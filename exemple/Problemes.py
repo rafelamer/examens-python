@@ -59,8 +59,32 @@ class Problemes:
         punt = text_vectors_matriu(Matrix(3,1,q))
         sol = equacio_del_pla_afi(v,q)
         return {'RECTA' : eq, 'PUNT' : punt, 'SOLUCIO' : sol}
+
+    def problema5(self):
+        # el vector director de la recta, que es la solución
+        k = matriu_aleatoria(f=1, c=3, maxim=3, nuls=False)
+
+        # base primitiva del núcleo 
+        plane = k.nullspace()
+        a = primitive(plane[0].transpose())
+        b = primitive(plane[1].transpose())
+
+        # obfuscar la base para que no esté en formato casi triangular
+        lam_base = random.randint(1,2)
+        mu_base = random.randint(1,2)
+
+        ap = lam_base * a + mu_base * b
+        bp = mu_base * a - lam_base * b
+
+        # crear el vector de entrada que se proyectará
+        u = ap + bp + k
+        
+        return { 'SISTEMA': sistema_equacions(Matrix([ap,bp]), Matrix([[0],[0]])),\
+                 'VECTOR': text_vectors_matriu(u.transpose()),
+                 'SOLUCIO': text_vectors_matriu(k.transpose()) }
     #
     #
     #
     def problemes(self):
-        return [self.problema1,self.problema2,self.problema3,self.problema4]
+        return [self.problema1, self.problema2, self.problema3, self.problema4,\
+                self.problema5]

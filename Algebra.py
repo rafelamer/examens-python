@@ -32,6 +32,7 @@ from sympy.printing.printer import Printer
 from sympy.printing.latex import print_latex
 from sympy.core.basic import Basic
 from itertools import permutations
+import numpy as np
 
 var('x y z t')
 ddict = collections.OrderedDict([(x,1),(y,2), (z,3), (t,4)])
@@ -418,3 +419,11 @@ def solucio_equacio_matricial(a,x):
     else:
         print('No implementat')
         sys.exit(0)
+        
+def proyeccio_ortogonal(u, vperp):
+    res = u - np.dot(u,vperp)/np.dot(vperp,vperp) * vperp
+    print(u, vperp, res)
+    return res
+            
+def primitive(u):
+    return u * reduce(lcm, [x.denominator() for x in u])

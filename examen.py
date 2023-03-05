@@ -239,7 +239,7 @@ class Examen:
             filename = "examen%04d" % nombre
             filename = filename.replace(" ","0")
         else:
-            relacio = {'COGNOMS' : estudiant['cognoms']), 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
+            relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
         examen = self.examen

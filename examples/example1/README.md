@@ -18,4 +18,30 @@ Per generar els fitxers TeX i els PDF amb els exàmens, hem d'executar la comand
 ```
 ~$ examen.py --examen=examen.tex --estudiants=estudiants.csv --problemes=4 --tex-engine=pdflatex
 ```
-Aleshores, es crea la carpeta *tex* os s'hi guarden tots els fitxers.
+Aleshores, es crea la carpeta *tex* os s'hi guarden tots els fitxers _.tex_ i _.pdf_.
+
+Altres exemples amb diferents opcions de *examen.py* són
+```
+~$ examen.py --examen=examen.tex --estudiants=estudiants.csv --problemes=2 --possibles-problemes=4 --aleatori --tex-engine=pdflatex
+```
+genera exàmens de 2 problemes escollits aleatòriament d'entre el 4 problemes disponibles i els ordena aleatòriament.
+```
+~$ examen.py --examen=examen.tex --grups=1,3:2,4 --estudiants=estudiants.csv --problemes=2 --possibles-problemes=4 --aleatori --tex-engine=pdflatex
+```
+genera exàmens de 2 problemes escollint-ne un d'entre el 1 i el 2 i l'altre d'entre el 3 i 4 i els ordena aleatòriament.
+```
+~$ examen.py --examen=examen.tex --incompatibles=1,2 --estudiants=estudiants.csv --problemes=2 --possibles-problemes=4 --aleatori --tex-engine=pdflatex
+```
+genera exàmens de 2 problemes escollits aleatòriament d'entre el 4 problemes disponibles i els ordena aleatòriament. En cap examen hi sortiran els problemes 1 i 3.
+```
+~$ examen.py --examen=examen.tex --estudiants=estudiants.csv --problemes=2 --possibles-problemes=4 --aleatori --tex-engine=pdflatex --json
+```
+genera exàmens de 2 problemes escollits aleatòriament d'entre el 4 problemes disponibles i els ordena aleatòriament. Guarda les generades aleatòriament en un fitxer _.json_.
+```
+~$ examen.py --examen=examen.tex --estudiants=estudiants.csv --problemes=2 --possibles-problemes=4 --aleatori --tex-engine=pdflatex --json
+```
+A més de generar els exàmens guarda les dades aleatòries en el fitxer _examen0%d.json.
+```
+~$ examen.py --examen=examen.tex --estudiants=estudiants.csv  --dades=examen001.json --tex-engine=pdflatex
+```
+Genera els exàmens a partir de les dades guardades al fitxer _examen001.json_.

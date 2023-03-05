@@ -106,10 +106,9 @@ Utilització: examen.py --examen=<fitxer> --estudiants=<fitxer> --problemes=<ent
     --aleatori                          : L'ordre dels problemes serà aleatori
     --nombre-examens=<nombre>           : Identifica els fitxers numèricament i no per nom i cognoms
                                         : Quantitat d'exàmens a fer
-    --no-solucions                      : No es generen els fitxers amb les solucions")
-    --json                              : Es guarden la dades dels enunciats en un fitxer json")
-    --ajuda                             : Imprimeix aquesta ajuda")
-
+    --no-solucions                      : No es generen els fitxers amb les solucions"
+    --json                              : Es guarden la dades dels enunciats en un fitxer json
+    --ajuda                             : Imprimeix aquesta ajuda"
 ```
 
 Cada vegada que es fa una col·lecció d'exàmens aleatoris i s'especifica l'opció --json, es guarden les dades aleatòries en un fitxer JSON, que en el cas anterior seria _examen001.json_. Si volem tornar a generar els exàmens amb les mateixes dades, haurem d'executar

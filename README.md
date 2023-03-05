@@ -8,6 +8,9 @@ Es fa servir el _LaTeX_ per a generar els diferents models d'examen. Per tant, p
 2. **Python**, la versió 3.7 o posterior (https://www.python.org/).
 3. **SymPy**, que és una llibreria de _Python_ per a càlcul simbòlic (https://www.sympy.org).
 4. **Python unidecode**, que serveix, entre altres coses, per treure els accents de qualsevol text. Es fa servir per treure els accents del nom i cognoms dels estudiants ja que poden donar problemes a l'hora d'ajuntar fitxers amb nom que conté aquests nom i cognoms.
+5. **Asymptote**, utilitzat per generar gràfics. (https://asymptote.sourceforge.io/). No és necessari si no volem incluir als examens gràfics fets amb aquest programa.
+6. **Git** per descarregar i mantenir actualitzat el repositori. Les distribucions de Linux ja tenen paquets per instal·lar-lo. En Windows 10/11 el podem el podem descarregar de https://git-scm.com/download/win.
+7. **Latexmk**, per defecte s'instal·la amb el TeXLive.
 
 Amb Windows 10/11 i amb Linux si la nostra distribució no incorpora aquests paqquets, podem executar des de la línia de comandes i com a administrador
 ```

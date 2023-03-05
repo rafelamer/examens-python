@@ -5799,11 +5799,11 @@ class Conica(object):
         Retorna el tipus de cònica
         """
         if isinstance(self,Ellipse):
-            return "El\\elageminada lipse"
+            return "El·lipse"
         if isinstance(self,Hiperbola):
-            return "Hip\\`erbola"
+            return "Hipèrbola"
         if isinstance(self,Parabola):
-            return "Par\\`abola"
+            return "Paràbola"
         return ""
     #
     #
@@ -6717,7 +6717,7 @@ class Quadrica(object):
         Retorna el tipus de quàdrica
         """
         if isinstance(self,Ellipsoide):
-            return "El\\elageminada ipsoide"
+            return "El·lipsoide"
         if isinstance(self,HiperboloideUnaFulla):
             return "Hiperboloide d'una fulla"
         if isinstance(self,HiperboloideDuesFulles):
@@ -6725,15 +6725,15 @@ class Quadrica(object):
         if isinstance(self,Con):
             return "Con real"
         if isinstance(self,CilindreElliptic):
-            return "Cilindre el\\elageminada\\'{\i}ptic"
+            return "Cilindre el·líptic"
         if isinstance(self,CilindreHiperbolic):
-            return "Cilindre hiperb\\`olic"
+            return "Cilindre hiperbòlic"
         if isinstance(self,ParaboloideElliptic):
-            return "Paraboloide el\\elageminada\\'{\i}ptic"
+            return "Paraboloide el·líptic"
         if isinstance(self,ParaboloideHiperbolic):
-            return "Paraboloide hiperb\\`olic"
+            return "Paraboloide hiperbòlic"
         if isinstance(self,CilindreParabolic):
-            return "Cilindre parab\\`olic"
+            return "Cilindre parabòlic"
         return ""
     #
     #

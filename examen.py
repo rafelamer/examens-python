@@ -31,8 +31,8 @@ sys.path.append('.')
 try:
     from Problemes import Problemes
 except:
-    pass
-from pylatexenc.latexencode import unicode_to_latex
+    pas
+
 class Examen:
     def __init__(self):
         self.parser = OptionParser()
@@ -163,7 +163,7 @@ class Examen:
         # Enunciat de l'examen
         #
         try:
-            with open(ex) as f:
+            with open(ex,encoding='utf8') as f:
                 self.examen = f.read()
                 f.close()
         except:
@@ -204,7 +204,7 @@ class Examen:
             self.maxproblema = self.possibles
         for i in range(1,self.maxproblema + 1):
             try:
-                with open(f"p{i}.tex") as f:
+                with open(f"p{i}.tex",encoding='utf8') as f:
                     e = f.read()
                     f.close()
                 self.enunciats.append(e)
@@ -239,18 +239,18 @@ class Examen:
             filename = "examen%04d" % nombre
             filename = filename.replace(" ","0")
         else:
-            relacio = {'COGNOMS' : unicode_to_latex(estudiant['cognoms']), 'NOM' : unicode_to_latex(estudiant['nom']), 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
+            relacio = {'COGNOMS' : estudiant['cognoms']), 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
         examen = self.examen
         for k,v in relacio.items():
             examen = examen.replace(k,v)
-        with open(f"{filename}.tex",'w') as f:
+        with open(f"{filename}.tex",'w',encoding='utf8') as f:
             f.write(examen)
             f.close()
         examen = examen.replace('NIC','nicsol')
         if self.options.solucions:
-            with open(f"{filename}-solucio.tex",'w') as f:
+            with open(f"{filename}-solucio.tex",'w',encoding='utf8') as f:
                 f.write(examen)
                 f.close()
         if engine is not None:
@@ -351,7 +351,7 @@ class Examen:
         t = ("%3d.json" % self.count).replace(' ','0')
         jsonfile += t
         if self.options.json:
-            with open(jsonfile,'w') as f:
+            with open(jsonfile,'w',encoding='utf8') as f:
                 json.dump(js,f)
             f.close()
     #
@@ -439,7 +439,7 @@ class Examen:
     #
     def recuperar_examen(self):
         try:
-            with open(self.options.fitxerdades) as f:
+            with open(self.options.fitxerdades,encoding='utf8') as f:
                 js = json.load(f)
             f.close()
         except:
@@ -452,7 +452,7 @@ class Examen:
         problemes.sort()
         for i in problemes:
             try:
-                with open(f"p{i}.tex") as f:
+                with open(f"p{i}.tex",encoding='utf8') as f:
                     e = f.read()
                 f.close()
                 self.enunciats.append(e)

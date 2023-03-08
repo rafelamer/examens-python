@@ -250,10 +250,25 @@ class Examen:
                 if isinstance(dataexamen,list) or isinstance(dataexamen,tuple):
                     relacio['DATAEXAMEN'] = f"\\dataexamen{{{dataexamen[0]}}}{{{dataexamen[1]}}}{{{dataexamen[2]}}}"
                 elif isinstance(dataexamen,dict):
-                    for k, v in dataexamen.items():
+                    keys = list(dataexamen.keys())
+                    if len(keys) == 0:
+                        print("La funció dataexamen retorna una valor no vàlid")
+                        sys.exit(0)
+                    keys.sort()
+                    keys.reverse()
+                    trobat = False
+                    for k in keys:
                         if estudiant['grup'].find(k) == 0:
+                            trobat = True
+                            v = dataexamen[k]
                             relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
                             break
+                    if not trobat:
+                        v = dataexamen[keys[0]]
+                        relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
+                else:
+                    print("La funció dataexamen retorna una valor no vàlid")
+                    sys.exit(0)
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
         examen = self.examen

@@ -184,7 +184,8 @@ class Examen:
                             data = line.split(':')
                             self.estudiants.append({'nom' : data[0].strip(),
                                                     'cognoms' : data[1].strip(),
-                                                    'email' : data[3].strip()})
+                                                    'email' : data[3].strip(),
+                                                    'grup' : data[4]})
                         except:
                             continue
                 f.close()
@@ -248,7 +249,7 @@ class Examen:
             if dataexamen is not None:
                 if isinstance(dataexamen,list) or isinstance(dataexamen,tuple):
                     relacio['DATAEXAMEN'] = f"\\dataexamen{{{dataexamen[0]}}}{{{dataexamen[1]}}}{{{dataexamen[2]}}}"
-                elif isinstance(dataexamen,dictionary):
+                elif isinstance(dataexamen,dict):
                     for k, v in dataexamen.items():
                         if estudiant['grup'].find(k) == 0:
                             relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"

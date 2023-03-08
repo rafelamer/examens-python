@@ -11,6 +11,11 @@ class Problemes:
     #
     #
     #
+    def dataexamen(self):
+        return {'1': (3,3,2023),'2': (1,1,2022)}
+    #
+    #
+    #
     def problema1(self):
         m = Matriu.invertible()
         inversa = m.inversa()

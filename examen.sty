@@ -98,6 +98,12 @@
  de juliol\or d'agost\or de setembre\or d'octubre\or de novembre\or
  de desembre\fi\space de\space\number\year}
  \def\@curs{Curs}
+ \def\dataexamen#1#2#3{%
+ \def\@@tempnumer{#2}%
+ #1\space\ifcase\numexpr\@@tempnumer \or
+ de gener\or de febrer\or de març\or d'abril\or de maig\or de juny\or
+ de juliol\or d'agost\or de setembre\or d'octubre\or de novembre\or
+ de desembre\fi\space de\space #3}
 }
 \DeclareOption{es}{
  \def\solutionname{Soluci\'on}
@@ -106,6 +112,13 @@
  de julio\or de agosto\or de septiembre\or de octubre\or de noviembre\or
  de diciembre\fi\space de\space\number\year}
  \def\@curs{Curso}
+ \def\dataexamen#1#2#3{%
+ \def\@@tempnumer{#2}%
+ #1\space\ifcase\numexpr\@@tempnumer \or
+ de enero\or de febrero\or de marzo\or de abril\or de mayo\or de junio\or
+ de julio\or de agosto\or de septiembre\or de octubre\or de noviembre\or
+ de diciembre\fi
+ \space de\space #3}
 }
 \DeclareOption{en}{
  \def\solutionname{Solution}
@@ -113,6 +126,12 @@
   January\or February\or March\or April\or May\or June\or
   July\or August\or September\or October\or November\or December\fi
   \space\number\day, \number\year}
+  \def\dataexamen#1#2#3{%
+ \def\@@tempnumer{#2}
+ \ifcase\numexpr\@@tempnumer \or
+ January\or February\or March\or April\or May\or June\or
+ July\or August\or September\or October\or November\or December\fi
+ \space #1,\space #3}
 }
 \DeclareOption{nic}{
  \setboolean{nomicognoms}{true}
@@ -270,6 +289,16 @@
  \usepackage{txfonts}
 }
 %
+% Logo
+%
+\def\scalelogo{0.45}
+\def\logoexamen{upc-ma.pdf}
+\def\@@logo[#1]#2{
+ \gdef\scalelogo{#1}
+ \gdef\logoexamen{#2}
+}
+\def\logo{\@ifnextchar[{\@@logo}{\@@logo[0.45]}}
+%
 % Asymptote
 %
 \ifthenelse{\boolean{use@asy}}
@@ -314,7 +343,7 @@
  \begin{flushleft}
  \setlength{\unitlength}{0.45cm}
  \begin{picture}(16,4)
- \put(-2,0.7){\makebox(0,0)[bl]{\includegraphics[scale=0.45]{eseiaat-ma.pdf}}}
+ \put(-2,0.7){\makebox(0,0)[bl]{\includegraphics[scale=\scalelogo]{\logoexamen}}}
  \end{picture}
  \end{flushleft}
  \end{minipage}

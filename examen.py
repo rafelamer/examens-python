@@ -54,6 +54,7 @@ class Examen:
         self.problemes = []
         self.maxproblema = 0
         self.enunciats = []
+        self.probs = None
         if self.options.ajuda:
             self.ajuda()
     #
@@ -240,6 +241,18 @@ class Examen:
             filename = filename.replace(" ","0")
         else:
             relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
+            try:
+                dataexamen = self.probs.dataexamen()
+            except:
+                dataexamen = None
+            if dataexamen is not None:
+                if isinstance(dataexamen,list) or isinstance(dataexamen,tuple):
+                    relacio['DATAEXAMEN'] = f"\\dataexamen{{{dataexamen[0]}}}{{{dataexamen[1]}}}{{{dataexamen[2]}}}"
+                elif isinstance(dataexamen,dictionary):
+                    for k, v in dataexamen.items():
+                        if estudiant['grup'].find(k) == 0:
+                            relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
+                            break
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
         examen = self.examen
@@ -269,6 +282,10 @@ class Examen:
                 if p.returncode != 0:
                     print (f"Hi ha un error en el fitxer {filename}-solucio.tex")
                     sys.exit(0)
+        try:
+            return relacio['DATAEXAMEN']
+        except:
+            return None
     #
     #
     #
@@ -297,7 +314,7 @@ class Examen:
     #
     def generar_examens(self):
         try:
-            probs = Problemes()
+            self.probs = Problemes()
         except:
             print("Error en el fitxer Problemes.py")
             sys.exit(0)
@@ -310,11 +327,12 @@ class Examen:
             iterator = range(self.nombreexamens)
         for e in iterator:
             if isinstance(e,dict):
-                js[e['email']] = {}
+                key = e['email']
             else:
-                js[nombre] = {}
+                key = nombre
+            js[key] = {}
             examen = []
-            problemes = probs.problemes()
+            problemes = self.probs.problemes()
             if isinstance(self.problemes,list):
                 llista = list(self.problemes)
                 random.shuffle(llista)
@@ -339,11 +357,10 @@ class Examen:
                         p = p.replace(k,v)
                 examen.append(p)
                 v = f"problema{i + 1}"
-                if self.nombreexamens is None:
-                    js[e['email']][v] = relacio
-                else:
-                    js[nombre][v] = relacio
-            self.generar_examen(examen,e,nombre)
+                js[key][v] = relacio
+            dataexamen = self.generar_examen(examen,e,nombre)
+            if dataexamen is not None:
+                js[key]['DATAEXAMEN'] = dataexamen
             nombre += 1
         self.borra_fitxers()
         os.chdir(dir)
@@ -429,8 +446,8 @@ class Examen:
     def problemes_json(self,js):
         problemes = []
         for k, v in js.items():
-            probs = [int(x.replace('problema','')) for x in v.keys()]
-            for p in probs:
+            self.probs = [int(x.replace('problema','')) for x in v.keys() if x != 'DATAEXAMEN']
+            for p in self.probs:
                 if p not in problemes:
                     problemes.append(p)
         return problemes
@@ -472,9 +489,9 @@ class Examen:
                 dades = js[e['email']]
             else:
                 dades = js[f"{nombre}"]
-            probs = [int(x.replace('problema','')) for x in dades.keys()]
-            probs.sort()
-            for i in probs:
+            self.probs = [int(x.replace('problema','')) for x in dades.keys() if x != 'DATAEXAMEN']
+            self.probs.sort()
+            for i in self.probs:
                  relacio = dades[f"problema{i}"]
                  p = self.enunciats[i - 1]
                  for k,v in relacio.items():

@@ -73,7 +73,7 @@ C:\Users\Rafel Amer\.asy> mklink coordenades.asy "C:\Users\Rafel Amer\examens-py
 C:\Users\Rafel Amer\.asy> cd ..
 C:\Users\Rafel Amer> mkdir -p texmf\tex\latex
 C:\Users\Rafel Amer> cd texmf\tex\latex
-C:\Users\Rafel Amer\texmf\tex\latex> mklink examen.asy "C:\Users\Rafel Amer\examens-python\examen.asy"
+C:\Users\Rafel Amer\texmf\tex\latex> mklink examen.sty "C:\Users\Rafel Amer\examens-python\examen.sty"
 C:\Users\Rafel Amer\texmf\tex\latex> mklink upc-ma.pdf "C:\Users\Rafel Amer\examens-python\upc-ma.pdf"
 C:\Users\Rafel Amer\texmf\tex\latex> mklink eseiaat-ma.pdf "C:\Users\Rafel Amer\examens-python\eseiaat-ma.pdf"
 C:\Users\Rafel Amer\texmf\tex\latex> cd C:\

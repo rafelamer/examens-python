@@ -31,7 +31,7 @@ sys.path.append('.')
 try:
     from Problemes import Problemes
 except:
-    pas
+    pass
 
 class Examen:
     def __init__(self):
@@ -75,7 +75,7 @@ class Examen:
         print("   --tex-engine=<programa>             : Nom del programa de LaTeX utilitzat")
         print("                                       : Si no s'especifica, no es generen els PDF")
         print("   --aleatori                          : L'ordre dels problemes serà aleatori")
-        print("   --nombre-examens=>nombre>           : Identifica els fitxers numèricament i no per nom i cognoms")
+        print("   --nombre-examens=<nombre>           : Identifica els fitxers numèricament i no per nom i cognoms")
         print("                                       : Quantitat d'exàmens a fer")
         print("   --no-solucions                      : No es generen els fitxers amb les solucions")
         print("   --json                              : Es guarden la dades dels enunciats en un fitxer json")
@@ -204,6 +204,9 @@ class Examen:
             self.maxproblema = max(self.problemes)
         if self.possibles is not None and self.possibles > self.maxproblema:
             self.maxproblema = self.possibles
+        if self.maxproblema == 0:
+            print("No s'ha especificat el nombre total de problemes")
+            sys.exit(0)
         for i in range(1,self.maxproblema + 1):
             try:
                 with open(f"p{i}.tex",encoding='utf8') as f:
@@ -233,15 +236,13 @@ class Examen:
     #
     def generar_examen(self,examen,estudiant,nombre=None):
         engine = self.options.engine
-        if self.options.aleatori:
-            random.shuffle(examen)
         enunciats = "\n\n".join(examen)
         if self.nombreexamens is not None:
-            relacio = {'COGNOMS' : 'Cognoms', 'NOM' : 'Nom', 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
+            relacio = {'COGNOMS' : '', 'NOM' : '', 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
             filename = "examen%04d" % nombre
             filename = filename.replace(" ","0")
         else:
-            relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
+            relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : ""}
             try:
                 dataexamen = self.probs.dataexamen()
             except:
@@ -363,6 +364,11 @@ class Examen:
                     if llista is None:
                         print("Impossible generar la llista de problemes")
                         sys.exit(0)
+            ordering = []            
+            order = list(range(len(llista)))
+            if self.options.aleatori:
+                random.shuffle(order)
+            preguntes = {} 
             for i in range(self.maxproblema):
                 if i + 1 not in llista:
                     continue
@@ -371,12 +377,18 @@ class Examen:
                 for k,v in relacio.items():
                     if v is not None:
                         p = p.replace(k,v)
-                examen.append(p)
+                preguntes[i+1] = p
                 v = f"problema{i + 1}"
+                ordering.append(i+1)
                 js[key][v] = relacio
+            ordering = [ordering[k] for k in order]
+            examen = [] 
+            for k in ordering:
+                examen.append(preguntes[k])          
             dataexamen = self.generar_examen(examen,e,nombre)
             if dataexamen is not None:
                 js[key]['DATAEXAMEN'] = dataexamen
+            js[key]['ORDER'] = ordering 
             nombre += 1
         self.borra_fitxers()
         os.chdir(dir)
@@ -459,18 +471,10 @@ class Examen:
     #
     #
     #
-    def problemes_json(self,js):
-        problemes = []
-        for k, v in js.items():
-            self.probs = [int(x.replace('problema','')) for x in v.keys() if x != 'DATAEXAMEN']
-            for p in self.probs:
-                if p not in problemes:
-                    problemes.append(p)
-        return problemes
-    #
-    #
-    #
-    def recuperar_examen(self):
+    def recuperar_examens(self):
+        #
+        # Llegim els enunciats dels problemes del fitxer JSON
+        #
         try:
             with open(self.options.fitxerdades,encoding='utf8') as f:
                 js = json.load(f)
@@ -478,41 +482,30 @@ class Examen:
         except:
             print (f"Error llegint el fitxer JSON {self.options.fitxerdades}")
             sys.exit(0)
-        #
-        # Llegim els enunciats dels problemes
-        #
-        problemes = self.problemes_json(js)
-        problemes.sort()
-        for i in problemes:
-            try:
-                with open(f"p{i}.tex",encoding='utf8') as f:
-                    e = f.read()
-                f.close()
-                self.enunciats.append(e)
-            except:
-                print("Error en els enunciats dels problemes")
-                sys.exit(0)
-
+        
         dir = self.crea_carpeta_tex()
         nombre = 1
         if self.nombreexamens is None:
             iterator = self.estudiants
         else:
             iterator = range(self.nombreexamens)
+        #
+        # Generem els PDF
+        #  
         for e in iterator:
             examen = []
             if isinstance(e,dict):
                 dades = js[e['email']]
             else:
                 dades = js[f"{nombre}"]
-            self.probs = [int(x.replace('problema','')) for x in dades.keys() if x != 'DATAEXAMEN']
-            self.probs.sort()
-            for i in self.probs:
-                 relacio = dades[f"problema{i}"]
-                 p = self.enunciats[i - 1]
-                 for k,v in relacio.items():
-                     p = p.replace(k,v)
-                 examen.append(p)
+            self.probs = [int(x.replace('problema','')) for x in dades.keys() if x not in ('DATAEXAMEN','ORDER')]
+            ordering = dades['ORDER']
+            for i in ordering:
+                relacio = dades[f"problema{i}"]
+                p = self.enunciats[i - 1]
+                for k,v in relacio.items():
+                    p = p.replace(k,v)
+                examen.append(p)
             self.generar_examen(examen,e,nombre)
             nombre += 1
         self.borra_fitxers()
@@ -523,7 +516,7 @@ class Examen:
     def main(self):
         self.read_data()
         if self.options.fitxerdades is not None:
-            self.recuperar_examen()
+            self.recuperar_examens()
         else:
             self.generar_examens()
 

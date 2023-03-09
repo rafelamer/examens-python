@@ -97,6 +97,7 @@
  de gener\or de febrer\or de mar\or d'abril\or de maig\or de juny\or
  de juliol\or d'agost\or de setembre\or d'octubre\or de novembre\or
  de desembre\fi\space de\space\number\year}
+ \def\modelname{Model}
  \def\@curs{Curs}
  \def\dataexamen#1#2#3{%
  \def\@@tempnumer{#2}%
@@ -111,6 +112,7 @@
  de enero\or de febrero\or de marzo\or de abril\or de mayo\or de junio\or
  de julio\or de agosto\or de septiembre\or de octubre\or de noviembre\or
  de diciembre\fi\space de\space\number\year}
+ \def\modelname{Modelo}
  \def\@curs{Curso}
  \def\dataexamen#1#2#3{%
  \def\@@tempnumer{#2}%
@@ -126,7 +128,9 @@
   January\or February\or March\or April\or May\or June\or
   July\or August\or September\or October\or November\or December\fi
   \space\number\day, \number\year}
-  \def\dataexamen#1#2#3{%
+ \def\modelname{Model}
+ \def\@curs{Academic year}
+ \def\dataexamen#1#2#3{%
  \def\@@tempnumer{#2}
  \ifcase\numexpr\@@tempnumer \or
  January\or February\or March\or April\or May\or June\or
@@ -289,6 +293,14 @@
  \usepackage{txfonts}
 }
 %
+%
+%
+\def\@@model{}
+\def\model#1{%
+ \def\@@tempm{#1}
+ \ifx\@@tempm\empty\gdef\@@model{}\else\gdef\@@model{\\ {\bfseries\textsf{\scriptsize{\modelname\space #1}}}}\fi
+}
+%
 % Logo
 %
 \def\scalelogo{0.45}
@@ -370,7 +382,7 @@
 {\bfseries\textsf{\scriptsize\@CU}}\\
 {\bfseries\textsf{\scriptsize\@QU}}\\[2pt]
 {\bfseries\textsf{\scriptsize\@data}}\\
-{\bfseries\textsf{\scriptsize\@examen}}
+{\bfseries\textsf{\scriptsize\@examen}}\@@model
 \end{center}
 \end{minipage}}
 %

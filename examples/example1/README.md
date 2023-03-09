@@ -45,3 +45,10 @@ A més de generar els exàmens guarda les dades aleatòries en el fitxer _examen
 ~$ examen.py --examen=examen.tex --estudiants=estudiants.csv  --dades=examen001.json --tex-engine=pdflatex
 ```
 Genera els exàmens a partir de les dades guardades al fitxer _examen001.json_.
+
+També tenim l'opció de generar un nombre determinat d'exàmens sense que hi apareguin els noms i cognoms
+dels estudiants. És a dir, podem voler fer 100 exàmens diferents i repartir-los aleatòriament entre els estudiants:
+```
+~$ examen.py --examen=examen.tex --problemes=4 --tex-engine=lualatex --nombre-examens=100 --aleatori --json
+
+```

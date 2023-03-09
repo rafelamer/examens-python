@@ -43,7 +43,7 @@ class Examen:
         self.parser.add_option("--incompatibles",dest="incompatibles",default=None)
         self.parser.add_option("--grups",dest="grups",default=None)
         self.parser.add_option("--dades",dest="fitxerdades",default=None)
-        self.parser.add_option("--tex-engine",dest="engine",default=None)
+        self.parser.add_option("--tex-engine",dest="engine",default='pdflatex')
         self.parser.add_option("--no-solucions",action="store_false",dest="solucions",default=True)
         self.parser.add_option("--aleatori",action="store_true",dest="aleatori",default=False)
         self.parser.add_option("--nombre-examens",dest="nombreexamens")
@@ -243,35 +243,37 @@ class Examen:
             filename = filename.replace(" ","0")
         else:
             relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : ""}
-            try:
-                dataexamen = self.probs.dataexamen()
-            except:
-                dataexamen = None
-            if dataexamen is not None:
-                if isinstance(dataexamen,list) or isinstance(dataexamen,tuple):
-                    relacio['DATAEXAMEN'] = f"\\dataexamen{{{dataexamen[0]}}}{{{dataexamen[1]}}}{{{dataexamen[2]}}}"
-                elif isinstance(dataexamen,dict):
-                    keys = list(dataexamen.keys())
-                    if len(keys) == 0:
-                        print("La funció dataexamen retorna una valor no vàlid")
-                        sys.exit(0)
-                    keys.sort()
-                    keys.reverse()
-                    trobat = False
-                    for k in keys:
-                        if estudiant['grup'].find(k) == 0:
-                            trobat = True
-                            v = dataexamen[k]
-                            relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
-                            break
-                    if not trobat:
-                        v = dataexamen[keys[0]]
-                        relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
-                else:
-                    print("La funció dataexamen retorna una valor no vàlid")
-                    sys.exit(0)
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
+        try:
+            dataexamen = self.probs.dataexamen()
+        except:
+            dataexamen = None
+
+        if dataexamen is not None:
+            if isinstance(dataexamen,list) or isinstance(dataexamen,tuple):
+                relacio['DATAEXAMEN'] = f"\\dataexamen{{{dataexamen[0]}}}{{{dataexamen[1]}}}{{{dataexamen[2]}}}"
+            elif isinstance(dataexamen,dict):
+                keys = list(dataexamen.keys())
+
+                if len(keys) == 0:
+                    print("La funció dataexamen retorna una valor no vàlid")
+                    sys.exit(0)
+                keys.sort()
+                keys.reverse()
+                trobat = False
+                for k in keys:
+                    if estudiant['grup'].find(k) == 0:
+                        trobat = True
+                        v = dataexamen[k]
+                        relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
+                        break
+                if not trobat:
+                    v = dataexamen[keys[0]]
+                    relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
+            else:
+                print("La funció dataexamen retorna una valor no vàlid")
+                sys.exit(0)
         examen = self.examen
         for k,v in relacio.items():
             examen = examen.replace(k,v)
@@ -352,10 +354,9 @@ class Examen:
             problemes = self.probs.problemes()
             if isinstance(self.problemes,list):
                 llista = list(self.problemes)
-                random.shuffle(llista)
             else:
                 llista = list(range(self.possibles))
-                random.shuffle(llista)
+
                 if self.grups is None:
                     llista = [x+1 for x in llista]
                     llista = self.comprova_incompatibilitats(llista)
@@ -364,11 +365,11 @@ class Examen:
                     if llista is None:
                         print("Impossible generar la llista de problemes")
                         sys.exit(0)
-            ordering = []            
-            order = list(range(len(llista)))
+            ordering = []
+            order = list(range(self.maxproblema))
             if self.options.aleatori:
                 random.shuffle(order)
-            preguntes = {} 
+            preguntes = {}
             for i in range(self.maxproblema):
                 if i + 1 not in llista:
                     continue
@@ -382,13 +383,13 @@ class Examen:
                 ordering.append(i+1)
                 js[key][v] = relacio
             ordering = [ordering[k] for k in order]
-            examen = [] 
+            examen = []
             for k in ordering:
-                examen.append(preguntes[k])          
+                examen.append(preguntes[k])
             dataexamen = self.generar_examen(examen,e,nombre)
             if dataexamen is not None:
                 js[key]['DATAEXAMEN'] = dataexamen
-            js[key]['ORDER'] = ordering 
+            js[key]['ORDER'] = ordering
             nombre += 1
         self.borra_fitxers()
         os.chdir(dir)
@@ -472,6 +473,11 @@ class Examen:
     #
     #
     def recuperar_examens(self):
+        try:
+            self.probs = Problemes()
+        except:
+            print("Error en el fitxer Problemes.py")
+            sys.exit(0)
         #
         # Llegim els enunciats dels problemes del fitxer JSON
         #
@@ -482,7 +488,7 @@ class Examen:
         except:
             print (f"Error llegint el fitxer JSON {self.options.fitxerdades}")
             sys.exit(0)
-        
+
         dir = self.crea_carpeta_tex()
         nombre = 1
         if self.nombreexamens is None:
@@ -491,14 +497,14 @@ class Examen:
             iterator = range(self.nombreexamens)
         #
         # Generem els PDF
-        #  
+        #
         for e in iterator:
             examen = []
             if isinstance(e,dict):
                 dades = js[e['email']]
             else:
                 dades = js[f"{nombre}"]
-            self.probs = [int(x.replace('problema','')) for x in dades.keys() if x not in ('DATAEXAMEN','ORDER')]
+            ##### self.probs = [int(x.replace('problema','')) for x in dades.keys() if x not in ('DATAEXAMEN','ORDER')]
             ordering = dades['ORDER']
             for i in ordering:
                 relacio = dades[f"problema{i}"]

@@ -573,12 +573,12 @@ class Vector(object):
                     if isinstance(a,Rational):
                         l.append(a.q)
                         s.append(False)
-            elif k in incognites:
-                pass
+           # elif k in self.incognites:
+           #     pass
             else:
                 other = True
         if other:
-            return 1
+            return 1, self
         if square:
             for k in range(len(l)):
                 if not s[k]:
@@ -586,6 +586,8 @@ class Vector(object):
         m = mcm_llista(l)
         if square:
             m = sqrt(m)
+        if isinstance(self,Punt):
+            return m, Punt([m*k for k in self.components])
         return m, Vector([m*k for k in self.components])
     #
     #
@@ -684,7 +686,7 @@ class Vector(object):
             u2 = Vector(-2,4,-3,1)
             v = u1 + u2
         """
-        if not isinstance(other,Vector):
+        if not isinstance(other,Vector) and not isinstance(other,Punt):
             return None
         if self.dimensio != other.dimensio:
             return None
@@ -693,6 +695,8 @@ class Vector(object):
         c = []
         for i in range(self.dimensio):
             c.append(c1[i] + c2[i])
+        if isinstance(self,Punt) or isinstance(other,Punt):
+            return Punt(c)
         return Vector(c)
     #
     #
@@ -716,6 +720,8 @@ class Vector(object):
         c = []
         for i in range(self.dimensio):
             c.append(c1[i] - c2[i])
+        if isinstance(self,Punt) and isinstance(other,Vector):
+            return Punt(c)
         return Vector(c)
     #
     #
@@ -728,6 +734,8 @@ class Vector(object):
             u2 = - u1
         """
         p = [-k for k in self.components]
+        if isinstance(self,Punt):
+            return Punt(p)
         return Vector(p)
     #
     #
@@ -751,6 +759,8 @@ class Vector(object):
         types = [Rational,float,int,Float,Pow,Add,Mul]
         for t in types:
             if isinstance(other,t):
+                if isinstance(self,Punt):
+                    return Punt([other * x for x in self.components])
                 return Vector([other * x for x in self.components])
         if isinstance(other,Matriu):
             if self.dimensio != other.files:
@@ -3695,6 +3705,8 @@ class PlaAfi(object):
         if p.tots_enters():
             return p
         t, _ = p.factor_comu()
+        if isinstance(t,int) or isinstance(t,Integer):
+            return p
         for i in range(1,t.q):
             for j in range(1,t.q):
                 r = (p + Rational(i,t.q) * u + Rational(j,t.q) * v).punt()
@@ -6002,7 +6014,7 @@ class Ellipse(Conica):
     #
     #
     #
-    def to_asy(self,scaled=1.0,canonica=10):
+    def to_asy(self,scaled=1.0,canonica=10,x=9,y=9):
         """
         Retorna una expressió per fer servir amb el programa Asymtote
         Paràmetres:
@@ -6026,7 +6038,7 @@ class Ellipse(Conica):
         str = f"Canonica({mx},{Mx},{my},{My},scaled={scaled});"
         clip = f"path cl = ({mx},{my})--({Mx},{my})--({Mx},{My})--({mx},{My})--cycle;\n"
         clip += f"cl = scale({scaled}) * cl;\nclip(cl);"
-        return f"{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled});\n{clip}"
+        return f"{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled},x={x},y={y});\n{clip}"
 
 
 class Hiperbola(Conica):

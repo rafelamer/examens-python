@@ -1571,6 +1571,38 @@ class Matriu:
     #
     #
     #
+    def anula_coeficient_amb_pivot(self,fc,fp):
+        """
+        Aplicar la transformació elemental
+        F_fc \sim s F_fc - t F_fp
+        on s i t s'obtenen de la forma següent:
+           1. s és el primer coeficient no nul de la fila fp, que ocuparà la columna col
+           2. t és el coeficient que ocupa la fila fc, columna col
+           3. Si s i t són enters, els dividim pel seu màxim comú divisor
+        Retornem la transformació elemental feta en forma de tupla (s,t)
+        """
+        k = primer_no_nul(self.matriu[fp,:])
+        if k is None:
+            return 1, None
+        if self.matriu[fc,k] == 0:
+            return 2, None
+        if primer_no_nul(self.matriu[fc,:]) != k:
+            return 3, None
+        s = self.matriu[fp,k]
+        t = self.matriu[fc,k]
+        if isinstance(s,int) or isinstance(s,Integer):
+             if isinstance(t,int) or isinstance(t,Integer):
+                 d = mcd_llista([t,s])
+                 if abs(d) != 1:
+                     s /= d
+                     t /= d
+        if s < 0:
+            s, t = -s, -t
+        self.matriu[fc,:] = s * self.matriu[fc,:] - t * self.matriu[fp,:]
+        return 0, (s,t)
+    #
+    #
+    #
     def norma_maxim(self):
         """
         Retorna la norma del màxim de la matriu

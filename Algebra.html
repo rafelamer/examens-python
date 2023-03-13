@@ -626,12 +626,12 @@ class Vector(object):
                     if isinstance(a,Rational):
                         l.append(a.q)
                         s.append(False)
-            elif k in incognites:
-                pass
+           # elif k in self.incognites:
+           #     pass
             else:
                 other = True
         if other:
-            return 1
+            return 1, self
         if square:
             for k in range(len(l)):
                 if not s[k]:
@@ -639,6 +639,8 @@ class Vector(object):
         m = mcm_llista(l)
         if square:
             m = sqrt(m)
+        if isinstance(self,Punt):
+            return m, Punt([m*k for k in self.components])
         return m, Vector([m*k for k in self.components])
     #
     #
@@ -737,7 +739,7 @@ class Vector(object):
             u2 = Vector(-2,4,-3,1)
             v = u1 + u2
         &#34;&#34;&#34;
-        if not isinstance(other,Vector):
+        if not isinstance(other,Vector) and not isinstance(other,Punt):
             return None
         if self.dimensio != other.dimensio:
             return None
@@ -746,6 +748,8 @@ class Vector(object):
         c = []
         for i in range(self.dimensio):
             c.append(c1[i] + c2[i])
+        if isinstance(self,Punt) or isinstance(other,Punt):
+            return Punt(c)
         return Vector(c)
     #
     #
@@ -769,6 +773,8 @@ class Vector(object):
         c = []
         for i in range(self.dimensio):
             c.append(c1[i] - c2[i])
+        if isinstance(self,Punt) and isinstance(other,Vector):
+            return Punt(c)
         return Vector(c)
     #
     #
@@ -781,6 +787,8 @@ class Vector(object):
             u2 = - u1
         &#34;&#34;&#34;
         p = [-k for k in self.components]
+        if isinstance(self,Punt):
+            return Punt(p)
         return Vector(p)
     #
     #
@@ -804,6 +812,8 @@ class Vector(object):
         types = [Rational,float,int,Float,Pow,Add,Mul]
         for t in types:
             if isinstance(other,t):
+                if isinstance(self,Punt):
+                    return Punt([other * x for x in self.components])
                 return Vector([other * x for x in self.components])
         if isinstance(other,Matriu):
             if self.dimensio != other.files:
@@ -1611,6 +1621,38 @@ class Matriu:
         a = eye(ordre)
         a[i,:] = s * a[i,:] + t * a[j,:]
         return cls(a)
+    #
+    #
+    #
+    def anula_coeficient_amb_pivot(self,fc,fp):
+        &#34;&#34;&#34;
+        Aplicar la transformació elemental
+        F_fc \sim s F_fc - t F_fp
+        on s i t s&#39;obtenen de la forma següent:
+           1. s és el primer coeficient no nul de la fila fp, que ocuparà la columna col
+           2. t és el coeficient que ocupa la fila fc, columna col
+           3. Si s i t són enters, els dividim pel seu màxim comú divisor
+        Retornem la transformació elemental feta en forma de tupla (s,t)
+        &#34;&#34;&#34;
+        k = primer_no_nul(self.matriu[fp,:])
+        if k is None:
+            return 1, None
+        if self.matriu[fc,k] == 0:
+            return 2, None
+        if primer_no_nul(self.matriu[fc,:]) != k:
+            return 3, None
+        s = self.matriu[fp,k]
+        t = self.matriu[fc,k]
+        if isinstance(s,int) or isinstance(s,Integer):
+             if isinstance(t,int) or isinstance(t,Integer):
+                 d = mcd_llista([t,s])
+                 if abs(d) != 1:
+                     s /= d
+                     t /= d
+        if s &lt; 0:
+            s, t = -s, -t
+        self.matriu[fc,:] = s * self.matriu[fc,:] - t * self.matriu[fp,:]
+        return 0, (s,t)
     #
     #
     #
@@ -3748,6 +3790,8 @@ class PlaAfi(object):
         if p.tots_enters():
             return p
         t, _ = p.factor_comu()
+        if isinstance(t,int) or isinstance(t,Integer):
+            return p
         for i in range(1,t.q):
             for j in range(1,t.q):
                 r = (p + Rational(i,t.q) * u + Rational(j,t.q) * v).punt()
@@ -6055,7 +6099,7 @@ class Ellipse(Conica):
     #
     #
     #
-    def to_asy(self,scaled=1.0,canonica=10):
+    def to_asy(self,scaled=1.0,canonica=10,x=9,y=9):
         &#34;&#34;&#34;
         Retorna una expressió per fer servir amb el programa Asymtote
         Paràmetres:
@@ -6079,7 +6123,7 @@ class Ellipse(Conica):
         str = f&#34;Canonica({mx},{Mx},{my},{My},scaled={scaled});&#34;
         clip = f&#34;path cl = ({mx},{my})--({Mx},{my})--({Mx},{My})--({mx},{My})--cycle;\n&#34;
         clip += f&#34;cl = scale({scaled}) * cl;\nclip(cl);&#34;
-        return f&#34;{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled});\n{clip}&#34;
+        return f&#34;{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled},x={x},y={y});\n{clip}&#34;
 
 
 class Hiperbola(Conica):
@@ -11521,7 +11565,7 @@ def parabola(cls,maxim=30,canonica=False):
     #
     #
     #
-    def to_asy(self,scaled=1.0,canonica=10):
+    def to_asy(self,scaled=1.0,canonica=10,x=9,y=9):
         &#34;&#34;&#34;
         Retorna una expressió per fer servir amb el programa Asymtote
         Paràmetres:
@@ -11545,7 +11589,7 @@ def parabola(cls,maxim=30,canonica=False):
         str = f&#34;Canonica({mx},{Mx},{my},{My},scaled={scaled});&#34;
         clip = f&#34;path cl = ({mx},{my})--({Mx},{my})--({Mx},{My})--({mx},{My})--cycle;\n&#34;
         clip += f&#34;cl = scale({scaled}) * cl;\nclip(cl);&#34;
-        return f&#34;{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled});\n{clip}&#34;</code></pre>
+        return f&#34;{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled},x={x},y={y});\n{clip}&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -11720,7 +11764,7 @@ def aleatoria(cls,canonica=False,):
 </details>
 </dd>
 <dt id="Algebra.Ellipse.to_asy"><code class="name flex">
-<span>def <span class="ident">to_asy</span></span>(<span>self, scaled=1.0, canonica=10)</span>
+<span>def <span class="ident">to_asy</span></span>(<span>self, scaled=1.0, canonica=10, x=9, y=9)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una expressió per fer servir amb el programa Asymtote</p>
@@ -11731,7 +11775,7 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def to_asy(self,scaled=1.0,canonica=10):
+<pre><code class="python">def to_asy(self,scaled=1.0,canonica=10,x=9,y=9):
     &#34;&#34;&#34;
     Retorna una expressió per fer servir amb el programa Asymtote
     Paràmetres:
@@ -11755,7 +11799,7 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
     str = f&#34;Canonica({mx},{Mx},{my},{My},scaled={scaled});&#34;
     clip = f&#34;path cl = ({mx},{my})--({Mx},{my})--({Mx},{My})--({mx},{My})--cycle;\n&#34;
     clip += f&#34;cl = scale({scaled}) * cl;\nclip(cl);&#34;
-    return f&#34;{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled});\n{clip}&#34;</code></pre>
+    return f&#34;{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled},x={x},y={y});\n{clip}&#34;</code></pre>
 </details>
 </dd>
 <dt id="Algebra.Ellipse.vertexs"><code class="name flex">
@@ -14678,6 +14722,38 @@ per defecte és la matriu unitat d'ordre 3</p></div>
     #
     #
     #
+    def anula_coeficient_amb_pivot(self,fc,fp):
+        &#34;&#34;&#34;
+        Aplicar la transformació elemental
+        F_fc \sim s F_fc - t F_fp
+        on s i t s&#39;obtenen de la forma següent:
+           1. s és el primer coeficient no nul de la fila fp, que ocuparà la columna col
+           2. t és el coeficient que ocupa la fila fc, columna col
+           3. Si s i t són enters, els dividim pel seu màxim comú divisor
+        Retornem la transformació elemental feta en forma de tupla (s,t)
+        &#34;&#34;&#34;
+        k = primer_no_nul(self.matriu[fp,:])
+        if k is None:
+            return 1, None
+        if self.matriu[fc,k] == 0:
+            return 2, None
+        if primer_no_nul(self.matriu[fc,:]) != k:
+            return 3, None
+        s = self.matriu[fp,k]
+        t = self.matriu[fc,k]
+        if isinstance(s,int) or isinstance(s,Integer):
+             if isinstance(t,int) or isinstance(t,Integer):
+                 d = mcd_llista([t,s])
+                 if abs(d) != 1:
+                     s /= d
+                     t /= d
+        if s &lt; 0:
+            s, t = -s, -t
+        self.matriu[fc,:] = s * self.matriu[fc,:] - t * self.matriu[fp,:]
+        return 0, (s,t)
+    #
+    #
+    #
     def norma_maxim(self):
         &#34;&#34;&#34;
         Retorna la norma del màxim de la matriu
@@ -15976,6 +16052,52 @@ def transformacio_elemental(cls,ordre,i,j,s,t):
     Retorna una nova matriu que és l&#39;adjunta de l&#39;actual
     &#34;&#34;&#34;
     return Matriu(self.matriu.adjugate().T)</code></pre>
+</details>
+</dd>
+<dt id="Algebra.Matriu.anula_coeficient_amb_pivot"><code class="name flex">
+<span>def <span class="ident">anula_coeficient_amb_pivot</span></span>(<span>self, fc, fp)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Aplicar la transformació elemental
+F_fc \sim s F_fc - t F_fp
+on s i t s'obtenen de la forma següent:
+1. s és el primer coeficient no nul de la fila fp, que ocuparà la columna col
+2. t és el coeficient que ocupa la fila fc, columna col
+3. Si s i t són enters, els dividim pel seu màxim comú divisor
+Retornem la transformació elemental feta en forma de tupla (s,t)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def anula_coeficient_amb_pivot(self,fc,fp):
+    &#34;&#34;&#34;
+    Aplicar la transformació elemental
+    F_fc \sim s F_fc - t F_fp
+    on s i t s&#39;obtenen de la forma següent:
+       1. s és el primer coeficient no nul de la fila fp, que ocuparà la columna col
+       2. t és el coeficient que ocupa la fila fc, columna col
+       3. Si s i t són enters, els dividim pel seu màxim comú divisor
+    Retornem la transformació elemental feta en forma de tupla (s,t)
+    &#34;&#34;&#34;
+    k = primer_no_nul(self.matriu[fp,:])
+    if k is None:
+        return 1, None
+    if self.matriu[fc,k] == 0:
+        return 2, None
+    if primer_no_nul(self.matriu[fc,:]) != k:
+        return 3, None
+    s = self.matriu[fp,k]
+    t = self.matriu[fc,k]
+    if isinstance(s,int) or isinstance(s,Integer):
+         if isinstance(t,int) or isinstance(t,Integer):
+             d = mcd_llista([t,s])
+             if abs(d) != 1:
+                 s /= d
+                 t /= d
+    if s &lt; 0:
+        s, t = -s, -t
+    self.matriu[fc,:] = s * self.matriu[fc,:] - t * self.matriu[fp,:]
+    return 0, (s,t)</code></pre>
 </details>
 </dd>
 <dt id="Algebra.Matriu.clona"><code class="name flex">
@@ -17774,6 +17896,8 @@ p: punt de pas</p></div>
         if p.tots_enters():
             return p
         t, _ = p.factor_comu()
+        if isinstance(t,int) or isinstance(t,Integer):
+            return p
         for i in range(1,t.q):
             for j in range(1,t.q):
                 r = (p + Rational(i,t.q) * u + Rational(j,t.q) * v).punt()
@@ -18257,6 +18381,8 @@ que passa pel punt p i té vectors directors u i v</p></div>
     if p.tots_enters():
         return p
     t, _ = p.factor_comu()
+    if isinstance(t,int) or isinstance(t,Integer):
+        return p
     for i in range(1,t.q):
         for j in range(1,t.q):
             r = (p + Rational(i,t.q) * u + Rational(j,t.q) * v).punt()
@@ -25426,12 +25552,12 @@ v = Vector(3,1,-2)</p></div>
                     if isinstance(a,Rational):
                         l.append(a.q)
                         s.append(False)
-            elif k in incognites:
-                pass
+           # elif k in self.incognites:
+           #     pass
             else:
                 other = True
         if other:
-            return 1
+            return 1, self
         if square:
             for k in range(len(l)):
                 if not s[k]:
@@ -25439,6 +25565,8 @@ v = Vector(3,1,-2)</p></div>
         m = mcm_llista(l)
         if square:
             m = sqrt(m)
+        if isinstance(self,Punt):
+            return m, Punt([m*k for k in self.components])
         return m, Vector([m*k for k in self.components])
     #
     #
@@ -25537,7 +25665,7 @@ v = Vector(3,1,-2)</p></div>
             u2 = Vector(-2,4,-3,1)
             v = u1 + u2
         &#34;&#34;&#34;
-        if not isinstance(other,Vector):
+        if not isinstance(other,Vector) and not isinstance(other,Punt):
             return None
         if self.dimensio != other.dimensio:
             return None
@@ -25546,6 +25674,8 @@ v = Vector(3,1,-2)</p></div>
         c = []
         for i in range(self.dimensio):
             c.append(c1[i] + c2[i])
+        if isinstance(self,Punt) or isinstance(other,Punt):
+            return Punt(c)
         return Vector(c)
     #
     #
@@ -25569,6 +25699,8 @@ v = Vector(3,1,-2)</p></div>
         c = []
         for i in range(self.dimensio):
             c.append(c1[i] - c2[i])
+        if isinstance(self,Punt) and isinstance(other,Vector):
+            return Punt(c)
         return Vector(c)
     #
     #
@@ -25581,6 +25713,8 @@ v = Vector(3,1,-2)</p></div>
             u2 = - u1
         &#34;&#34;&#34;
         p = [-k for k in self.components]
+        if isinstance(self,Punt):
+            return Punt(p)
         return Vector(p)
     #
     #
@@ -25604,6 +25738,8 @@ v = Vector(3,1,-2)</p></div>
         types = [Rational,float,int,Float,Pow,Add,Mul]
         for t in types:
             if isinstance(other,t):
+                if isinstance(self,Punt):
+                    return Punt([other * x for x in self.components])
                 return Vector([other * x for x in self.components])
         if isinstance(other,Matriu):
             if self.dimensio != other.files:
@@ -26282,12 +26418,12 @@ vector</p></div>
                 if isinstance(a,Rational):
                     l.append(a.q)
                     s.append(False)
-        elif k in incognites:
-            pass
+       # elif k in self.incognites:
+       #     pass
         else:
             other = True
     if other:
-        return 1
+        return 1, self
     if square:
         for k in range(len(l)):
             if not s[k]:
@@ -26295,6 +26431,8 @@ vector</p></div>
     m = mcm_llista(l)
     if square:
         m = sqrt(m)
+    if isinstance(self,Punt):
+        return m, Punt([m*k for k in self.components])
     return m, Vector([m*k for k in self.components])</code></pre>
 </details>
 </dd>
@@ -26855,6 +26993,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Matriu.adjunta" href="#Algebra.Matriu.adjunta">adjunta</a></code></li>
 <li><code><a title="Algebra.Matriu.aleatoria" href="#Algebra.Matriu.aleatoria">aleatoria</a></code></li>
 <li><code><a title="Algebra.Matriu.amb_rang" href="#Algebra.Matriu.amb_rang">amb_rang</a></code></li>
+<li><code><a title="Algebra.Matriu.anula_coeficient_amb_pivot" href="#Algebra.Matriu.anula_coeficient_amb_pivot">anula_coeficient_amb_pivot</a></code></li>
 <li><code><a title="Algebra.Matriu.clona" href="#Algebra.Matriu.clona">clona</a></code></li>
 <li><code><a title="Algebra.Matriu.det" href="#Algebra.Matriu.det">det</a></code></li>
 <li><code><a title="Algebra.Matriu.determinant" href="#Algebra.Matriu.determinant">determinant</a></code></li>

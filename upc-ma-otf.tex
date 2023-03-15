@@ -1,0 +1,72 @@
+\documentclass[12pt,catalan]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{babel}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds}
+\usepackage[a3paper]{geometry}
+\usepackage{fontspec}
+\setmainfont{HelveticaLTStd}[
+UprightFont={*-Roman},
+BoldFont={*-Bold},
+ItalicFont={*-Obl},
+BoldItalicFont={*-BoldObl}]
+\newcommand{\UNI}{\fontsize{0.75cm}{0.75cm}\selectfont}
+\newcommand{\UNIB}{\fontsize{0.75cm}{0.75cm}\fontseries{bx}\selectfont}
+\newcommand{\ETSEIT}{\fontsize{0.66cm}{0.66cm}\fontseries{bx}\selectfont}
+\newfontfamily{\titles}{HelveticaRoundedLTStd-Bd}
+\newcommand{\UPC}{\fontsize{0.8cm}{0.8cm}\fontseries{bx}\selectfont\titles}
+
+\definecolor{white}{RGB}{0,0,0}
+\definecolor{colorTFG}{RGB}{255,255,255}
+\hoffset=-2cm
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{tikzpicture}[x=0.5cm,y=0.5cm,background rectangle/.style={draw=colorTFG,fill=colorTFG}, show background rectangle]
+
+\draw (0,0) [draw=colorTFG,fill=white] circle (3.4);
+
+\draw (0,-0.5) [draw=colorTFG,fill=colorTFG] circle (0.5);
+\draw (0,0.75) [draw=colorTFG,fill=colorTFG] circle (0.5);
+\draw (0,2) [draw=colorTFG,fill=colorTFG] circle (0.5);
+
+\draw (1.25,-0.5) [draw=colorTFG,fill=colorTFG] circle (0.5);
+\draw (1.25,0.75) [draw=colorTFG,fill=colorTFG] circle (0.5);
+\draw (1.25,2) [draw=colorTFG,fill=colorTFG] circle (0.5);
+
+\draw (-1.25,-0.5) [draw=colorTFG,fill=colorTFG] circle (0.5);
+\draw (-1.25,0.75) [draw=colorTFG,fill=colorTFG] circle (0.5);
+\draw (-1.25,2) [draw=colorTFG,fill=colorTFG] circle (0.5);
+
+\path (-1.55,-2) node {
+         \pgfsetlinewidth{2pt}
+         \pgfsetstrokecolor{colorTFG}
+         \pgfsetfillcolor{colorTFG}
+         \UPC U};
+         
+\path (-0.25,-2) node {
+         \pgfsetlinewidth{2pt}
+         \pgfsetstrokecolor{colorTFG}
+         \pgfsetfillcolor{colorTFG}
+         \UPC P};        
+
+\path (0.95,-2) node {
+         \pgfsetlinewidth{2pt}
+         \pgfsetstrokecolor{colorTFG}
+         \pgfsetfillcolor{colorTFG}
+         \UPC C}; 
+         
+\draw [draw=white,line width=0.5mm,](4.4,-0.55) -- (37,-0.55);
+         
+\node [anchor=north west] at (4.2,3.7) {\color{white}\UNIB UNIVERSITAT POLIT\`ECNICA DE CATALUNYA};
+
+\node [anchor=north west] at (4.2,1.7) {{\color{white}\UNI BARCELONA}{\color{white}\UNIB TECH}};
+
+\node [anchor=north west] at (4.2,-0.9) {\color{white}\ETSEIT Departament de Matemàtiques};
+
+\end{tikzpicture}
+
+\end{document}

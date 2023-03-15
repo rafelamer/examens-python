@@ -263,11 +263,14 @@ class Examen:
                 keys.reverse()
                 trobat = False
                 for k in keys:
-                    if estudiant['grup'].find(k) == 0:
-                        trobat = True
-                        v = dataexamen[k]
-                        relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
-                        break
+                    try:
+                        if estudiant['grup'].find(k) == 0:
+                            trobat = True
+                            v = dataexamen[k]
+                            relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"
+                            break
+                    except:
+                        pass
                 if not trobat:
                     v = dataexamen[keys[0]]
                     relacio['DATAEXAMEN'] = f"\\dataexamen{{{v[0]}}}{{{v[1]}}}{{{v[2]}}}"

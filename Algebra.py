@@ -4103,11 +4103,21 @@ class RectaAfi(object):
         if aleatori:
             trobat = False
             while not trobat:
-                m = Matriu.amb_rang(f=2,c=2,r=2,maxim=3,mzeros=0)
+                m = Matriu.amb_rang(f=2,c=2,r=2,maxim=2,mzeros=0)
                 aux = m * a
                 trobat = aux.nzeros() == 0
             a = m * a
             b = m * b
+            p = Matriu.identitat(2)
+            fls = a.vectors_fila()
+            k = primer_no_nul(fls[0].components)
+            if fls[0][k] < 0:
+                p[0,0] = -1
+            k = primer_no_nul(fls[1].components)
+            if fls[1][k] < 0:
+                p[1,1] = -1
+            a = p * a 
+            b = p * b
         return SistemaEquacions(a,b,prime=prime)
     #
     #

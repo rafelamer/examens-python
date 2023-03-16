@@ -3798,7 +3798,7 @@ class PlaAfi(object):
         """
         if ref is None:
             w = self.u1.cross(self.u2)
-            return EquacioLineal.coeficients(w,w.dot(self.p),False)
+            return EquacioLineal.coeficients(w,w.dot(self.p),False,prime)
         if not isinstance(ref,ReferenciaAfi):
             return None
         c = self.p.coordenades_en_referencia(ref)

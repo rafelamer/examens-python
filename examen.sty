@@ -52,7 +52,7 @@
 }
 \DeclareOption{palatino}{
  \setboolean{use@palatino}{true}
- \catcode`\·=\active
+ %%%% \catcode`\·=\active
 }
 \DeclareOption{century}{
  \setboolean{use@century}{true}
@@ -225,7 +225,7 @@
   UprightFont={*-Roman},
   BoldFont={*-Bold},
   ItalicFont={*-Italic},
-  BoldItalicFont={*-BoldItalic}]
+  BoldItalicFont={*-BoldItalic},
   SmallCapsFont={*-Roman},
   SmallCapsFeatures={Letters=SmallCaps}]
  \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
@@ -597,8 +597,9 @@
   \allowhyphens\discretionary{-}{}%
   {\hbox{}\kern\leftllkern\raise\raiselldim\hbox{.}%
    \kern\rightllkern\hbox{}}\allowhyphens}
-\ifcsname directlua\endcsname\catcode`\·\active\fi
-\def·#1{%
+\ifthenelse{\boolean{use@palatino}}{}{
+ \ifcsname directlua\endcsname\catcode`\·\active\fi
+ \def·#1{%
  \def\ela{l}%
  \def\ELA{L}%
  \def\mybox{#1}%
@@ -606,6 +607,7 @@
   \cdot #1%
  \else%
   \ifx\mybox\ela\elageminada\else%
-  \ifx\mybox\ELA\ELAgeminada\else%
+  \ifx\mybox\ELA\ELAgeminada\else%x
  \fi\fi #1%
  \fi}
+}

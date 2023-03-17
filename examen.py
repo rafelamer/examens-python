@@ -359,7 +359,6 @@ class Examen:
                 llista = list(self.problemes)
             else:
                 llista = list(range(self.possibles))
-
                 if self.grups is None:
                     llista = [x+1 for x in llista]
                     llista = self.comprova_incompatibilitats(llista)
@@ -369,7 +368,7 @@ class Examen:
                         print("Impossible generar la llista de problemes")
                         sys.exit(0)
             ordering = []
-            order = list(range(self.maxproblema))
+            order = list(range(self.problemes))
             if self.options.aleatori:
                 random.shuffle(order)
             preguntes = {}

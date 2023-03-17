@@ -27,6 +27,10 @@
 \setboolean{use@minion}{false}
 \newboolean{use@palatino}
 \setboolean{use@palatino}{false}
+\newboolean{use@timesnewroman}
+\setboolean{use@timesnewroman}{false}
+\newboolean{use@timesstd}
+\setboolean{use@timesstd}{false}
 \newboolean{use@century}
 \setboolean{use@century}{false}
 \newboolean{use@stix}
@@ -53,6 +57,14 @@
 \DeclareOption{palatino}{
  \setboolean{use@palatino}{true}
  %%%% \catcode`\·=\active
+}
+\DeclareOption{timesnewroman}{
+ \setboolean{use@timesnewroman}{true}
+ \catcode`\·=\active
+}
+\DeclareOption{timesstd}{
+ \setboolean{use@timesstd}{true}
+ \catcode`\·=\active
 }
 \DeclareOption{century}{
  \setboolean{use@century}{true}
@@ -230,6 +242,34 @@
   SmallCapsFeatures={Letters=SmallCaps}]
  \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
 }{}
+\ifthenelse{\boolean{use@timesnewroman}}{
+ \usepackage{fontspec}
+ \usepackage{unicode-math}
+ \setmathfont{STIXTwoMath}
+ \setmainfont{TimesNewRomanMTStd}[
+  Scale=1.1,
+  UprightFont={*},
+  BoldFont={*-Bold},
+  ItalicFont={*-Italic},
+  BoldItalicFont={*-BoldIt},
+  SmallCapsFont={*},
+  SmallCapsFeatures={Letters=SmallCaps}]
+ \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
+}{}
+\ifthenelse{\boolean{use@timesstd}}{
+ \usepackage{fontspec}
+ \usepackage{unicode-math}
+ \setmathfont{STIXTwoMath}
+ \setmainfont{TimesLTStd}[
+  Scale=1.1,
+  UprightFont={*-Roman},
+  BoldFont={*-Bold},
+  ItalicFont={*-Italic},
+  BoldItalicFont={*-BoldItalic},
+  SmallCapsFont={*-Roman},
+  SmallCapsFeatures={Letters=SmallCaps}]
+ \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
+}{}
 \ifthenelse{\boolean{use@stix}}{
  \usepackage{fontspec}
  \usepackage{unicode-math}
@@ -303,8 +343,8 @@
  \usepackage{times}
  \usepackage[mtphrd]{mtpro2}
 }{}
-\ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}%
-\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}}{}
+\ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}\or\boolean{use@timesnewroman}%
+\or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}}{}
 {
  \usepackage{amsfonts}
  \usepackage{amssymb}

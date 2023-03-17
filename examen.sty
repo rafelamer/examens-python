@@ -216,6 +216,36 @@
 %
 % Font
 %
+\ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}\or\boolean{use@timesnewroman}%
+\or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}}{}
+{
+ \ifcsname directlua\endcsname
+  \setboolean{use@stix}{true}
+ \else
+  \usepackage{amsfonts}
+  \usepackage{amssymb}
+  \usepackage{times}
+  \usepackage{txfonts}
+ \fi
+}
+\ifthenelse{\boolean{use@times}}{
+ \ifcsname directlua\endcsname
+  \setboolean{use@stix}{true}
+  \setboolean{use@times}{false}
+ \else
+  \usepackage{amsfonts}
+  \usepackage{amssymb}
+  \usepackage{times}
+  \usepackage{txfonts}
+ \fi
+}{}
+\ifthenelse{\boolean{use@mtpro}}{
+ \usepackage{times}
+ \usepackage[mtphrd]{mtpro2}
+}{}
+
+
+
 \ifthenelse{\boolean{use@minion}}{
  \usepackage{fontspec}
  \usepackage{unicode-math}
@@ -332,25 +362,6 @@
   SmallCapsFeatures={Letters=SmallCaps}]
  \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
 }{}
-
-\ifthenelse{\boolean{use@times}}{
- \usepackage{amsfonts}
- \usepackage{amssymb}
- \usepackage{times}
- \usepackage{txfonts}
-}{}
-\ifthenelse{\boolean{use@mtpro}}{
- \usepackage{times}
- \usepackage[mtphrd]{mtpro2}
-}{}
-\ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}\or\boolean{use@timesnewroman}%
-\or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}}{}
-{
- \usepackage{amsfonts}
- \usepackage{amssymb}
- \usepackage{times}
- \usepackage{txfonts}
-}
 %
 %
 %
@@ -608,6 +619,7 @@
 %
 % Ela geminada
 %
+\ifcsname directlua\endcsname\catcode`\·\active\fi
 \def\elageminada{%
   \leftllkern=0pt\rightllkern=0pt\raiselldim=0pt%
   \setbox0\hbox{l}\setbox1\hbox{l\/}\setbox2\hbox{.}%
@@ -649,5 +661,5 @@
   \ifx\mybox\ela\elageminada\else%
   \ifx\mybox\ELA\ELAgeminada\else%x
  \fi\fi #1%
- \fi}
-}
+ \fi}}
+\AtEndDocument{\ifcsname directlua\endcsname\catcode`\·=11\fi}

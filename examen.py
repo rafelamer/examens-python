@@ -111,7 +111,7 @@ class Examen:
             except:
                 prob = None
         if possibles is None and isinstance(prob,int):
-            prob = list(range(prob + 1))
+            prob = list(range(prob+1))
         try:
             self.nombreexamens = int(self.options.nombreexamens)
         except:
@@ -297,7 +297,7 @@ class Examen:
             p = subprocess.run(comanda,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False)
             if p.returncode != 0:
                 if self.options.showlogs:
-                    f = open(f"{filename}.tex")
+                    f = open(f"{filename}.log")
                     for line in f.readlines():
                         line = line.replace('\n','')
                         print (line)
@@ -384,7 +384,10 @@ class Examen:
                         print("Impossible generar la llista de problemes")
                         sys.exit(0)
             ordering = []
-            order = list(range(self.problemes))
+            if isinstance(self.problemes,int):
+                order = list(range(self.problemes))
+            else:
+                order = list(range(len(self.problemes) - 1))
             if self.options.aleatori:
                 random.shuffle(order)
             preguntes = {}

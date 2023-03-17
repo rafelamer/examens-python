@@ -25,6 +25,8 @@
 %
 \newboolean{use@minion}
 \setboolean{use@minion}{false}
+\newboolean{use@palatino}
+\setboolean{use@palatino}{false}
 \newboolean{use@century}
 \setboolean{use@century}{false}
 \newboolean{use@stix}
@@ -46,6 +48,10 @@
 
 \DeclareOption{minion}{
  \setboolean{use@minion}{true}
+ \catcode`\·=\active
+}
+\DeclareOption{palatino}{
+ \setboolean{use@palatino}{true}
  \catcode`\·=\active
 }
 \DeclareOption{century}{
@@ -210,7 +216,20 @@
   BoldItalicFont={*-BoldIt}]
  \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
 }{}
-
+\ifthenelse{\boolean{use@palatino}}{
+ \usepackage{fontspec}
+ \usepackage{unicode-math}
+ \setmathfont{STIXTwoMath}
+ \setmainfont{PalatinoLTStd}[
+  Scale=1.1,
+  UprightFont={*-Roman},
+  BoldFont={*-Bold},
+  ItalicFont={*-Italic},
+  BoldItalicFont={*-BoldItalic}]
+  SmallCapsFont={*-Roman},
+  SmallCapsFeatures={Letters=SmallCaps}]
+ \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
+}{}
 \ifthenelse{\boolean{use@stix}}{
  \usepackage{fontspec}
  \usepackage{unicode-math}
@@ -284,7 +303,7 @@
  \usepackage{times}
  \usepackage[mtphrd]{mtpro2}
 }{}
-\ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}%
+\ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}%
 \or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}}{}
 {
  \usepackage{amsfonts}

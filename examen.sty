@@ -221,6 +221,7 @@
 {
  \ifcsname directlua\endcsname
   \setboolean{use@stix}{true}
+  \catcode`\·=\active
  \else
   \usepackage{amsfonts}
   \usepackage{amssymb}
@@ -232,6 +233,7 @@
  \ifcsname directlua\endcsname
   \setboolean{use@stix}{true}
   \setboolean{use@times}{false}
+  \catcode`\·=\active
  \else
   \usepackage{amsfonts}
   \usepackage{amssymb}
@@ -243,9 +245,6 @@
  \usepackage{times}
  \usepackage[mtphrd]{mtpro2}
 }{}
-
-
-
 \ifthenelse{\boolean{use@minion}}{
  \usepackage{fontspec}
  \usepackage{unicode-math}
@@ -619,7 +618,6 @@
 %
 % Ela geminada
 %
-\ifcsname directlua\endcsname\catcode`\·\active\fi
 \def\elageminada{%
   \leftllkern=0pt\rightllkern=0pt\raiselldim=0pt%
   \setbox0\hbox{l}\setbox1\hbox{l\/}\setbox2\hbox{.}%

@@ -48,6 +48,7 @@ class Examen:
         self.parser.add_option("--aleatori",action="store_true",dest="aleatori",default=False)
         self.parser.add_option("--nombre-examens",dest="nombreexamens")
         self.parser.add_option("--json",action="store_true",dest="json",default=False)
+        self.parser.add_option("--logs",action="store_true",dest="showlogs",default=False)
         self.parser.add_option("--ajuda",action="store_true",dest="ajuda",default=False)
         (self.options,self.args) = self.parser.parse_args()
         self.estudiants = []
@@ -79,6 +80,7 @@ class Examen:
         print("                                       : Quantitat d'exàmens a fer")
         print("   --no-solucions                      : No es generen els fitxers amb les solucions")
         print("   --json                              : Es guarden la dades dels enunciats en un fitxer json")
+        print("   --logs                              : Es mostren els logs del latex quan hi ha un error")
         print("   --ajuda                             : Imprimeix aquesta ajuda")
         sys.exit(0)
     #
@@ -294,6 +296,13 @@ class Examen:
             print (f"S'està executant {engine} {filename}.tex")
             p = subprocess.run(comanda,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False)
             if p.returncode != 0:
+                if self.options.showlogs:
+                    f = open(f"{filename}.tex")
+                    for line in f.readlines():
+                        line = line.replace('\n','')
+                        print (line)
+                    f.close()
+                    print(f"El codi d'error és {p.returncode}")
                 print (f"Hi ha un error en el fitxer {filename}.tex")
                 sys.exit(0)
             if self.options.solucions:
@@ -302,6 +311,13 @@ class Examen:
                 print (f"S'està executant {engine} {filename}-solucio.tex")
                 p = subprocess.run(comanda,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False)
                 if p.returncode != 0:
+                    if self.options.showlogs:
+                        f = open(f"{filename}-solucio.log")
+                        for line in f.readlines():
+                            line = line.replace('\n','')
+                            print (line)
+                        f.close()
+                        print(f"El codi d'error és {p.returncode}")
                     print (f"Hi ha un error en el fitxer {filename}-solucio.tex")
                     sys.exit(0)
         try:

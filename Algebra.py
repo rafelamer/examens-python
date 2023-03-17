@@ -4116,7 +4116,7 @@ class RectaAfi(object):
             k = primer_no_nul(fls[1].components)
             if fls[1][k] < 0:
                 p[1,1] = -1
-            a = p * a 
+            a = p * a
             b = p * b
         return SistemaEquacions(a,b,prime=prime)
     #
@@ -6080,7 +6080,7 @@ class Ellipse(Conica):
         str = f"Canonica({mx},{Mx},{my},{My},scaled={scaled});"
         clip = f"path cl = ({mx},{my})--({Mx},{my})--({Mx},{My})--({mx},{My})--cycle;\n"
         clip += f"cl = scale({scaled}) * cl;\nclip(cl);"
-        return f"{str}\nElipse({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled},x={x},y={y});\n{clip}"
+        return f"{str}\nElipse({centre},{vector},{a2},{b2},scaled={scaled},x={x},y={y});\n{clip}"
 
 
 class Hiperbola(Conica):

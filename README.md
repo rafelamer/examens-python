@@ -54,6 +54,8 @@ root
 ~texmf/tex/latex$ ln -sf /home/amer/Git/examens-python/examen.sty .
 ~texmf/tex/latex$ ln -sf /home/amer/Git/examens-python/upc-ma.pdf .
 ~texmf/tex/latex$ ln -sf /home/amer/Git/examens-python/eseiaat-ma.pdf .
+~texmf/tex/latex$ ln -sf /home/amer/Git/examens-python/upc-ma-otf.pdf .
+~texmf/tex/latex$ ln -sf /home/amer/Git/examens-python/eseiaat-ma-otf.pdf .
 ~texmf/tex/latex$ cd
 ~$ ln -sf /home/amer/Git/examens-python/LaTeXMk .latexmkrc
 ```
@@ -76,6 +78,8 @@ C:\Users\Rafel Amer> cd texmf\tex\latex
 C:\Users\Rafel Amer\texmf\tex\latex> mklink examen.sty "C:\Users\Rafel Amer\examens-python\examen.sty"
 C:\Users\Rafel Amer\texmf\tex\latex> mklink upc-ma.pdf "C:\Users\Rafel Amer\examens-python\upc-ma.pdf"
 C:\Users\Rafel Amer\texmf\tex\latex> mklink eseiaat-ma.pdf "C:\Users\Rafel Amer\examens-python\eseiaat-ma.pdf"
+C:\Users\Rafel Amer\texmf\tex\latex> mklink upc-ma-otf.pdf "C:\Users\Rafel Amer\examens-python\upc-ma-otf.pdf"
+C:\Users\Rafel Amer\texmf\tex\latex> mklink eseiaat-ma-otf.pdf "C:\Users\Rafel Amer\examens-python\eseiaat-ma-otf.pdf"
 C:\Users\Rafel Amer\texmf\tex\latex> cd C:\
 C:\> mkdir LatexMk
 C:\> cd LaTeXMk
@@ -111,8 +115,9 @@ Utilització: examen.py --examen=<fitxer> --estudiants=<fitxer> --problemes=<ent
     --aleatori                          : L'ordre dels problemes serà aleatori
     --nombre-examens=<nombre>           : Identifica els fitxers numèricament i no per nom i cognoms
                                         : Quantitat d'exàmens a fer
-    --no-solucions                      : No es generen els fitxers amb les solucions"
+    --no-solucions                      : No es generen els fitxers amb les solucions
     --json                              : Es guarden la dades dels enunciats en un fitxer json
+    --logs                              : Es mostren els logs del latex quan hi ha un error
     --ajuda                             : Imprimeix aquesta ajuda"
 ```
 

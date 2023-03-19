@@ -31,6 +31,8 @@
 \setboolean{use@timesnewroman}{false}
 \newboolean{use@timesstd}
 \setboolean{use@timesstd}{false}
+\newboolean{use@minister}
+\setboolean{use@minister}{false}
 \newboolean{use@century}
 \setboolean{use@century}{false}
 \newboolean{use@stix}
@@ -64,6 +66,10 @@
 }
 \DeclareOption{timesstd}{
  \setboolean{use@timesstd}{true}
+ \catcode`\·=\active
+}
+\DeclareOption{minister}{
+ \setboolean{use@minister}{true}
  \catcode`\·=\active
 }
 \DeclareOption{century}{
@@ -217,7 +223,8 @@
 % Font
 %
 \ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}\or\boolean{use@timesnewroman}%
-\or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}}{}
+\or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}%
+\or\boolean{use@minister}}{}
 {
  \ifcsname directlua\endcsname
   \setboolean{use@stix}{true}
@@ -296,6 +303,20 @@
   ItalicFont={*-Italic},
   BoldItalicFont={*-BoldItalic},
   SmallCapsFont={*-Roman},
+  SmallCapsFeatures={Letters=SmallCaps}]
+ \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
+}{}
+\ifthenelse{\boolean{use@minister}}{
+ \usepackage{fontspec}
+ \usepackage{unicode-math}
+ \setmathfont{STIXTwoMath}
+ \setmainfont{MinisterStd}[
+  Scale=1,
+  UprightFont={*-Light},
+  BoldFont={*-Bold},
+  ItalicFont={*-LightItalic},
+  BoldItalicFont={*-BoldItalic},
+  SmallCapsFont={*-Light},
   SmallCapsFeatures={Letters=SmallCaps}]
  \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
 }{}

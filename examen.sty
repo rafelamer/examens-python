@@ -37,10 +37,14 @@
 \setboolean{use@century}{false}
 \newboolean{use@stix}
 \setboolean{use@stix}{false}
+\newboolean{use@xits}
+\setboolean{use@xits}{false}
 \newboolean{use@newcm}
 \setboolean{use@newcm}{false}
 \newboolean{use@erewhon}
 \setboolean{use@erewhon}{false}
+\newboolean{use@caflish}
+\setboolean{use@caflish}{false}
 \newboolean{use@mtpro}
 \setboolean{use@mtpro}{false}
 \newboolean{use@times}
@@ -80,12 +84,20 @@
  \setboolean{use@stix}{true}
  \catcode`\·=\active
 }
+\DeclareOption{xits}{
+ \setboolean{use@xits}{true}
+ \catcode`\·=\active
+}
 \DeclareOption{newcm}{
  \setboolean{use@newcm}{true}
  \catcode`\·=\active
 }
 \DeclareOption{erewhon}{
  \setboolean{use@erewhon}{true}
+ \catcode`\·=\active
+}
+\DeclareOption{caflish}{
+ \setboolean{use@caflish}{true}
  \catcode`\·=\active
 }
 \DeclareOption{times}{
@@ -224,7 +236,7 @@
 %
 \ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}\or\boolean{use@timesnewroman}%
 \or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}%
-\or\boolean{use@minister}}{}
+\or\boolean{use@caflish}\or\boolean{use@minister}\or\boolean{use@xits}}{}
 {
  \ifcsname directlua\endcsname
   \setboolean{use@stix}{true}
@@ -331,6 +343,17 @@
   BoldItalicFont={*-BoldItalic}]
  \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
 }{}
+\ifthenelse{\boolean{use@xits}}{
+ \usepackage{fontspec}
+ \usepackage{unicode-math}
+ \setmathfont{XITSMath-Regular}
+ \setmainfont{XITS}[
+  UprightFont={*-Regular},
+  BoldFont={*-Bold},
+  SmallCapsFont={*-Regular},
+  SmallCapsFeatures={Letters=SmallCaps}]
+ \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
+}{}
 
 \ifthenelse{\boolean{use@century}}{
  \usepackage{fontspec}
@@ -378,6 +401,18 @@
   BoldFont={*-Bold},
   ItalicFont={*-Italic},
   BoldItalicFont={*-BoldItalic},
+  SmallCapsFont={*-Regular},
+  SmallCapsFeatures={Letters=SmallCaps}]
+ \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
+}{}
+\ifthenelse{\boolean{use@caflish}}{
+ \usepackage{fontspec}
+ \usepackage{unicode-math}
+ \setmathfont{Latin Modern Math}
+ \setmainfont{CaflischScriptPro}[
+  Scale=1.2,
+  UprightFont={*-Regular},
+  BoldFont={*-Bold},
   SmallCapsFont={*-Regular},
   SmallCapsFeatures={Letters=SmallCaps}]
  \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}

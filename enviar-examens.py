@@ -19,7 +19,6 @@ License:    This program is free software: you can redistribute it and/or modify
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
-import pickle
 import mimetypes
 import os.path
 import base64
@@ -31,6 +30,7 @@ import time
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -136,9 +136,8 @@ except:
     sys.exit(0)
 
 try:
-    tokenfile = os.path.join(f"{HOME}","credentials","token.pickle")
-    with open(tokenfile,'rb') as token:
-        creds = pickle.load(token)
+    tokenfile = os.path.join(f"{HOME}","credentials","token.json")
+    creds = Credentials.from_authorized_user_file(tokenfile, SCOPES)
 except:
     print(f"Error en llegir el fitxer {tokenfile}")
     sys.exit(0)

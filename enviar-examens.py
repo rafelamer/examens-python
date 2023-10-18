@@ -1,9 +1,8 @@
-#!/usr/bin/python3
+#!/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Filename:   enviar-examens.py
 Author:     Rafel Amer (rafel.amer AT upc.edu)
-Copyright:  Rafel Amer 2018
 Disclaimer: This program is provided "as is", without warranty of any kind,
             either expressed or implied, including, but not linmited to, the
             implied warranties of merchantability and fitness for a particular

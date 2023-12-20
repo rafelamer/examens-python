@@ -6289,6 +6289,21 @@ class Hiperbola(Conica):
     #
     #
     #
+    def asimptotes(self):
+        """
+        Retorna les dues asímptotes de la hipèrbola
+        """
+        c = self.centre()
+        v1, v2 = self.vectors_directors_asimptotes()
+        v1.simplificar(positiu=True)
+        v2.simplificar(positiu=True)
+        a1 = RectaAfi(c,v1)
+        a2 = RectaAfi(c,v2)
+        return a1, a2
+
+    #
+    #
+    #
     def to_asy(self,scaled=1.0,canonica=10,x=8,y=8):
         """
         Retorna una expressió per fer servir amb el programa Asymtote
@@ -6380,6 +6395,10 @@ class Parabola(Conica):
             else:
                 vertex = Punt.aleatori(l=2,maxim=5,nuls=False)
                 focus = Punt.aleatori(l=2,maxim=5)
+                eix = vertex - focus
+                eix.simplificar()
+                if eix[0]**2 + eix[1]**2 <= 5 and random.randint(0,10) > 0:
+                    continue
                 trobat = vertex[0] != focus[0] and vertex[1] != focus[1]
         return cls(vertex,focus)
     #
@@ -6711,6 +6730,11 @@ class Quadrica(object):
             if canonica:
                 trobat = True
             else:
+                a, b = p.semieixos()
+                if not isinstance(a**4,int) and not isinstance(a**4,Integer):
+                    continue
+                if not isinstance(b**4,int) and not isinstance(b**4,Integer):
+                    continue
                 trobat = p.canonica.norma_maxim() <= maxim and p.canonica.nzeros() < 3 and p.canonica.max_diagonal() < diagonal
         return p
     #
@@ -6732,6 +6756,9 @@ class Quadrica(object):
             if canonica:
                 trobat = True
             else:
+                p = c.parametre()
+                if not isinstance(p**4,int) and  not isinstance(p**4,Integer):
+                    continue
                 trobat = c.canonica.norma_maxim() <= maxim and c.canonica.nzeros() < 3 and c.canonica.max_diagonal() < diagonal
         return c
     #
@@ -8186,7 +8213,7 @@ class ParaboloideHiperbolic(Quadrica):
         a = self.matriu[0,0]
         b = - self.matriu[1,1]
         t = - 2 * self.matriu[2,3]
-        return (sqrt(t,a),sqrt(t,b))
+        return (sqrt(t/a),sqrt(t/b))
     #
     #
     #

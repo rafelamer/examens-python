@@ -55,6 +55,9 @@
 \newboolean{use@asy}
 \setboolean{use@asy}{true}
 
+\newlength{\myvspace}
+\setlength{\myvspace}{0pt}
+
 \DeclareOption{minion}{
  \setboolean{use@minion}{true}
  \catcode`\·=\active
@@ -547,7 +550,7 @@
 {
  \end{list}
  \par
- \vspace{0pt}
+ \vspace{\the\myvspace}
 }
 
 \newenvironment{apartats}
@@ -595,11 +598,11 @@
 }
 %
 \newenvironment{observacio@i}%
-{\par\vspace{8ptminus 1pt}\begingroup\bfseries}%
-{\endgroup\par\vspace{8ptminus 1pt}}
+{\par\vspace{8pt minus 1pt}\begingroup\bfseries}%
+{\endgroup\par\vspace{8pt minus 1pt}}
 %
 \newenvironment{historia@i}%
-{\vfill\vspace{8ptminus 1pt}\begingroup\parskip=2pt plus 1pt minus 1pt\scriptsize}%
+{\vfill\vspace{8pt minus 1pt}\begingroup\parskip=2pt plus 1pt minus 1pt\scriptsize}%
 {\endgroup}
 %
 \newenvironment{quadricula@i}

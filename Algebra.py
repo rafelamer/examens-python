@@ -6798,7 +6798,7 @@ class Quadrica(object):
         Retorna el tipus de quàdrica
         """
         if isinstance(self,Ellipsoide):
-            return "El·lipsoide"
+            return "El·lipsoide real"
         if isinstance(self,HiperboloideUnaFulla):
             return "Hiperboloide d'una fulla"
         if isinstance(self,HiperboloideDuesFulles):

@@ -586,9 +586,15 @@ class Vector(object):
         m = mcm_llista(l)
         if square:
             m = sqrt(m)
+        r = [m*k for k in self.components]
+        g = mcd_llista(r)
         if isinstance(self,Punt):
-            return m, Punt([m*k for k in self.components])
-        return m, Vector([m*k for k in self.components])
+            return Rational(g,m) , Punt([Rational(m,g)*k for k in self.components])
+        else:
+            return Rational(g,m) , Vector([Rational(m,g)*k for k in self.components])
+        
+
+
     #
     #
     #
@@ -3642,7 +3648,7 @@ class ReferenciaAfi(object):
             unitaris: si és True els retorna dividits per la seva longitud
         """
         return self.base.vectors(unitaris)
-
+ 
 
 class PlaAfi(object):
     """
@@ -4096,6 +4102,8 @@ class RectaAfi(object):
             a = Matriu.matriu_fila(v)
             q = self.p.coordenades_en_referencia(ref)
         l = a.nucli()
+        for x in l:
+            x.simplificar(positiu=True)
         if len(l) == 1:
             return EquacioLineal.coeficients(l[0],l[0].dot(q),False,prime)
         a = Matriu.from_vectors_fila(l)

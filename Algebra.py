@@ -587,14 +587,19 @@ class Vector(object):
         if square:
             m = sqrt(m)
         r = [m*k for k in self.components]
-        g = mcd_llista(r)
+        try:
+            g = mcd_llista(r)
+        except:
+            g = 1
+        if isinstance(m,int) or isinstance(m,Integer):
+            if isinstance(self,Punt):
+                return Rational(g,m) , Punt([Rational(m,g)*k for k in self.components])
+            else:
+                return Rational(g,m) , Vector([Rational(m,g)*k for k in self.components])
         if isinstance(self,Punt):
-            return Rational(g,m) , Punt([Rational(m,g)*k for k in self.components])
+            return g/m, Punt([m/g*k for k in self.components])
         else:
-            return Rational(g,m) , Vector([Rational(m,g)*k for k in self.components])
-        
-
-
+            return g/m , Vector([m/g*k for k in self.components])
     #
     #
     #

@@ -4639,7 +4639,81 @@ class VarietatAfi(object):
         Retorna l'expressió en latex de la varietat afi
         """
         return f"{self.punt}+{self.subespai}"
+    
 
+class Tetraedre(object):
+    #
+    #
+    #
+    def __new__(cls,p1,p2,p3,p4):
+        """
+        Constructor.
+        Retorna el tetraedre que té els vèrtexs en els punts p1, p2, p3, p4
+        Paràmetres:
+           p1, p2, p3, p4: vèrtexs del tetraedre
+        """
+        if not isinstance(p1,Punt):
+            return None
+        if not isinstance(p2,Punt):
+            return None
+        if not isinstance(p3,Punt):
+            return None
+        if not isinstance(p4,Punt):
+            return None
+        v1 = p2 - p1
+        v2 = p3 - p1
+        v3 = p4 - p1
+        m = Matriu.from_vectors_columna([v1,v2,v3])
+        if m.determinant() == 0:
+            return None
+        return super(Tetraedre,cls).__new__(cls)
+    #
+    # 
+    #  
+    def __init__(self,p1,p2,p3,p4):
+        self.p1 = p1
+        self.p2 = p2
+        self.p3 = p3
+        self.p4 = p4
+    #
+    # 
+    #  
+    @classmethod
+    def aleatori(cls):
+        trobat = False
+        while not trobat:
+            ps = []
+            for i in range(4):
+                ps.append(Punt.aleatori(maxim=4,nuls=False))
+            v1 = ps[1]  - ps[0] 
+            v2 = ps[2]  - ps[0]
+            v3 = ps[3]   - ps[0]  
+            m = Matriu.from_vectors_columna([v1,v2,v3])
+            trobat = m.determinant() != 0
+        return cls(*ps)                    
+    #
+    #
+    #
+    def volum(self):
+        v1 = self.p2 - self.p1
+        v2 = self.p3 - self.p1
+        v3 = self.p4 - self.p1
+        m = Matriu.from_vectors_columna([v1,v2,v3])
+        return Rational(1,6) * abs(m.determinant())
+    #
+    # 
+    #
+    def plans_de_les_cares(self):
+        P1 = PlaAfi(self.p1, self.p2 - self.p1, self.p3 - self.p1)
+        P2 = PlaAfi(self.p1, self.p4 - self.p1, self.p2 - self.p1)
+        P3 = PlaAfi(self.p1, self.p3 - self.p1, self.p4 - self.p1)
+        P4 = PlaAfi(self.p2, self.p3 - self.p2, self.p4 - self.p2)
+        return (P1,P2,P3,P4)
+    #
+    # 
+    #  
+    def vertexs(self):
+        return (self.p1,self.p2,self.p3,self.p4)
 
 class TransformacioLineal(object):
     """

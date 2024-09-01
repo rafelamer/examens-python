@@ -3,7 +3,7 @@
 """
 Filename:   Algebra.py
 Author:     Rafel Amer (rafel.amer AT upc.edu)
-Copyright:  Rafel Amer 2020--2021
+Copyright:  Rafel Amer 2020--2024
 Disclaimer: This program is provided "as is", without warranty of any kind,
             either expressed or implied, including, but not linmited to, the
             implied warranties of merchantability and fitness for a particular
@@ -433,7 +433,7 @@ class Vector(object):
     Atributs:
         dimensio: el nombre de components o longitud del vector
         components: llista amb les components del vector
-        big: si ha d'escrire \left( ... \right)
+        big: si ha d'escrire \\left( ... \\right)
     """
     #
     #
@@ -510,7 +510,7 @@ class Vector(object):
     #
     def set_big(self,big=True):
         """
-           Activa o desactiva l'opció \left( ... \right)
+           Activa o desactiva l'opció \\left( ... \\right)
         """
         self.big = big
     #
@@ -1574,7 +1574,7 @@ class Matriu:
     def transformacio_elemental(cls,ordre,i,j,s,t):
         """
         Retorna la matriu corresponent a la transformació elemental
-        F_i \sim s F_i + t F_j
+        F_i \\sim s F_i + t F_j
         """
         a = eye(ordre)
         a[i,:] = s * a[i,:] + t * a[j,:]
@@ -1585,7 +1585,7 @@ class Matriu:
     def anula_coeficient_amb_pivot(self,fc,fp):
         """
         Aplicar la transformació elemental
-        F_fc \sim s F_fc - t F_fp
+        F_fc \\sim s F_fc - t F_fp
         on s i t s'obtenen de la forma següent:
            1. s és el primer coeficient no nul de la fila fp, que ocuparà la columna col
            2. t és el coeficient que ocupa la fila fc, columna col

@@ -1,5 +1,19 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+"""
+Filename:   examens-grup.py
+Author:     Rafel Amer (rafel.amer AT upc.edu)
+Copyright:  Rafel Amer 2020--2024
+Disclaimer: This code is presented "as is" and it has been written to
+            generate random models of exams for the subject of Linear
+            Algebra at ESEIAAT, Technic University of Catalonia
+License:    This program is free software: you can redistribute it and/or modify
+            it under the terms of the GNU General Public License as published by
+            the Free Software Foundation, either version 3 of the License, or
+            (at your option) any later version.
+
+ 	        See https://www.gnu.org/licenses/
+"""
 
 import os
 import re

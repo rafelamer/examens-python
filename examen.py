@@ -3,7 +3,7 @@
 """
 Filename:   examen.py
 Author:     Rafel Amer (rafel.amer AT upc.edu)
-Copyright:  Rafel Amer 2020-2023
+Copyright:  Rafel Amer 2020-2024
 Disclaimer: This program is provided "as is", without warranty of any kind,
             either expressed or implied, including, but not linmited to, the
             implied warranties of merchantability and fitness for a particular
@@ -116,7 +116,7 @@ class Examen:
             self.nombreexamens = int(self.options.nombreexamens)
         except:
             self.nombreexamens = None
-        regex = re.compile('^\s*#.*$',re.IGNORECASE)
+        regex = re.compile(r'^\s*#.*$',re.IGNORECASE)
         self.problemes = prob
         #
         # Comprovacions

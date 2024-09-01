@@ -3,7 +3,7 @@
 """
 Filename:   test.py
 Author:     Rafel Amer (rafel.amer AT upc.edu)
-Copyright:  Rafel Amer 2020
+Copyright:  Rafel Amer 2020--2024
 Disclaimer: This code is presented "as is" and it has been written to
             generate random models of exams for the subject of Linear
             Algebra at ESEIAAT, Technic University of Catalonia

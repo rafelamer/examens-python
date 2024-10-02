@@ -247,6 +247,7 @@ class Examen:
             relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : ""}
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
+            filename = filename.replace("'","")
         try:
             dataexamen = self.probs.dataexamen()
         except:

@@ -29,7 +29,7 @@ parser.add_option("--nomfitxer",dest="nomfitxer",default=None)
 parser.add_option("--solucions",action="store_true",dest="solucions",default=False)
 (options,args) = parser.parse_args()
 
-regex = re.compile('^\s*#.*$',re.IGNORECASE)
+regex = re.compile(r'^\s*#.*$',re.IGNORECASE)
 estudiants = []
 est = options.estudiants
 try:
@@ -72,6 +72,7 @@ for e in estudiants:
             continue
     filename = f"{e['cognoms']}-{e['nom']}".lower().replace(' ','-')
     filename = unidecode.unidecode(filename)
+    filename = filename.replace("'","")
     if options.solucions:
         filename += "-solucio.pdf"
     else:

@@ -153,20 +153,25 @@ def mylatex(e):
     e = e.replace('v','t')
     return e
 
-def mcd_llista(list):
+def mcd_llista(llista):
     """
     Retorna el màxim comú divisor d'una llista d'enters
     """
-    return reduce(gcd, list)
+    f = 1
+    for k in llista:
+        if isinstance(k,Rational):
+            f *= k.q
+    llista = [f*x for x in llista]
+    return reduce(gcd, llista)
 
-def mcm_llista(list):
+def mcm_llista(llista):
     """
     Retorna el mínim comú múltiple d'una llista d'enters
     """
-    if len(list) == 0:
+    if len(llista) == 0:
         return 1
-    mcm = list[0]
-    for i in list[1:]:
+    mcm = llista[0]
+    for i in llista[1:]:
         mcm = mcm * i // gcd(mcm, i)
     return mcm
 
@@ -2507,6 +2512,32 @@ class EquacioLineal:
             if diff(eq,k) != 0:
                 self.unknowns.append(k)
         self.prime = prime
+        self.simplificar()
+    #
+    #
+    #
+    def simplificar(self):
+        """
+        Simplifica l'equacio
+        """
+        m = mcd_llista(list(self.equacio.as_coefficients_dict().values()))
+        self.equacio = self.equacio / m
+    #
+    #
+    #
+    def maxim_coeficients(self):
+        """
+        Retorna el màxim en valor absolut dels coeficients de l'equació
+        """
+        return Vector(list(self.equacio.as_coefficients_dict().values())).maxim()
+    #
+    #
+    #
+    def nombre_coeficients(self):
+        """
+        Retorna el nombre de coeficients de l'equació
+        """
+        return len(list(self.equacio.as_coefficients_dict().values()))
     #
     #
     #
@@ -2537,7 +2568,15 @@ class EquacioLineal:
     #
     #
     #
-    def set_coeficient_positiu(self,incogs):
+    def set_ampersan(self,ampersan=True):
+        """
+        Assignem ampersan a self.amp
+        """
+        self.amp = ampersan
+    #
+    #
+    #
+    def set_coeficient_positiu(self,incogs=None):
         """
         Busca el primer coeficient no nul d'entre les incògnites "incogs", si el primer
         que troba és negatiu, canvia l'equació de signe
@@ -2546,6 +2585,10 @@ class EquacioLineal:
         manera que el coeficients de "k" passa a ser positiu
         """
         d = self.equacio.as_coefficients_dict()
+        if incogs is None:
+            x, y, z, t = symbols('x y z t')
+            x1, x2, x3, x4, x5, x6, x7, x8 = symbols('x1 x2 x3 x4 x5 x6 x7 x8')
+            incogs = [x,y,z,t,x1,x2,x3,x4,x5,x6,x7,x8]
         for k in incogs:
             if d[k] == 0:
                 continue

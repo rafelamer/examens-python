@@ -20,6 +20,7 @@ License:    This program is free software: you can redistribute it and/or modify
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 
+import filetype
 import mimetypes
 import os.path
 import base64
@@ -38,9 +39,11 @@ from email.mime.base import MIMEBase
 from email import encoders
 from googleapiclient.errors import HttpError
 from optparse import OptionParser
+from pandas_ods_reader import read_ods
 
 parser = OptionParser()
 parser.add_option("--estudiants",dest="estudiants",default=None)
+parser.add_option("--full",dest="full")
 parser.add_option("--subject",dest="subject",default=None)
 parser.add_option("--message",dest="message",default=None)
 parser.add_option("--sender",dest="sender",default=None)
@@ -49,6 +52,49 @@ parser.add_option("--ajuda",action="store_true",dest="ajuda",default=False)
 parser.add_option("--solucions",action="store_true",dest="solucions",default=False)
 (options,args) = parser.parse_args()
 
+#
+#
+#
+def estudiants_from_ods(self,file):
+    result = []
+    for e in file.values:
+        try:
+            dades = {'nom'     : e[0],
+                     'cognoms' : e[1],
+                     'email'   : e[3],
+                     'grup'    : e[4] 
+                    }
+            result.append(dades)
+        except:
+            pass
+    return result
+#
+#
+#
+def estudiants_from_csv(self,file):
+    regex = re.compile(r'^\s*#.*$',re.IGNORECASE)
+    result = []
+    count =  0
+    for e in file:
+        if len(e) > 0:
+            count += 1
+        e = e.strip()
+        if regex.match(e):
+            continue
+        try:
+            e = e.split(':')
+            dades = {'nom'     : e[0],
+                     'cognoms' : e[1],
+                     'email'   : e[3],
+                     'grup'    : e[4] 
+                    }
+            result.append(dades)
+        except:
+            pass
+    return result
+#
+#
+#
 def create_message(sender,to,subject,message_text,files):
     """Create a message for an email.
     Args:
@@ -82,7 +128,9 @@ def create_message(sender,to,subject,message_text,files):
         msg.add_header('Content-Disposition', 'attachment', filename=filename)
         message.attach(msg)
     return {'raw': base64.urlsafe_b64encode(bytes(message.as_string().encode('utf-8'))).decode("ascii")}
-
+#
+#
+#
 def send_message(service, user_id, message):
     """
     Send an email message.
@@ -105,29 +153,25 @@ HOME = os.path.expanduser('~')
 est = options.estudiants
 fitxer = options.message
 carpeta = options.carpeta
-regex = re.compile('^\s*#.$',re.IGNORECASE)
-estudiants = []
+
 sender, subject = options.sender,options.subject
 if sender is None or subject is None:
     print("S'ha d'especificar l'assumpte i l'emisor dels correus")
     sys.exit(0)
 
-regex = re.compile('^\s*#.*$',re.IGNORECASE)
-try:
-    with open(est,encoding='utf8') as f:
-        for line in f:
-            line = line.strip()
-            if regex.match(line):
-                continue
-            try:
-                data = line.split(':')
-                estudiants.append({'nom' : data[0],'cognoms' : data[1],'email' : data[3]})
-            except:
-                continue
-    f.close()
-except:
-    print("Error de lectura del fitxer d'estudiants")
-    sys.exit(0)
+if est is not None:
+    try:
+        kind = filetype.guess(options.estudiants)
+        if kind is not None and kind.mime == 'application/vnd.oasis.opendocument.spreadsheet':
+            f = read_ods(est,options.full,headers=False)
+            estudiants = estudiants_from_ods(f)
+        else:
+            f = open(est,"r",encoding='utf8')
+            estudiants = estudiants_from_csv(f)
+            f.close()
+    except:
+        print("Error de lectura del fitxer d'estudiants")
+        sys.exit(0)
 
 try:
     with open(fitxer,'r') as f:

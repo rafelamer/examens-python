@@ -18,6 +18,7 @@ License:    This program is free software: you can redistribute it and/or modify
  	        See https://www.gnu.org/licenses/
 """
 
+import filetype
 import sys
 import os
 import re
@@ -27,6 +28,7 @@ import glob
 import json
 import subprocess
 from optparse import OptionParser
+from pandas_ods_reader import read_ods
 sys.path.append('.')
 try:
     from Problemes import Problemes
@@ -38,6 +40,7 @@ class Examen:
         self.parser = OptionParser()
         self.parser.add_option("--examen",dest="examen",default=None)
         self.parser.add_option("--estudiants",dest="estudiants",default=None)
+        self.parser.add_option("--full",dest="full")
         self.parser.add_option("--problemes",dest="problemes",default=None)
         self.parser.add_option("--possibles-problemes",dest="possibles",default=None)
         self.parser.add_option("--incompatibles",dest="incompatibles",default=None)
@@ -61,11 +64,51 @@ class Examen:
     #
     #
     #
+    def estudiants_from_ods(self,file):
+        result = []
+        for e in file.values:
+            try:
+                dades = {'nom'     : e[0],
+                         'cognoms' : e[1],
+                         'email'   : e[3],
+                         'grup'    : e[4] 
+                        }
+                result.append(dades)
+            except:
+                pass
+        return result
+    #
+    #
+    #
+    def estudiants_from_csv(self,file):
+        regex = re.compile(r'^\s*#.*$',re.IGNORECASE)
+        result = []
+        count =  0
+        for e in file:
+            if len(e) > 0:
+                count += 1
+            e = e.strip()
+            if regex.match(e):
+                continue
+            try:
+                e = e.split(':')
+                dades = {'nom'     : e[0],
+                         'cognoms' : e[1],
+                         'email'   : e[3],
+                         'grup'    : e[4] 
+                        }
+                result.append(dades)
+            except:
+                pass
+    #
+    #
+    #
     def ajuda(self):
         print("Utilització: examen.py --examen=<fitxer> --estudiants=<fitxer> [--problemes=<enter>] [--dades=<fitxer>] [--no-solucions] [--tex-engine=pdflatex]\n")
         print("Opcions:")
         print("   --examen=<fitxer>                   : Fitxer LaTeX amb el model d'examen")
         print("   --estudiants=<fitxer>               : Fitxer amb nom:cognoms dels estudiants")
+        print("   --full=<nom del full>               : Nom del full del fitxer .ods")
         print("   --problemes=<nombre|llista>         : Nombre de problemes o llista de problemes")
         print("   --possibles-problemes=<nombre>      : Nombre de possibles problemes")
         print("                                       : S'escullen aleatòriament \"nombre\" problemes")
@@ -116,7 +159,6 @@ class Examen:
             self.nombreexamens = int(self.options.nombreexamens)
         except:
             self.nombreexamens = None
-        regex = re.compile(r'^\s*#.*$',re.IGNORECASE)
         self.problemes = prob
         #
         # Comprovacions
@@ -176,24 +218,21 @@ class Examen:
         # Dades dels estudiants
         #
         if est is not None:
-            try:
-                with open(est,encoding='utf8') as f:
-                    for line in f:
-                        line = line.rstrip()
-                        if regex.match(line):
-                            continue
-                        try:
-                            data = line.split(':')
-                            self.estudiants.append({'nom' : data[0].strip(),
-                                                    'cognoms' : data[1].strip(),
-                                                    'email' : data[3].strip(),
-                                                    'grup' : data[4]})
-                        except:
-                            continue
-                f.close()
-            except:
-                print("Error de lectura del fitxer d'estudiants")
-                sys.exit(0)
+            kind = filetype.guess(est)
+            if kind is not None and kind.mime == 'application/vnd.oasis.opendocument.spreadsheet':
+                try:
+                    f = read_ods(est,self.options.full,headers=False)
+                    self.estudiants = self.estudiants_from_ods(f)
+                except:
+                    print("Can't open ODS file or sheet")
+                    sys.exit(0)
+            else:
+                try:
+                    f = open(options.estudiants,"r")
+                    self.estudiants = self.estudiants_from_csv(f)
+                    f.close()
+                except:
+                    print("Can't open CSV file")
         else:
             if self.nombreexamens is None:
                 self.ajuda()
@@ -258,7 +297,6 @@ class Examen:
                 relacio['DATAEXAMEN'] = f"\\dataexamen{{{dataexamen[0]}}}{{{dataexamen[1]}}}{{{dataexamen[2]}}}"
             elif isinstance(dataexamen,dict):
                 keys = list(dataexamen.keys())
-
                 if len(keys) == 0:
                     print("La funció dataexamen retorna una valor no vàlid")
                     sys.exit(0)

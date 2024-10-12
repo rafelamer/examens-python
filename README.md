@@ -6,16 +6,20 @@ Es fa servir el _LaTeX_ per a generar els diferents models d'examen. Per tant, p
 
 1. **LaTeX**, preferiblement el TeXLive, que està disponible per a Linux, Windows 10/11  i MacOS (https://www.tug.org/texlive/).
 2. **Python**, la versió 3.7 o posterior (https://www.python.org/).
-3. **SymPy**, que és una llibreria de _Python_ per a càlcul simbòlic (https://www.sympy.org).
-4. **Python unidecode**, que serveix, entre altres coses, per treure els accents de qualsevol text. Es fa servir per treure els accents del nom i cognoms dels estudiants ja que poden donar problemes a l'hora d'ajuntar fitxers amb nom que conté aquests nom i cognoms.
-5. **Asymptote**, utilitzat per generar gràfics. (https://asymptote.sourceforge.io/). No és necessari si no volem incluir als examens gràfics fets amb aquest programa. Està inclòs tant a TeXLive com a MiKTeX. Amb Fedora, Debian i Ubuntu s'ha d'instal·lar el paquet _asymtote_.
-6. **Git** per descarregar i mantenir actualitzat el repositori. Les distribucions de Linux ja tenen paquets per instal·lar-lo. En Windows 10/11 el podem el podem descarregar de https://git-scm.com/download/win.
-7. **Latexmk**, per defecte s'instal·la amb el TeXLive i amb el MiKTeX. Amb Fedora, Debian i Ubuntu s'ha d'instal·lar el paquet _latexmk_.
+3. **Python Pandas**, eina potent i flexible per a anàlisi de dades basa en Python (https://pandas.pydata.org).
+4. **Python pandas.ods-reader**, per llegir fitxers ods en Python (https://github.com/iuvbio/pandas_ods_reader). 
+5. **Python unidecode**, que serveix, entre altres coses, per treure els accents de qualsevol text. Es fa servir per treure els accents del nom i cognoms dels estudiants ja que poden donar problemes a l'hora d'ajuntar fitxers amb nom que conté aquests nom i cognoms.
+6. **SymPy**, que és una llibreria de _Python_ per a càlcul simbòlic (https://www.sympy.org).
+7. **Asymptote**, utilitzat per generar gràfics. (https://asymptote.sourceforge.io/). No és necessari si no volem incluir als examens gràfics fets amb aquest programa. Està inclòs tant a TeXLive com a MiKTeX. Amb Fedora, Debian i Ubuntu s'ha d'instal·lar el paquet _asymtote_.
+8. **Git** per descarregar i mantenir actualitzat el repositori. Les distribucions de Linux ja tenen paquets per instal·lar-lo. En Windows 10/11 el podem el podem descarregar de https://git-scm.com/download/win.
+9. **Latexmk**, per defecte s'instal·la amb el TeXLive i amb el MiKTeX. Amb Fedora, Debian i Ubuntu s'ha d'instal·lar el paquet _latexmk_.
 
-Amb Windows 10/11 i amb Linux si la nostra distribució no incorpora aquests paqquets, podem executar des de la línia de comandes i com a administrador
+Amb Windows 10/11 i amb Linux si la nostra distribució no incorpora aquests paquets, podem executar des de la línia de comandes i com a administrador
 ```
 pip3 install sympy
 pip3 install unidecode
+pip3 install pandas
+pip3 install pandas-ods-reader
 ```
 
 ## Descàrrega
@@ -44,9 +48,9 @@ root
 ~/usr/local/bin# ln -sf /home/amer/Git/examens-python/examen.py .
 ~/usr/local/bin# ln -sf /home/amer/Git/examens-python/enviar-examens.py .
 ~/usr/local/bin# ln -sf /home/amer/Git/examens-python/examens-grup.py .
-~/usr/local/bin# cd ../lib/python3.11/dist-packages/
-~/usr/local/bin/lib/python3.11/dist-packages# ln -sf /home/amer/Git/examens-python/Algebra.py .
-~/usr/local/bin/lib/python3.11/dist-packages# ^D
+~/usr/local/bin# cd ../lib/python3.12/dist-packages/
+~/usr/local/bin/lib/python3.12/dist-packages# ln -sf /home/amer/Git/examens-python/Algebra.py .
+~/usr/local/bin/lib/python3.12/dist-packages# ^D
 ~$ mkdir -P .asy ; cd .asy
 ~/.asy$ ln -sf /home/amer/Git/examens-python/coordenades.asy .
 ~/.asy$ cd ..
@@ -63,12 +67,12 @@ root
 En Windows 10/11, obrim el teminal (cmd) com a administrador i executarem
 ```
 C:\Windows\system32> cd "C:\Program Files\Python311
-C:\Program Files\Python311> mklink examen.py "C:\Users\Rafel Amer\examens-python\examen.py"
-C:\Program Files\Python311> mklink enviar-examens.py "C:\Users\Rafel Amer\examens-python\enviar-examens.py"
-C:\Program Files\Python311> mklink examens-grup.py "C:\Users\Rafel Amer\examens-python\examens-grup.py"
-C:\Program Files\Python311> cd Lib\site-packages
-C:\Program Files\Python311\Lib\site-packages> mklink Algebra.py "C:\Users\Rafel Amer\examens-python\Algebra.py
-C:\Program Files\Python311\Lib\site-packages> cd C:\Users\Rafel Amer>
+C:\Program Files\Python312> mklink examen.py "C:\Users\Rafel Amer\examens-python\examen.py"
+C:\Program Files\Python312> mklink enviar-examens.py "C:\Users\Rafel Amer\examens-python\enviar-examens.py"
+C:\Program Files\Python312> mklink examens-grup.py "C:\Users\Rafel Amer\examens-python\examens-grup.py"
+C:\Program Files\Python312> cd Lib\site-packages
+C:\Program Files\Python312\Lib\site-packages> mklink Algebra.py "C:\Users\Rafel Amer\examens-python\Algebra.py
+C:\Program Files\Python312\Lib\site-packages> cd C:\Users\Rafel Amer>
 C:\Users\Rafel Amer> mkdir .asy
 C:\Users\Rafel Amer> cd .asy
 C:\Users\Rafel Amer\.asy> mklink coordenades.asy "C:\Users\Rafel Amer\examens-python\coordenades.asy"
@@ -98,11 +102,15 @@ NOM:COGNOMS:DNI:CORREU ELECTRÒNIC:GRUP
 ```
 on els camps obligatoris són NOM, COGNOMS i CORREU ELECTRÒNIC. DNI i GRUP poden estar en blanc.
 
+També poder ser fitxers ods, xls o xlsx amb columnes que contenen el nom, cognoms, correu electrònic, dni i grup
+
 Les opcions que tenim són
 ```
 Utilització: examen.py --examen=<fitxer> --estudiants=<fitxer> --problemes=<enter> [--no-solucions] [--tex-engine=pdflatex]
     --examen=<fitxer>                   : Fitxer LaTeX amb el model d'examen
     --estudiants=<fitxer>               : Fitxer amb nom:cognoms dels estudiants
+                                        : Pot ser un fitxer csv, ods, xls o xlsx
+    --full=<full>                       : Nom o full del fitxer ods, xls o xlsx
     --problemes=<nombre|llista>         : Nombre de problemes o llista de problemes
     --possibles-problemes=<nombre>      : Nombre de possibles problemes
                                         : S'escullen aleatòriament d'entre aquest nombre de problemes

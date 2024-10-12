@@ -15,6 +15,7 @@ License:    This program is free software: you can redistribute it and/or modify
  	        See https://www.gnu.org/licenses/
 """
 import filetype
+import pandas
 import os
 import re
 import sys
@@ -34,6 +35,35 @@ def estudiants_from_ods(file,first,number,grups):
         try:
             dades = {'nom'     : e[0],
                      'cognoms' : e[1],
+                     'grup'    : e[4] 
+                    }
+            if grups is not None:
+                trobat = False
+                for gr in grups:
+                    trobat = trobat or e[4].find(gr) == 0
+                if trobat:
+                    result.append(dades)
+            else:
+                result.append(dades)
+        except:
+            pass
+    return result
+#
+#
+#
+def estudiants_from_excel(file,first,number,grups):
+    result = []
+    count = 0
+    for index, e in file.iterrows():
+        count += 1
+        if first is not None and count < first:
+            continue
+        if first is not None and number is not None and count >= first + number:
+            continue
+        try:
+            dades = {'nom'     : e[0],
+                     'cognoms' : e[1],
+                     'email'   : e[3],
                      'grup'    : e[4] 
                     }
             if grups is not None:
@@ -102,31 +132,42 @@ if carpeta is None:
     print("S'ha d'especificar una carpeta")
     sys.exit(0)
 try:
-  primer = int(options.primer)
+    primer = int(options.primer)
 except:
-  primer = None
+    primer = None
 try:
-  nombre = int(options.nombre)
+    nombre = int(options.nombre)
 except:
-  nombre = None 
+    nombre = None 
 nomfitxer = options.nomfitxer
 if nomfitxer is None:
     print("S'ha d'especificar un nom de fitxer resultant")
     sys.exit(0)
 
+full = options.full
+try:
+    full = int(full)
+except:
+    pass
+if full is None:
+    full = 0
 if options.estudiants is not None:
-  kind = filetype.guess(options.estudiants)
-  if kind is not None and kind.mime == 'application/vnd.oasis.opendocument.spreadsheet':
-    try:
-      f = read_ods(options.estudiants,options.full,headers=False)
-      estudiants = estudiants_from_ods(f,primer,nombre,grups)
-    except:
-      print("Can't open file or sheet")
-      sys.exit(0)
-  else:
-    f = open(options.estudiants,"r")
-    estudiants = estudiants_from_csv(f,primer,nombre,grups)
-    f.close()
+    kind = filetype.guess(options.estudiants)
+    if kind is not None and kind.mime == 'application/vnd.oasis.opendocument.spreadsheet':
+        try:
+            f = read_ods(options.estudiants,full,headers=False)
+            estudiants = estudiants_from_ods(f,primer,nombre,grups)
+        except:
+            print("Can't open file or sheet")
+            sys.exit(0)
+    elif kind is not None and kind.mime in ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                            'application/vnd.ms-excel']:
+        f = pandas.read_excel(options.estudiants,full,header=None)
+        estudiants = estudiants_from_excel(f,primer,nombre,grups)
+    else:
+        f = open(options.estudiants,"r")
+        estudiants = estudiants_from_csv(f,primer,nombre,grups)
+        f.close()
 else:
   f = open("%s.csv" % espai,"r")
   estudiants = estudiants_from_csv(f,primer,nombre,grups)

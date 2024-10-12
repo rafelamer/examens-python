@@ -24,6 +24,7 @@ import filetype
 import mimetypes
 import os.path
 import base64
+import pandas
 import mimetypes
 import sys
 import re
@@ -51,11 +52,10 @@ parser.add_option("--carpeta",dest="carpeta",default="tex")
 parser.add_option("--ajuda",action="store_true",dest="ajuda",default=False)
 parser.add_option("--solucions",action="store_true",dest="solucions",default=False)
 (options,args) = parser.parse_args()
-
 #
 #
 #
-def estudiants_from_ods(self,file):
+def estudiants_from_ods(file):
     result = []
     for e in file.values:
         try:
@@ -71,7 +71,23 @@ def estudiants_from_ods(self,file):
 #
 #
 #
-def estudiants_from_csv(self,file):
+def estudiants_from_excel(file):
+    result = []
+    for index, e in file.iterrows():
+        try:
+            dades = {'nom'     : e[0],
+                     'cognoms' : e[1],
+                     'email'   : e[3],
+                     'grup'    : e[4] 
+                    }
+            result.append(dades)
+        except:
+            pass
+    return result
+#
+#
+#
+def estudiants_from_csv(file):
     regex = re.compile(r'^\s*#.*$',re.IGNORECASE)
     result = []
     count =  0
@@ -153,7 +169,13 @@ HOME = os.path.expanduser('~')
 est = options.estudiants
 fitxer = options.message
 carpeta = options.carpeta
-
+full = options.full
+try:
+    full = int(full)
+except:
+    pass
+if full is None:
+    full = 0
 sender, subject = options.sender,options.subject
 if sender is None or subject is None:
     print("S'ha d'especificar l'assumpte i l'emisor dels correus")
@@ -163,8 +185,12 @@ if est is not None:
     try:
         kind = filetype.guess(options.estudiants)
         if kind is not None and kind.mime == 'application/vnd.oasis.opendocument.spreadsheet':
-            f = read_ods(est,options.full,headers=False)
+            f = read_ods(est,full,headers=False)
             estudiants = estudiants_from_ods(f)
+        elif kind is not None and kind.mime in ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                                'application/vnd.ms-excel']:
+            f = pandas.read_excel(est,full,header=None)
+            estudiants = estudiants_from_excel(f)
         else:
             f = open(est,"r",encoding='utf8')
             estudiants = estudiants_from_csv(f)
@@ -206,6 +232,7 @@ for e in estudiants:
         m = m.replace(k,v)
     filename = os.path.join(carpeta,f"{e['cognoms']}-{e['nom']}".lower().replace(' ','-'))
     filename = unidecode.unidecode(filename)
+    filename = filename.replace("'","")
     if options.solucions:
         filename += "-solucio.pdf"
     else:

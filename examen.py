@@ -19,6 +19,7 @@ License:    This program is free software: you can redistribute it and/or modify
 """
 
 import filetype
+import pandas
 import sys
 import os
 import re
@@ -67,6 +68,22 @@ class Examen:
     def estudiants_from_ods(self,file):
         result = []
         for e in file.values:
+            try:
+                dades = {'nom'     : e[0],
+                         'cognoms' : e[1],
+                         'email'   : e[3],
+                         'grup'    : e[4] 
+                        }
+                result.append(dades)
+            except:
+                pass
+        return result
+    #
+    #
+    #
+    def estudiants_from_excel(self.file):
+        result = []
+        for index, e in f.iterrows():
             try:
                 dades = {'nom'     : e[0],
                          'cognoms' : e[1],
@@ -217,15 +234,26 @@ class Examen:
         #
         # Dades dels estudiants
         #
+        full = self.options.full
+        try:
+            full = int(full)
+        except:
+            pass
+        if full is None:
+            full = 0
         if est is not None:
             kind = filetype.guess(est)
             if kind is not None and kind.mime == 'application/vnd.oasis.opendocument.spreadsheet':
                 try:
-                    f = read_ods(est,self.options.full,headers=False)
+                    f = read_ods(est,full,headers=False)
                     self.estudiants = self.estudiants_from_ods(f)
                 except:
                     print("Can't open ODS file or sheet")
                     sys.exit(0)
+            elif kind is not None and kind.mime in ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                                    'application/vnd.ms-excel']:
+                f = pandas.read_excel(est,full,header=None)
+                self.estudiants = self.estudiants_from_excel(f)
             else:
                 try:
                     f = open(options.estudiants,"r")

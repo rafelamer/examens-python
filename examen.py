@@ -81,7 +81,7 @@ class Examen:
     #
     #
     #
-    def estudiants_from_excel(self.file):
+    def estudiants_from_excel(self,file):
         result = []
         for index, e in f.iterrows():
             try:
@@ -117,6 +117,7 @@ class Examen:
                 result.append(dades)
             except:
                 pass
+        return result
     #
     #
     #
@@ -256,7 +257,7 @@ class Examen:
                 self.estudiants = self.estudiants_from_excel(f)
             else:
                 try:
-                    f = open(options.estudiants,"r")
+                    f = open(self.options.estudiants,"r")
                     self.estudiants = self.estudiants_from_csv(f)
                     f.close()
                 except:

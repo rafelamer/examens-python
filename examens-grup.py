@@ -109,7 +109,8 @@ def estudiants_from_csv(file,first,number,grups):
             else:
                 result.append(dades)
         except:
-            pass   
+            pass
+    return result
 
 parser = OptionParser()
 parser.add_option("--estudiants",dest="estudiants",default=None)

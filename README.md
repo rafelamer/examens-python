@@ -121,6 +121,7 @@ Utilització: examen.py --examen=<fitxer> --estudiants=<fitxer> --problemes=<ent
     --tex-engine=<programa>             : Nom del programa de LaTeX utilitzat
                                         : Si no s'especifica, no es generen els PDF
     --aleatori                          : L'ordre dels problemes serà aleatori
+    --resum                             : Mostra un resum amb els problemes escollits aleatòriament
     --nombre-examens=<nombre>           : Identifica els fitxers numèricament i no per nom i cognoms
                                         : Quantitat d'exàmens a fer
     --no-solucions                      : No es generen els fitxers amb les solucions

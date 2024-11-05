@@ -50,6 +50,7 @@ class Examen:
         self.parser.add_option("--tex-engine",dest="engine",default='pdflatex')
         self.parser.add_option("--no-solucions",action="store_false",dest="solucions",default=True)
         self.parser.add_option("--aleatori",action="store_true",dest="aleatori",default=False)
+        self.parser.add_option("--resum",action="store_true",dest="resum",default=False)
         self.parser.add_option("--nombre-examens",dest="nombreexamens")
         self.parser.add_option("--json",action="store_true",dest="json",default=False)
         self.parser.add_option("--logs",action="store_true",dest="showlogs",default=False)
@@ -137,6 +138,7 @@ class Examen:
         print("   --tex-engine=<programa>             : Nom del programa de LaTeX utilitzat")
         print("                                       : Si no s'especifica, no es generen els PDF")
         print("   --aleatori                          : L'ordre dels problemes serà aleatori")
+        print("   --resum                             : Mostra un resum amb els problemes escollits aleatòriament")
         print("   --nombre-examens=<nombre>           : Identifica els fitxers numèricament i no per nom i cognoms")
         print("                                       : Quantitat d'exàmens a fer")
         print("   --no-solucions                      : No es generen els fitxers amb les solucions")
@@ -427,6 +429,8 @@ class Examen:
         dir = self.crea_carpeta_tex()
         js = {}
         nombre = 1
+        resum = [0 for i in range(self.maxproblema)]
+        totalresum = 0
         if self.nombreexamens is None:
             iterator = self.estudiants
         else:
@@ -451,6 +455,9 @@ class Examen:
                     if llista is None:
                         print("Impossible generar la llista de problemes")
                         sys.exit(0)
+            for i in llista:
+                resum[i-1] += 1
+            totalresum += len(llista)
             ordering = []
             if isinstance(self.problemes,int):
                 order = list(range(self.problemes))
@@ -489,6 +496,10 @@ class Examen:
             with open(jsonfile,'w',encoding='utf8') as f:
                 json.dump(js,f)
             f.close()
+        if self.options.resum:
+            for i in range(self.maxproblema):
+                print(f"Problema {i+1:2d}: {100*resum[i]/totalresum:.2f}%")
+
     #
     #
     #

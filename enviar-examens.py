@@ -58,6 +58,8 @@ parser.add_option("--solucions",action="store_true",dest="solucions",default=Fal
 def estudiants_from_ods(file):
     result = []
     for e in file.values:
+        if e[5] == 0:
+            continue
         try:
             dades = {'nom'     : e[0],
                      'cognoms' : e[1],
@@ -74,6 +76,8 @@ def estudiants_from_ods(file):
 def estudiants_from_excel(file):
     result = []
     for index, e in file.iterrows():
+        if e[5] == 0:
+            continue
         try:
             dades = {'nom'     : e[0],
                      'cognoms' : e[1],

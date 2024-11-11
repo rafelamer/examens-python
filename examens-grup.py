@@ -32,6 +32,8 @@ def estudiants_from_ods(file,first,number,grups):
             continue
         if first is not None and number is not None and count >= first + number:
             continue
+        if e[5] == 0:
+            continue
         try:
             dades = {'nom'     : e[0],
                      'cognoms' : e[1],
@@ -59,6 +61,8 @@ def estudiants_from_excel(file,first,number,grups):
         if first is not None and count < first:
             continue
         if first is not None and number is not None and count >= first + number:
+            continue
+        if e[5] == 0:
             continue
         try:
             dades = {'nom'     : e[0],

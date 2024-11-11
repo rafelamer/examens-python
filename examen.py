@@ -69,6 +69,8 @@ class Examen:
     def estudiants_from_ods(self,file):
         result = []
         for e in file.values:
+            if e[5] == 0:
+                continue
             try:
                 dades = {'nom'     : e[0],
                          'cognoms' : e[1],
@@ -85,6 +87,8 @@ class Examen:
     def estudiants_from_excel(self,file):
         result = []
         for index, e in f.iterrows():
+            if e[5] == 0:
+                continue
             try:
                 dades = {'nom'     : e[0],
                          'cognoms' : e[1],

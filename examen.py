@@ -69,8 +69,11 @@ class Examen:
     def estudiants_from_ods(self,file):
         result = []
         for e in file.values:
-            if e[5] == 0:
-                continue
+            try:
+                if e[5] == 0:
+                    continue
+            except:
+                pass
             try:
                 dades = {'nom'     : e[0],
                          'cognoms' : e[1],
@@ -87,8 +90,11 @@ class Examen:
     def estudiants_from_excel(self,file):
         result = []
         for index, e in f.iterrows():
-            if e[5] == 0:
-                continue
+            try:
+                if e[5] == 0:
+                    continue
+            except:
+                pass
             try:
                 dades = {'nom'     : e[0],
                          'cognoms' : e[1],
@@ -314,11 +320,11 @@ class Examen:
         engine = self.options.engine
         enunciats = "\n\n".join(examen)
         if self.nombreexamens is not None:
-            relacio = {'COGNOMS' : '', 'NOM' : '', 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
+            relacio = {'COGNOMS' : '', 'NOM' : '', 'GRUP' : '', 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
             filename = "examen%04d" % nombre
             filename = filename.replace(" ","0")
         else:
-            relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'ENUNCIATS' : enunciats,'MODEL' : ""}
+            relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'GRUP' : estudiant['grup'], 'ENUNCIATS' : enunciats,'MODEL' : ""}
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
             filename = filename.replace("'","")

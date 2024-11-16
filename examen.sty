@@ -507,12 +507,15 @@
 \def\nom#1{\gdef\@@nom{#1}}
 \def\@@cognoms{}
 \def\cognoms#1{\gdef\@@cognoms{#1}}
-\def\dadesalumne{\begin{minipage}[c]{17.75cm}
+\def\@@grup{}
+\def\grup#1{\gdef\@@grup{#1}}
+\def\dadesalumne{\begin{minipage}[c]{18.25cm}
 \baselineskip=8pt
 \vspace*{3.5cm}
 \begin{center}
-\textbf{Cognoms}: \framebox[9cm][l]{\rule[-4pt]{0pt}{18pt}\textsf{\@@cognoms}}
-\hfill\textbf{Nom}: \framebox[5cm][l]{\rule[-4pt]{0pt}{18pt}\textsf{\@@nom}}
+\textsf{\bfseries Cognoms}:~\framebox[8.25cm][l]{\rule[-4pt]{0pt}{18pt}\textsf{\@@cognoms}}
+\hfill\textsf{\bfseries Nom}:~\framebox[4.25cm][l]{\rule[-4pt]{0pt}{18pt}\textsf{\@@nom}}
+\hfill\textsf{\bfseries Grup}:~\framebox[1cm][l]{\rule[-4pt]{0pt}{18pt}\textsf{\@@grup}}
 \end{center}
 \end{minipage}}
 %

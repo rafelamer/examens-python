@@ -571,6 +571,7 @@ class Examen:
                 count += 1
                 continue
             d = list(set(g) - set(llista))
+            random.seed()
             random.shuffle(d)
             p = [x for x in d if self.es_compatible(x,llista)]
             if len(p) == 0:

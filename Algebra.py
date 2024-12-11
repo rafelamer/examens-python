@@ -551,7 +551,6 @@ class Vector(object):
                 l.append(1)
                 s.append(False)
             elif isinstance(k**2,Rational):
-                square = True
                 k2 = k**2
                 l.append(k2.q)
                 s.append(True)
@@ -564,7 +563,6 @@ class Vector(object):
                         l.append(1)
                         s.append(False)
                     elif isinstance(a**2,Rational):
-                        square = True
                         a2 = a**2
                         l.append(a2.q)
                         s.append(True)
@@ -640,7 +638,6 @@ class Vector(object):
                 l.append(1)
                 s.append(False)
             elif isinstance(k**2,Rational):
-                square = True
                 k2 = k**2
                 l.append(k2.q)
                 s.append(True)
@@ -653,7 +650,6 @@ class Vector(object):
                         l.append(1)
                         s.append(False)
                     elif isinstance(a**2,Rational):
-                        square = True
                         a2 = a**2
                         l.append(a2.q)
                         s.append(True)
@@ -1107,6 +1103,7 @@ class Vector(object):
         if self.dimensio != 4:
             return None
         f, v = self.factor_comu()
+        f = 1/f
         s = ""
         if f != 1:
             s = f"\\deufrac{{1}}{{{latex(f)}}}"
@@ -1692,6 +1689,45 @@ class Matriu:
     #
     #
     #
+    def tots_enters_racionals(self):
+        """
+        Retorna True si totes les components del vector són nombres enters o racionals
+        """
+        for i in range(self.files):
+            for j in range(self.columnes):
+                if not (isinstance(self[i,j],Integer) or isinstance(self[i,j],int) or isinstance(self[i,j],Rational)):
+                    return False
+        return True
+    #
+    #
+    #
+    def columna_tots_enters_racionals(self,col):
+        """
+        Retorna True si totes les components del vector són nombres enters o racionals
+        Paràmetres:
+            columna: índex de la columna
+        """
+        for i in range(self.files):
+            if not (isinstance(self[i,col],Integer) or isinstance(self[i,col],int) or isinstance(self[i,col],Rational)):
+                return False
+        return True
+    #
+    #
+    #
+    def calcula_format(self):
+        """
+        Calcula el format LaTeX amb que s'escriurà la matriu
+        """
+        format = ""
+        for col in range(self.columnes):
+            if self.columna_tots_enters_racionals(col):
+                format += 'r'
+            else:
+                format += 'c'
+        return format
+    #
+    #
+    #
     def clona(self):
         """
         Retorma una còpia de la matriu
@@ -1917,6 +1953,8 @@ class Matriu:
         if m != 1:
             s = f"\\deufrac{{1}}{{{latex(m)}}}"
         m = Matrix(self.files,self.columnes,l)
+        n = Matriu(m)
+        self.format = n.calcula_format()
         return s + matriu_latex(m,format=self.format)
     #
     #

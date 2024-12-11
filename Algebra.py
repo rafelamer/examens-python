@@ -551,6 +551,7 @@ class Vector(object):
                 l.append(1)
                 s.append(False)
             elif isinstance(k**2,Rational):
+                square = True
                 k2 = k**2
                 l.append(k2.q)
                 s.append(True)
@@ -563,6 +564,7 @@ class Vector(object):
                         l.append(1)
                         s.append(False)
                     elif isinstance(a**2,Rational):
+                        square = True
                         a2 = a**2
                         l.append(a2.q)
                         s.append(True)
@@ -638,6 +640,7 @@ class Vector(object):
                 l.append(1)
                 s.append(False)
             elif isinstance(k**2,Rational):
+                square = True
                 k2 = k**2
                 l.append(k2.q)
                 s.append(True)
@@ -650,6 +653,7 @@ class Vector(object):
                         l.append(1)
                         s.append(False)
                     elif isinstance(a**2,Rational):
+                        square = True
                         a2 = a**2
                         l.append(a2.q)
                         s.append(True)

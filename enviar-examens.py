@@ -40,7 +40,10 @@ from email.mime.base import MIMEBase
 from email import encoders
 from googleapiclient.errors import HttpError
 from optparse import OptionParser
-from pandas_ods_reader import read_ods
+try:
+  from pandas_ods_reader import read_ods
+except:
+  print ("Can't import pandas_ods_reader")
 
 parser = OptionParser()
 parser.add_option("--estudiants",dest="estudiants",default=None)

@@ -29,7 +29,10 @@ import glob
 import json
 import subprocess
 from optparse import OptionParser
-from pandas_ods_reader import read_ods
+try:
+  from pandas_ods_reader import read_ods
+except:
+  print ("Can't import pandas_ods_reader")
 sys.path.append('.')
 try:
     from Problemes import Problemes

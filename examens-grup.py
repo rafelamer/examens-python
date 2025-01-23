@@ -21,7 +21,10 @@ import re
 import sys
 import unidecode
 from optparse import OptionParser
-from pandas_ods_reader import read_ods
+try:
+  from pandas_ods_reader import read_ods
+except:
+  print ("Can't import pandas_ods_reader")
 
 def estudiants_from_ods(file,first,number,grups):
     result = []

@@ -539,6 +539,11 @@ class Vector(object):
         Si hi ha components que no són ni enteres ni racionals, torna 1 i el mateix
         vector
         """
+        if self.length() == 0:
+            if isinstance(self,Punt):
+                return 1, Punt([0 for k in self.components])
+            else:
+                return 1 , Vector([0 for k in self.components])
         l = []
         s = []
         square = False
@@ -1695,11 +1700,23 @@ class Matriu:
     #
     def tots_enters_racionals(self):
         """
-        Retorna True si totes les components del vector són nombres enters o racionals
+        Retorna True si tots els coeficients de la matriu són nombres enters o racionals
         """
         for i in range(self.files):
             for j in range(self.columnes):
                 if not (isinstance(self[i,j],Integer) or isinstance(self[i,j],int) or isinstance(self[i,j],Rational)):
+                    return False
+        return True
+    #
+    #
+    #
+    def tots_uns_i_zeros(self):
+        """
+        Retorna True si tots els coeficients de la matriu son uns, menys uns i zeros
+        """
+        for i in range(self.files):
+            for j in range(self.columnes):
+                if abs(self[i,j]) != 1 and self[i,j] != 0:
                     return False
         return True
     #

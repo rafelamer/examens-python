@@ -1288,8 +1288,10 @@ class Base(object):
         Fa que tingui orientació positiva canviant, si cal, de signe l'últim
         vector
         """
+        for i in range(len(self.vecs)):
+            self.vecs[i].simplificar(positiu=True)
         if not self.te_orientacio_positiva():
-            self.vecs[-1] = - self.vecs[-1]
+            self.vecs[0:2] = self.vecs[1],self.vecs[0]
     #
     #
     #

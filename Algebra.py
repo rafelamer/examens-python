@@ -1498,6 +1498,19 @@ class Base(object):
         en compte si la base és unitària
         """
         return [v.length()**2 for v in self.vecs]
+    #
+    #
+    #
+    def __getitem__(self,i):
+        """
+        Permet indexar els elements de la base.
+        Paràmetres:
+            i : índex
+        """
+        try:
+            return self.vecs[i]
+        except:
+            return None
 
 
 class Matriu:
@@ -3591,7 +3604,7 @@ class ReferenciaAfi(object):
     #
     #
     @classmethod
-    def aleatoria(cls,dimensio=3,maxim=3,mzeros=0,unitaria=False):
+    def aleatoria(cls,dimensio=3,maxim=3,mzeros=0,unitaria=False,euclidiana=False):
         """
         Retorna una referència aleatòria
         Paràmetres:
@@ -3601,8 +3614,11 @@ class ReferenciaAfi(object):
             unitaria: si és True la matriu del canvi de base tindrà determinant 1 o -1
         """
         origen = Punt.aleatori(l=dimensio,maxim=maxim,nuls=False)
-        m = Matriu.invertible(ordre=dimensio,maxim=maxim,mzeros=mzeros,unitaria=unitaria)
-        base = Base.from_matriu(m)
+        if not euclidiana:
+            m = Matriu.invertible(ordre=dimensio,maxim=maxim,mzeros=mzeros,unitaria=unitaria)
+            base = Base.from_matriu(m)
+        else:
+            base = Base.ortogonal(ordre=dimensio,maxim=maxim,unitaria=True)
         return cls(origen,base)
     #
     #
@@ -3920,7 +3936,7 @@ class PlaAfi(object):
         v1 = self.u1.components_en_base(ref.base)
         v2 = self.u2.components_en_base(ref.base)
         w = v1.cross(v2)
-        w.simplificar()
+        w.simplificar(positiu=True)
         return EquacioLineal.coeficients(w,w.dot(c),False,prime)
     #
     #
@@ -5878,31 +5894,35 @@ class Conica(object):
     #
     #
     @classmethod
-    def from_equacio(cls,eq):
+    def from_equacio(cls,eq,s=None):
         """
         Retorna i classifica la cònica a partir de la seva equació.
         Només per a el·lipses, hipèrboles i paràboles
         """
-        x, y = symbols('x y')
-        unknowns = [x,y]
-        a = diff(eq,x,2) / 2
-        b = diff(eq,x,y) / 2
-        c = diff(eq,y,2) / 2
-        d = (diff(eq,x).subs({x:1,y:0}) - 2 * a) / 2
-        e = (diff(eq,y).subs({x:0,y:1}) - 2 * c) / 2
-        f = eq.subs({x:0,y:0})
+        if s is None:
+            x, y = symbols('x y')
+            unknowns = [x,y]
+            s = [x,y]
+        else:
+            unknowns = s
+        a = diff(eq,s[0],2) / 2
+        b = diff(eq,s[0],s[1]) / 2
+        c = diff(eq,s[1],2) / 2
+        d = (diff(eq,s[0]).subs({s[0]:1,s[1]:0}) - 2 * a) / 2
+        e = (diff(eq,s[1]).subs({s[0]:0,s[1]:1}) - 2 * c) / 2
+        f = eq.subs({s[0]:0,s[1]:0})
         Q = Matrix([[a,b],[b,c]])
         L = Matrix(2,1,[d,e])
         l = Vector(d,e)
         vs = Q.eigenvects()
         (t1,t2), veps = vaps_veps(vs)
-        s = list(linsolve((Q,-L),*unknowns))
+        sp = list(linsolve((Q,-L),*unknowns))
         if t1 * t2 < 0:
             #
             # Hipèrbola
             #
-            s = Punt(list(s[0]))
-            fp = eq.subs({x:s[0],y:s[1]})
+            centre = Punt(list(sp[0]))
+            fp = eq.subs({s[0]:sp[0][0],s[1]:sp[0][1]})
             a2 = -fp/t1
             b2 = -fp/t2
             if a2 > 0:
@@ -5910,13 +5930,13 @@ class Conica(object):
             else:
                 a2, b2 = b2, a2
                 u = veps[1]
-            return Hiperbola(a2,-b2,s,u)
+            return Hiperbola(a2,-b2,centre,u)
         if t1 * t2 > 0:
             #
             # El·lipse
             #
-            s = Punt(list(s[0]))
-            fp = eq.subs({x:s[0],y:s[1]})
+            centre = Punt(list(sp[0]))
+            fp = eq.subs({s[0]:sp[0][0],s[1]:sp[0][1]})
             if fp == 0:
                 return None
             a2 = -fp/t1
@@ -5928,7 +5948,7 @@ class Conica(object):
             else:
                 a2, b2 = b2, a2
                 u = veps[1]
-            return Ellipse(a2,b2,s,u)
+            return Ellipse(a2,b2,centre,u)
         if len(s) > 0:
             return None
         if t1 == 0 and t2 == 0:
@@ -5943,8 +5963,8 @@ class Conica(object):
         veps[1].simplificar()
         b = Base(veps,unitaria=True)
         b.orientacio_positiva()
-        es = t1 * veps[0].dot(Vector(x,y)) + veps[0].dot(l)
-        vertex = Punt(solve([es,eq],x,y)[0])
+        es = t1 * veps[0].dot(Vector(s[0],s[1])) + veps[0].dot(l)
+        vertex = Punt(solve([es,eq],s[0],s[1])[0])
         ref = ReferenciaAfi(vertex,b)
         ep = veps[1].dot(l)/veps[1].length()
         p = - ep/t1
@@ -6128,10 +6148,11 @@ class Ellipse(Conica):
         s = SubespaiVectorial([eix])
         base = s.amplia_base(unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = gcd(a2,b2)
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
+        ### g = gcd(a2,b2)
+        ### t = a2 * b2 // g
+        ### a2 = a2 // g
+        ### b2 = b2 // g
+        t = a2 * b2
         m = Matriu.diagonal(Vector([b2,a2,-t]))
         Conica.__init__(self,m,r)
     #
@@ -6315,10 +6336,11 @@ class Hiperbola(Conica):
         s = SubespaiVectorial([eix])
         base = s.amplia_base(unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = gcd(a2,b2)
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
+        # g = gcd(a2,b2)
+        # t = a2 * b2 // g
+        # a2 = a2 // g
+        # b2 = b2 // g
+        t = a2 * b2
         m = Matriu.diagonal(Vector([b2,-a2,-t]))
         Conica.__init__(self,m,r)
     #
@@ -6755,6 +6777,66 @@ class Quadrica(object):
         r = m.transposada() * self.canonica * m
         r.simplificar()
         return r[0,0].expand()
+    #
+    #
+    #
+    def matriu_en_referencia(self,referencia=ReferenciaAfi.canonica()):
+        """
+        Retorna la matriu projectiva de la quàdrica en la referencia 'referencia'
+        Paràmetres:
+          referencia: Element de la classe ReferenciaAfi 
+        """
+        a = referencia.base.matriu()
+        a = a.inserta_columna(3,referencia.origen)
+        a = a.inserta_fila(3,Vector([0,0,0,1]))
+        mat = a.transposada() * self.canonica * a
+        denom = []
+        mat.simplificar()
+        for i in range(mat.columnes):
+            for j in range(mat.files):
+                if isinstance(mat.matriu[i,j],Mul):
+                    for b in mat.matriu[i,j].args:
+                        if isinstance(b,Rational):
+                            denom.append(b.q)
+        mcm =  mcm_llista(denom)
+        mat = mcm * mat
+        return mat
+    #
+    #
+    #
+    def equacio_en_referencia(self,referencia=ReferenciaAfi.canonica(),prime=1):
+        """
+        Retorna l'equació de la quàdrica en la referencia 'referencia'
+        Paràmetres:
+          referencia: Element de la classe ReferenciaAfi
+          prime: nombre de primes que escriurem a l'equació
+        """
+        p = ""
+        if prime > 0:
+            p = prime * "'"
+        mat = self.matriu_en_referencia(referencia)
+        u, v, w = symbols('u v w')
+        m = Matriu.matriu_columna(Vector([u,v,w,1]))
+        r = m.transposada() * mat * m
+        return r[0,0].expand()
+    #
+    #
+    #
+    def equacio_en_plaUV(self,referencia=ReferenciaAfi.canonica()):
+        """
+        Retorna l'equació de la intersecció de la quàdrica amb el pla w=0
+        de la referència R
+        Paràmetres:
+          referencia: Element de la classe ReferenciaAfi
+        """
+        mat = self.matriu_en_referencia(referencia)
+        u, v, w = symbols('u v w')
+        m = Matriu.matriu_columna(Vector([u,v,w,1]))
+        r = m.transposada() * mat * m
+        r = r[0,0].expand()
+        r = r.subs(w,0)
+        return r
+
     #
     #
     #

@@ -3,7 +3,7 @@
 """
 Filename:   Algebra.py
 Author:     Rafel Amer (rafel.amer AT upc.edu)
-Copyright:  Rafel Amer 2020--2024
+Copyright:  Rafel Amer 2020--2025
 Disclaimer: This program is provided "as is", without warranty of any kind,
             either expressed or implied, including, but not linmited to, the
             implied warranties of merchantability and fitness for a particular
@@ -1291,7 +1291,7 @@ class Base(object):
         for i in range(len(self.vecs)):
             self.vecs[i].simplificar(positiu=True)
         if not self.te_orientacio_positiva():
-            self.vecs[0:2] = self.vecs[1],self.vecs[0]
+            self.vecs[1] *= -1
     #
     #
     #
@@ -3653,7 +3653,8 @@ class ReferenciaAfi(object):
             unitaris = [(1 / v.length()) * v for v in self.base.vecs]
             c = Matriu.from_vectors_columna(unitaris)
         p = self.origen + c * punt
-        return Punt(p.components)
+        coordenades = list(map(radsimp,p.components))
+        return Punt(coordenades)
     #
     #
     #
@@ -3773,6 +3774,30 @@ class ReferenciaAfi(object):
             unitaris: si és True els retorna dividits per la seva longitud
         """
         return self.base.vectors(unitaris)
+    #
+    #
+    #
+    def punt_de_coordenades_ampliat(self,punt):
+        """
+        Retorna un nou punt expressat en la referència canònica del
+        punt que en aquesta referencia té coordenades "punt"
+        ampliant-lo a una última coordenada nul·la
+        Paràmetres:
+            punt: coordenades d'un punt en la referència actual
+        """
+        if not isinstance(punt,Punt):
+            return None
+        if punt.dimensio != self.dimensio - 1:
+            return None
+        if not self.base.unitaria:
+            c = self.base.matriu()
+        else:
+            unitaris = [(1 / v.length()) * v for v in self.base.vecs]
+            c = Matriu.from_vectors_columna(unitaris)
+        coordenades = Punt(punt.components + [0])
+        p = self.origen + c * coordenades
+        coordenades = list(map(radsimp,p.components))
+        return Punt(coordenades)
  
 
 class PlaAfi(object):
@@ -5949,7 +5974,7 @@ class Conica(object):
                 a2, b2 = b2, a2
                 u = veps[1]
             return Ellipse(a2,b2,centre,u)
-        if len(s) > 0:
+        if len(sp) > 0:
             return None
         if t1 == 0 and t2 == 0:
             return None
@@ -6148,11 +6173,13 @@ class Ellipse(Conica):
         s = SubespaiVectorial([eix])
         base = s.amplia_base(unitaria=True)
         r = ReferenciaAfi(centre,base)
-        ### g = gcd(a2,b2)
-        ### t = a2 * b2 // g
-        ### a2 = a2 // g
-        ### b2 = b2 // g
-        t = a2 * b2
+        if (isinstance(a2,int) or isinstance(a2,Integer)) and (isinstance(b2,int) or isinstance(b2,Integer)):
+            g = gcd(a2,b2)
+            t = a2 * b2 // g
+            a2 = a2 // g
+            b2 = b2 // g
+        else:
+            t = a2 * b2
         m = Matriu.diagonal(Vector([b2,a2,-t]))
         Conica.__init__(self,m,r)
     #
@@ -6209,7 +6236,9 @@ class Ellipse(Conica):
         """
         l1 = self.matriu[0,0]
         f = - self.matriu[2,2]
-        return sqrt(Rational(f,l1))
+        if (isinstance(l1,int) or isinstance(l1,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
+            return sqrt(Rational(f,l1))
+        return sqrt(f/l1)
     #
     #
     #
@@ -6219,7 +6248,9 @@ class Ellipse(Conica):
         """
         l2 = self.matriu[1,1]
         f = - self.matriu[2,2]
-        return sqrt(Rational(f,l2))
+        if (isinstance(l2,int) or isinstance(l2,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
+            return sqrt(Rational(f,l2))
+        return sqrt(f/l2)
     #
     #
     #
@@ -6336,11 +6367,13 @@ class Hiperbola(Conica):
         s = SubespaiVectorial([eix])
         base = s.amplia_base(unitaria=True)
         r = ReferenciaAfi(centre,base)
-        # g = gcd(a2,b2)
-        # t = a2 * b2 // g
-        # a2 = a2 // g
-        # b2 = b2 // g
-        t = a2 * b2
+        if (isinstance(a2,int) or isinstance(a2,Integer)) and (isinstance(b2,int) or isinstance(b2,Integer)):
+            g = gcd(a2,b2)
+            t = a2 * b2 // g
+            a2 = a2 // g
+            b2 = b2 // g
+        else:
+            t = a2 * b2
         m = Matriu.diagonal(Vector([b2,-a2,-t]))
         Conica.__init__(self,m,r)
     #
@@ -6407,7 +6440,9 @@ class Hiperbola(Conica):
         """
         l1 = self.matriu[0,0]
         f = - self.matriu[2,2]
-        return sqrt(Rational(f,l1))
+        if (isinstance(l1,int) or isinstance(l1,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
+            return sqrt(Rational(f,l1))
+        return sqrt(f/l1)
     #
     #
     #
@@ -6417,7 +6452,9 @@ class Hiperbola(Conica):
         """
         l2 = - self.matriu[1,1]
         f = - self.matriu[2,2]
-        return sqrt(Rational(f,l2))
+        if (isinstance(l2,int) or isinstance(l2,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
+            return sqrt(Rational(f,l2))
+        return sqrt(f/l2)
     #
     #
     #

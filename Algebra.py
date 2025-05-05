@@ -3653,7 +3653,7 @@ class ReferenciaAfi(object):
             unitaris = [(1 / v.length()) * v for v in self.base.vecs]
             c = Matriu.from_vectors_columna(unitaris)
         p = self.origen + c * punt
-        coordenades = list(map(radsimp,p.components))
+        coordenades = [x.simplify() for x in p.components]
         return Punt(coordenades)
     #
     #
@@ -3796,7 +3796,7 @@ class ReferenciaAfi(object):
             c = Matriu.from_vectors_columna(unitaris)
         coordenades = Punt(punt.components + [0])
         p = self.origen + c * coordenades
-        coordenades = list(map(radsimp,p.components))
+        coordenades = [x.simplify() for x in p.components]
         return Punt(coordenades)
  
 
@@ -6237,8 +6237,10 @@ class Ellipse(Conica):
         l1 = self.matriu[0,0]
         f = - self.matriu[2,2]
         if (isinstance(l1,int) or isinstance(l1,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
-            return sqrt(Rational(f,l1))
-        return sqrt(f/l1)
+            c = sqrt(Rational(f,l1))
+        else:
+            c = sqrt(f/l1)
+        return c.simplify()
     #
     #
     #
@@ -6249,8 +6251,10 @@ class Ellipse(Conica):
         l2 = self.matriu[1,1]
         f = - self.matriu[2,2]
         if (isinstance(l2,int) or isinstance(l2,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
-            return sqrt(Rational(f,l2))
-        return sqrt(f/l2)
+            c = sqrt(Rational(f,l2))
+        else:
+            c = sqrt(f/l2)
+        return c.simplify()
     #
     #
     #
@@ -6260,7 +6264,8 @@ class Ellipse(Conica):
         """
         a2 = self.semieix_major()**2
         b2 = self.semieix_menor()**2
-        return sqrt(a2 - b2)
+        c = sqrt(a2 - b2)
+        return c.simplify()
     #
     #
     #
@@ -6441,8 +6446,10 @@ class Hiperbola(Conica):
         l1 = self.matriu[0,0]
         f = - self.matriu[2,2]
         if (isinstance(l1,int) or isinstance(l1,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
-            return sqrt(Rational(f,l1))
-        return sqrt(f/l1)
+            c = sqrt(Rational(f,l1))
+        else:
+            c = sqrt(f/l1)
+        return c.simplify()
     #
     #
     #
@@ -6453,8 +6460,10 @@ class Hiperbola(Conica):
         l2 = - self.matriu[1,1]
         f = - self.matriu[2,2]
         if (isinstance(l2,int) or isinstance(l2,Integer)) and (isinstance(f,int) or isinstance(f,Integer)):
-            return sqrt(Rational(f,l2))
-        return sqrt(f/l2)
+            c = sqrt(Rational(f,l2))
+        else:
+            c = sqrt(f/l2)
+        return c.simplify()
     #
     #
     #
@@ -6464,7 +6473,8 @@ class Hiperbola(Conica):
         """
         a2 = self.semieix_real()**2
         b2 = self.semieix_imaginari()**2
-        return sqrt(a2 + b2)
+        c = sqrt(a2 + b2)
+        return c.simplify()
     #
     #
     #

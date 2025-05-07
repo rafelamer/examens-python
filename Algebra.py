@@ -1511,6 +1511,26 @@ class Base(object):
             return self.vecs[i]
         except:
             return None
+    #
+    #
+    #
+    def vector_de_components_ampliat(self,vector):
+        """
+        Retorna un nou vector expressat en la base canònica del
+        del que en aquesta base té components "vector"
+        ampliant-lo a una última component nul·la
+        Paràmetres:
+            vector: components d'un vector en la base actual
+        """
+        if not isinstance(vector,Vector):
+            return None
+        if vector.dimensio != self.dimensio - 1:
+            return None
+        c = self.matriu()
+        components = Vector(vector.components + [0])
+        v = c * components
+        components = [x.simplify() for x in v.components]
+        return Vector(components)
 
 
 class Matriu:
@@ -6112,7 +6132,12 @@ class Conica(object):
         Paràmetres:
             unitaris: si és True, els retorna unitaris
         """
-        return self.ref.vectors(unitaris)
+        v1, v2 = self.ref.vectors()
+        v1.radsimplificar()
+        v2.radsimplificar()
+        if unitaris:
+            v1, v2 = [(1 / v.length()) * v for v in [v1,v2]]
+        return v1, v2
     #
     #
     #

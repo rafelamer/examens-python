@@ -1203,11 +1203,13 @@ class Base(object):
     #
     #
     #
-    def __new__(cls,vecs,unitaria=False):
+    def __new__(cls,vecs,ortogonal=False,unitaria=False):
         """
         Contructor.
         Paràmetres:
            vecs: llista de vectors
+           ortogonal: True o False
+                      Si és True apliquem el mètode de Gram-Schmidt als vectors
            unitaria: True o False.
                      Serveix per si volem imprimir o fer servir els seus
                      vectors com a unitaris
@@ -1235,10 +1237,25 @@ class Base(object):
     #
     #
     #
-    def __init__(self,vecs,unitaria=False):
+    def __init__(self,vecs,ortogonal=False,unitaria=False):
         self.unitaria = unitaria
-        self.vecs = vecs
-        self.dimensio = vecs[0].dimensio
+        self.dimensio = len(vecs)
+        if not ortogonal:
+            self.vecs = vecs
+            return
+        L = []
+        m = Matriu.from_vectors_columna(vecs)
+        for v in m.vectors_columna():
+            a = Matriu.from_vectors_columna([v])
+            L.append(a.matriu)
+        Q = GramSchmidt(L)
+        base = []
+        for m in Q:
+            m = Matriu(m)
+            v = m.vectors_columna()[0]
+            v.simplificar()
+            base.append(v)
+        self.vecs = base
     #
     #
     #
@@ -4574,10 +4591,10 @@ class SubespaiVectorial(object):
             unitaria: si és True, retorna una base ortonormal
         """
         if self.es_total():
-            b = Base(self.base_ortogonal(),unitaria)
+            b = Base(self.base_ortogonal(),unitaria=unitaria)
         else:
             h = self.suplementari_ortogonal()
-            b = Base(self.base_ortogonal() + h.base_ortogonal(),unitaria)
+            b = Base(self.base_ortogonal() + h.base_ortogonal(),unitaria=unitaria)
         b.orientacio_positiva()
         return b
     #
@@ -4591,7 +4608,7 @@ class SubespaiVectorial(object):
             unitaria: si és True, retorna una base ortonormal
         """
         h = self.suplementari_ortogonal()
-        b = Base(h.base_ortogonal() + self.base_ortogonal(),unitaria)
+        b = Base(h.base_ortogonal() + self.base_ortogonal(),unitaria=unitaria)
         b.orientacio_positiva()
         return b
     #
@@ -6644,6 +6661,7 @@ class Parabola(Conica):
     def __init__(self,vertex,focus):
         eix = focus - vertex
         p = 2 * eix.length()
+        eix.radsimplificar()
         s = SubespaiVectorial([eix])
         base = s.amplia_base_suplementari(unitaria=True)
         v1, v2 = base.vecs
@@ -7269,7 +7287,7 @@ class Quadrica(object):
                 # Con
                 #
                 if a2.is_integer and b2.is_integer and c2.is_integer:
-                    g = mcm_llista([a2,b2,c2])
+                    g = abs(mcm_llista([a2,b2,c2]))
                 else:
                     g = a2 * b2 * c2
                 a2 = g / a2
@@ -7908,10 +7926,13 @@ class Con(Quadrica):
         s = SubespaiVectorial([eix1,eix2])
         base = s.amplia_base(unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcm_llista([a2,b2,c2])
-        a2 = g // a2
-        b2 = g // b2
-        c2 = g // c2
+        if (isinstance(a2,int) or isinstance(a2,Integer)) and (isinstance(b2,int) or isinstance(b2,Integer)) and (isinstance(c2,int) or isinstance(c2,Integer)):
+            g = abs(mcm_llista([a2,b2,c2]))
+        else:
+            g = a2 * b2 * c2
+        a2 = g / a2
+        b2 = g / b2
+        c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,-c2,0]))
         Quadrica.__init__(self,m,r)
     #

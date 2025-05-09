@@ -381,7 +381,7 @@ class Radicals(object):
             if el.args[0] not in self.quadrats:
                 self.quadrats.append(el.args[0])
         elif isinstance(el,int) or isinstance(el,Integer):
-            if el not in self.enters:
+            if el not in self.enters and el != 0:
                 self.enters.append(el)
         else:
             for k in el.args:
@@ -7286,13 +7286,6 @@ class Quadrica(object):
                 #
                 # Con
                 #
-                if a2.is_integer and b2.is_integer and c2.is_integer:
-                    g = abs(mcm_llista([a2,b2,c2]))
-                else:
-                    g = a2 * b2 * c2
-                a2 = g / a2
-                b2 = g / b2
-                c2 = g / c2
                 return Con(a2,b2,-c2,s,v1[0][1],v1[1][1])
             elif tip > 0:
                 #
@@ -7926,7 +7919,7 @@ class Con(Quadrica):
         s = SubespaiVectorial([eix1,eix2])
         base = s.amplia_base(unitaria=True)
         r = ReferenciaAfi(centre,base)
-        if (isinstance(a2,int) or isinstance(a2,Integer)) and (isinstance(b2,int) or isinstance(b2,Integer)) and (isinstance(c2,int) or isinstance(c2,Integer)):
+        if a2.is_integer and b2.is_integer and c2.is_integer:
             g = abs(mcm_llista([a2,b2,c2]))
         else:
             g = a2 * b2 * c2
@@ -8624,7 +8617,7 @@ class CilindreParabolic(Quadrica):
         direcció "eix", eix de les y' amb direcció "eix2" i paràmetre de
         la paràbola "p"
         Paràmetres:
-           p: paràmetre de l'equació reduïda z' = \\frac{x'^2}{2 * p}
+           p: paràmetre de l'equació reduïda z' = \\pm \\frac{x'^2}{2 * p}
            vertex: un vèrtex del cilindre parabòlic
            eix1: direcció de l'eix de les x'
            eix2: direcció de l'eix de les y'. Si és None, el tria el programa
@@ -8653,12 +8646,9 @@ class CilindreParabolic(Quadrica):
     #
     #
     #
-    def __init__(self,p,vertex,eix1,eix2=None):
-        if eix2 is None:
-            s = SubespaiVectorial([eix1])
-        else:
-            s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+    def __init__(self,p,vertex,eix1,eix2):
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
         m = Matriu(Matrix([[1,0,0,0],[0,0,0,0],[0,0,0,-p],[0,0,-p,0]]))
         Quadrica.__init__(self,m,r)
@@ -8686,7 +8676,7 @@ class CilindreParabolic(Quadrica):
         c += [Rational(1,k) for k in range(1,4)] + [-Rational(1,k) for k in range(1,4)]
         a = random.randint(0,len(c) - 1)
         p = 2 * c[a] * sqrt(q[2])
-        return cls(p,vertex,eix)
+        return cls(p,vertex,base[0],base[1])
     #
     #
     #

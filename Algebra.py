@@ -2489,15 +2489,46 @@ class Matriu:
         """
         Retorna quin factor comú podem treure de la matriu
         """
-        d = []
+        l = []
+        s = []
+        square = False
         for i in range(self.files):
             for j in range(self.columnes):
-                k = self[i,j]
-            if (isinstance(k,int) or isinstance(k,Integer)):
-                d.append(k)
-            else:
-                return 1
-        return (mcd_llista(d))
+                k = self.matriu[i,j]
+                if isinstance(k,Rational):
+                    l.append(k.q)
+                    s.append(False)
+                elif isinstance(k,int) or isinstance(k,Integer):
+                    l.append(1)
+                    s.append(False)
+                elif isinstance(k**2,Rational):
+                    square = True
+                    k2 = k**2
+                    l.append(k2.q)
+                    s.append(True)
+                elif isinstance(k,Add):
+                    for a in k.args:
+                        if isinstance(a,Rational):
+                            l.append(a.q)
+                            s.append(False)
+                        elif isinstance(a,int) or isinstance(a,Integer):
+                            l.append(1)
+                            s.append(False)
+                        elif isinstance(a**2,Rational):
+                            square = True
+                            a2 = a**2
+                            l.append(a2.q)
+                            s.append(True)
+                else:
+                    return matriu_latex(self.matriu,format=self.format)
+        if square:
+            for k in range(len(l)):
+                if not s[k]:
+                    l[k] = l[k]**2
+        m = mcm_llista(l)
+        if square:
+            m = sqrt(m)
+        return m
     #
     #
     #
@@ -3835,7 +3866,7 @@ class ReferenciaAfi(object):
         p = self.origen + c * coordenades
         coordenades = [x.simplify() for x in p.components]
         return Punt(coordenades)
- 
+
 
 class PlaAfi(object):
     """
@@ -4821,7 +4852,7 @@ class VarietatAfi(object):
         Retorna l'expressió en latex de la varietat afi
         """
         return f"{self.punt}+{self.subespai}"
-    
+
 
 class Tetraedre(object):
     #
@@ -4850,16 +4881,16 @@ class Tetraedre(object):
             return None
         return super(Tetraedre,cls).__new__(cls)
     #
-    # 
-    #  
+    #
+    #
     def __init__(self,p1,p2,p3,p4):
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3
         self.p4 = p4
     #
-    # 
-    #  
+    #
+    #
     @classmethod
     def aleatori(cls):
         trobat = False
@@ -4867,12 +4898,12 @@ class Tetraedre(object):
             ps = []
             for i in range(4):
                 ps.append(Punt.aleatori(maxim=4,nuls=False))
-            v1 = ps[1]  - ps[0] 
+            v1 = ps[1]  - ps[0]
             v2 = ps[2]  - ps[0]
-            v3 = ps[3]   - ps[0]  
+            v3 = ps[3]   - ps[0]
             m = Matriu.from_vectors_columna([v1,v2,v3])
             trobat = m.determinant() != 0
-        return cls(*ps)                    
+        return cls(*ps)
     #
     #
     #
@@ -4883,7 +4914,7 @@ class Tetraedre(object):
         m = Matriu.from_vectors_columna([v1,v2,v3])
         return Rational(1,6) * abs(m.determinant())
     #
-    # 
+    #
     #
     def plans_de_les_cares(self):
         P1 = PlaAfi(self.p1, self.p2 - self.p1, self.p3 - self.p1)
@@ -4892,8 +4923,8 @@ class Tetraedre(object):
         P4 = PlaAfi(self.p2, self.p3 - self.p2, self.p4 - self.p2)
         return (P1,P2,P3,P4)
     #
-    # 
-    #  
+    #
+    #
     def vertexs(self):
         return (self.p1,self.p2,self.p3,self.p4)
 
@@ -5951,7 +5982,8 @@ class Conica(object):
             a = a.inserta_fila(2,Vector([0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * matriu * b
-            self.canonica.simplificar()
+            self.canonica = self.canonica.factor_comu() * self.canonica
+
     #
     #
     #
@@ -6024,12 +6056,14 @@ class Conica(object):
         veps[0].simplificar()
         veps[1].simplificar()
         b = Base(veps,unitaria=True)
-        b.orientacio_positiva()
         es = t1 * veps[0].dot(Vector(s[0],s[1])) + veps[0].dot(l)
         vertex = Punt(solve([es,eq],s[0],s[1])[0])
         ref = ReferenciaAfi(vertex,b)
         ep = veps[1].dot(l)/veps[1].length()
-        p = - ep/t1
+        if t1 < 0:
+            p = - ep/t1
+        else:
+            p = ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
         return Parabola(vertex,focus)
     #
@@ -6055,7 +6089,6 @@ class Conica(object):
         x, y = symbols('x y')
         m = Matriu.matriu_columna(Vector([x,y,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
         return r[0,0].expand()
     #
     #
@@ -6662,16 +6695,9 @@ class Parabola(Conica):
         eix = focus - vertex
         p = 2 * eix.length()
         eix.radsimplificar()
-        s = SubespaiVectorial([eix])
-        base = s.amplia_base_suplementari(unitaria=True)
-        v1, v2 = base.vecs
-        if v1[0] < 0:
-            v1 = -v1
-        if v2[1] < 0:
-            v2 = -v2
-        if eix * v2 < 0:
-            p = -p
-        base.vecs = [v1,v2]
+        v2 = eix
+        v1 = Vector([v2[1],-v2[0]])
+        base = Base([v1,v2],unitaria=True)
         m = Matriu(Matrix(3,3,[1,0,0,0,0,-p,0,-p,0]))
         r = ReferenciaAfi(vertex,base)
         Conica.__init__(self,m,r)
@@ -6841,7 +6867,7 @@ class Quadrica(object):
             a = a.inserta_fila(3,Vector([0,0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * self.matriu * b
-        self.canonica.simplificar()
+        self.canonica = self.canonica.factor_comu() * self.canonica
     #
     #
     #
@@ -6874,7 +6900,7 @@ class Quadrica(object):
         """
         Retorna la matriu projectiva de la quàdrica en la referencia 'referencia'
         Paràmetres:
-          referencia: Element de la classe ReferenciaAfi 
+          referencia: Element de la classe ReferenciaAfi
         """
         a = referencia.base.matriu()
         a = a.inserta_columna(3,referencia.origen)
@@ -7381,12 +7407,6 @@ class Quadrica(object):
                 vertex = Punt(solve([es1,es2,eq],x,y,z)[0])
                 a2 =  -2 * ep / t1
                 b2 =  -2 * ep / t2
-                if a2 < 0:
-                    a2, b2 = b2, a2
-                    vec1, vec2 = vec2, vec1
-                    vec3 *= -1
-                a2 /= vec3.length()
-                b2 /= vec3.length()
                 return ParaboloideHiperbolic(a2,-b2,vertex,vec1,vec2)
         if len(positius) + len(negatius) == 1:
             #
@@ -7467,8 +7487,11 @@ class Ellipsoide(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcm_llista([a2,b2,c2])
         t = g
@@ -7616,8 +7639,11 @@ class HiperboloideUnaFulla(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcm_llista([a2,b2,c2])
         t = g
@@ -7765,8 +7791,11 @@ class HiperboloideDuesFulles(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcm_llista([a2,b2,c2])
         t = g
@@ -7916,8 +7945,11 @@ class Con(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
             g = abs(mcm_llista([a2,b2,c2]))
@@ -8065,8 +8097,11 @@ class CilindreElliptic(Quadrica):
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcd_llista([a2,b2])
         t = a2 * b2 // g
@@ -8211,8 +8246,11 @@ class CilindreHiperbolic(Quadrica):
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcd_llista([a2,b2])
         t = a2 * b2 // g
@@ -8362,8 +8400,11 @@ class ParaboloideElliptic(Quadrica):
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
         q = base.quadrats_longituds()
         t = a2 * b2
@@ -8465,10 +8506,10 @@ class ParaboloideHiperbolic(Quadrica):
     def __new__(cls,a2,b2,vertex,eix1,eix2):
         """
         Constructor.
-        Retorna el paraboloide hiperbòlic amb vèrtex "vertex" i semieixos l*a2
-        i l*b2, on l és la longitud de eix3
+        Retorna el paraboloide hiperbòlic amb quadrats delsm semieixos a2 i b3
+        z' = frac{x'^2}{a2} - frac{y'^2}{b2}
         Paràmetres:
-           a2, b2: nombres enters positius
+           a2, b2: semieixos
            eix1: direcció de l'eix principal (de les x')
            eix2: en pricipi és la direcció de l'eix de les y', però si no és
                  perpendicular a eix1, es calcula el perpendicular que està
@@ -8500,26 +8541,24 @@ class ParaboloideHiperbolic(Quadrica):
             return None
         a2 = sympify(a2)
         b2 = sympify(b2)
-        if not a2.is_integer or not b2.is_integer:
-            return None
         return super(Quadrica,cls).__new__(cls)
     #
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
-        g = mcd_llista([a2,b2])
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
-        q = base.quadrats_longituds()
-        if random.randint(0,1):
-            t /= sqrt(q[2])
+        if a2.is_integer and b2.is_integer:
+            g = mcm_llista([a2,b2])
         else:
-            t *= sqrt(q[2])
-        m = Matriu(Matrix([[b2,0,0,0],[0,-a2,0,0],[0,0,0,-t/2],[0,0,-t/2,0]]))
+            g = a2 * b2
+        a2 = g / a2
+        b2 = g / b2
+        m = Matriu(Matrix([[a2,0,0,0],[0,-b2,0,0],[0,0,0,-g/2],[0,0,-g/2,0]]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -8610,7 +8649,7 @@ class CilindreParabolic(Quadrica):
     #
     #
     #
-    def __new__(cls,p,vertex,eix1,eix2=None):
+    def __new__(cls,p,vertex,eix1,eix2):
         """
         Constructor.
         Retorna el cilindre parabòlic amb vèrtex "vertex", eix de les x' amb
@@ -8620,7 +8659,7 @@ class CilindreParabolic(Quadrica):
            p: paràmetre de l'equació reduïda z' = \\pm \\frac{x'^2}{2 * p}
            vertex: un vèrtex del cilindre parabòlic
            eix1: direcció de l'eix de les x'
-           eix2: direcció de l'eix de les y'. Si és None, el tria el programa
+           eix2: direcció de l'eix de les y'.
         """
         if not isinstance(vertex,Punt):
             return None
@@ -8647,6 +8686,9 @@ class CilindreParabolic(Quadrica):
     #
     #
     def __init__(self,p,vertex,eix1,eix2):
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)

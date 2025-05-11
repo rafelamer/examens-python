@@ -1248,8 +1248,11 @@ inicial i final</p></div>
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcd_llista([a2,b2])
         t = a2 * b2 // g
@@ -1475,6 +1478,7 @@ inicial i final</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -1539,8 +1543,11 @@ inicial i final</p></div>
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcd_llista([a2,b2])
         t = a2 * b2 // g
@@ -1765,6 +1772,7 @@ inicial i final</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -1776,7 +1784,7 @@ inicial i final</p></div>
 </dd>
 <dt id="Algebra.CilindreParabolic"><code class="flex name class">
 <span>class <span class="ident">CilindreParabolic</span></span>
-<span>(</span><span>p, vertex, eix1, eix2=None)</span>
+<span>(</span><span>p, vertex, eix1, eix2)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -1790,17 +1798,17 @@ inicial i final</p></div>
     #
     #
     #
-    def __new__(cls,p,vertex,eix1,eix2=None):
+    def __new__(cls,p,vertex,eix1,eix2):
         &#34;&#34;&#34;
         Constructor.
         Retorna el cilindre parabòlic amb vèrtex &#34;vertex&#34;, eix de les x&#39; amb
         direcció &#34;eix&#34;, eix de les y&#39; amb direcció &#34;eix2&#34; i paràmetre de
         la paràbola &#34;p&#34;
         Paràmetres:
-           p: paràmetre de l&#39;equació reduïda z&#39; = \\frac{x&#39;^2}{2 * p}
+           p: paràmetre de l&#39;equació reduïda z&#39; = \\pm \\frac{x&#39;^2}{2 * p}
            vertex: un vèrtex del cilindre parabòlic
            eix1: direcció de l&#39;eix de les x&#39;
-           eix2: direcció de l&#39;eix de les y&#39;. Si és None, el tria el programa
+           eix2: direcció de l&#39;eix de les y&#39;.
         &#34;&#34;&#34;
         if not isinstance(vertex,Punt):
             return None
@@ -1826,12 +1834,12 @@ inicial i final</p></div>
     #
     #
     #
-    def __init__(self,p,vertex,eix1,eix2=None):
-        if eix2 is None:
-            s = SubespaiVectorial([eix1])
-        else:
-            s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+    def __init__(self,p,vertex,eix1,eix2):
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
         m = Matriu(Matrix([[1,0,0,0],[0,0,0,0],[0,0,0,-p],[0,0,-p,0]]))
         Quadrica.__init__(self,m,r)
@@ -1859,7 +1867,7 @@ inicial i final</p></div>
         c += [Rational(1,k) for k in range(1,4)] + [-Rational(1,k) for k in range(1,4)]
         a = random.randint(0,len(c) - 1)
         p = 2 * c[a] * sqrt(q[2])
-        return cls(p,vertex,eix)
+        return cls(p,vertex,base[0],base[1])
     #
     #
     #
@@ -1980,6 +1988,7 @@ inicial i final</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -2047,16 +2056,22 @@ inicial i final</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        if (isinstance(a2,int) or isinstance(a2,Integer)) and (isinstance(b2,int) or isinstance(b2,Integer)) and (isinstance(c2,int) or isinstance(c2,Integer)):
+        if a2.is_integer and b2.is_integer and c2.is_integer:
             g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
         else:
-            g = a2 * b2 * c2
-        a2 = g / a2
-        b2 = g / b2
-        c2 = g / c2
+            g = a2 * b2* c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,-c2,0]))
         Quadrica.__init__(self,m,r)
     #
@@ -2065,7 +2080,7 @@ inicial i final</p></div>
     @classmethod
     def aleatoria(cls,canonica=False):
         &#34;&#34;&#34;
-        Retorna un hiperboloide de dues fulles de manera aleatòria aleatòria
+        Retorna un con de manera aleatòria aleatòria
         &#34;&#34;&#34;
         if canonica:
             v = [Vector(1,0,0),Vector(0,1,0),Vector(0,0,1)]
@@ -2093,8 +2108,12 @@ inicial i final</p></div>
             a = random.randint(0,len(c) - 1)
             c2 = c[a]
             trobat = a2 != b2 or a2 != c2
-        a2, b2 = sorted([a2,b2])[::-1]
-        return cls(a2,b2,c2,centre,eix1,eix2)
+            a2, b2 = sorted([a2,b2])[::-1]
+            q = cls(a2,b2,c2,centre,eix1,eix2)
+            if q is None or q.canonica is None:
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -2160,7 +2179,7 @@ inicial i final</p></div>
 <span>def <span class="ident">aleatoria</span></span>(<span>canonica=False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Retorna un hiperboloide de dues fulles de manera aleatòria aleatòria</p></div>
+<div class="desc"><p>Retorna un con de manera aleatòria aleatòria</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -2267,6 +2286,7 @@ inicial i final</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -2336,7 +2356,7 @@ inicial i final</p></div>
             a = a.inserta_fila(2,Vector([0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * matriu * b
-            self.canonica.simplificar()
+            self.canonica = self.canonica.factor_comu() * self.canonica
     #
     #
     #
@@ -2409,12 +2429,14 @@ inicial i final</p></div>
         veps[0].simplificar()
         veps[1].simplificar()
         b = Base(veps,unitaria=True)
-        b.orientacio_positiva()
         es = t1 * veps[0].dot(Vector(s[0],s[1])) + veps[0].dot(l)
         vertex = Punt(solve([es,eq],s[0],s[1])[0])
         ref = ReferenciaAfi(vertex,b)
         ep = veps[1].dot(l)/veps[1].length()
-        p = - ep/t1
+        if t1 &lt; 0:
+            p = - ep/t1
+        else:
+            p = ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
         return Parabola(vertex,focus)
     #
@@ -2428,11 +2450,25 @@ inicial i final</p></div>
         x, y = symbols(&#39;x y&#39;)
         m = Matriu.matriu_columna(Vector([x,y,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
         return mylatex(r[0,0].expand()) + &#34; = 0&#34;
-        #
-        #
-        #
+    #
+    #
+    #
+    def matrius(self):
+        &#34;&#34;&#34;
+        Retorna les matrius Q i L i el terme independent f a punt
+        per a utilitzar-les em el Sagemath
+        &#34;&#34;&#34;
+        Q = f&#34;Q = {self.canonica[0:2,0:2]}\n&#34;
+        Q = Q.replace(&#34;Matrix&#34;,&#34;matrix&#34;)
+        L = f&#34;L = {self.canonica[2,0:2]}\n&#34;
+        L = L.replace(&#34;Matrix([&#34;,&#34;vector(&#34;)
+        L = L.replace(&#34;]]&#34;,&#34;]&#34;)
+        f = f&#34;f = {self.canonica[2,2]}\n&#34;
+        return Q + L + f
+    #
+    #
+    #
     def equacio(self):
         &#34;&#34;&#34;
         Retorna l&#39;equació en latex de l&#39;equació de la quàdrica
@@ -2440,7 +2476,6 @@ inicial i final</p></div>
         x, y = symbols(&#39;x y&#39;)
         m = Matriu.matriu_columna(Vector([x,y,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
         return r[0,0].expand()
     #
     #
@@ -2661,10 +2696,33 @@ Només per a el·lipses, hipèrboles i paràboles</p></div>
     x, y = symbols(&#39;x y&#39;)
     m = Matriu.matriu_columna(Vector([x,y,1]))
     r = m.transposada() * self.canonica * m
-    r.simplificar()
     return r[0,0].expand()</code></pre>
 </details>
 <div class="desc"><p>Retorna l'equació en latex de l'equació de la quàdrica</p></div>
+</dd>
+<dt id="Algebra.Conica.matrius"><code class="name flex">
+<span>def <span class="ident">matrius</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def matrius(self):
+    &#34;&#34;&#34;
+    Retorna les matrius Q i L i el terme independent f a punt
+    per a utilitzar-les em el Sagemath
+    &#34;&#34;&#34;
+    Q = f&#34;Q = {self.canonica[0:2,0:2]}\n&#34;
+    Q = Q.replace(&#34;Matrix&#34;,&#34;matrix&#34;)
+    L = f&#34;L = {self.canonica[2,0:2]}\n&#34;
+    L = L.replace(&#34;Matrix([&#34;,&#34;vector(&#34;)
+    L = L.replace(&#34;]]&#34;,&#34;]&#34;)
+    f = f&#34;f = {self.canonica[2,2]}\n&#34;
+    return Q + L + f</code></pre>
+</details>
+<div class="desc"><p>Retorna les matrius Q i L i el terme independent f a punt
+per a utilitzar-les em el Sagemath</p></div>
 </dd>
 <dt id="Algebra.Conica.referencia_principal"><code class="name flex">
 <span>def <span class="ident">referencia_principal</span></span>(<span>self)</span>
@@ -3160,6 +3218,7 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
@@ -3225,8 +3284,11 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcm_llista([a2,b2,c2])
         t = g
@@ -3443,6 +3505,7 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -5150,6 +5213,7 @@ base canònica</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
@@ -5215,8 +5279,11 @@ base canònica</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcm_llista([a2,b2,c2])
         t = g
@@ -5435,6 +5502,7 @@ base canònica</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -5501,8 +5569,11 @@ base canònica</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         g = mcm_llista([a2,b2,c2])
         t = g
@@ -5719,6 +5790,7 @@ base canònica</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -6053,6 +6125,18 @@ Ho he trobat a StackOverflow.</p></div>
         Retorna el determiant de la matriu
         &#34;&#34;&#34;
         return self.matriu.det()
+    #
+    #
+    #
+    def tots_enters(self):
+        &#34;&#34;&#34;
+        Retorna True si tots els coeficients de la matriu són nombres enters
+        &#34;&#34;&#34;
+        for i in range(self.files):
+            for j in range(self.columnes):
+                if not (isinstance(self[i,j],Integer) or isinstance(self[i,j],int)):
+                    return False
+        return True
     #
     #
     #
@@ -6795,15 +6879,51 @@ Ho he trobat a StackOverflow.</p></div>
         &#34;&#34;&#34;
         Retorna quin factor comú podem treure de la matriu
         &#34;&#34;&#34;
-        d = []
+        l = []
+        s = []
+        square = False
         for i in range(self.files):
             for j in range(self.columnes):
-                k = self[i,j]
-            if (isinstance(k,int) or isinstance(k,Integer)):
-                d.append(k)
-            else:
-                return 1
-        return (mcd_llista(d))
+                k = self.matriu[i,j]
+                if isinstance(k,Rational):
+                    l.append(k.q)
+                    s.append(False)
+                elif isinstance(k,int) or isinstance(k,Integer):
+                    l.append(1)
+                    s.append(False)
+                elif isinstance(k**2,Rational):
+                    square = True
+                    k2 = k**2
+                    fac = factorint(k2.p)
+                    for p, e in fac.items():
+                        if e % 2 == 1:
+                            l.append(p)
+                            s.append(True)
+                    l.append(k2.q)
+                    s.append(True)
+                elif isinstance(k,Add):
+                    for a in k.args:
+                        if isinstance(a,Rational):
+                            l.append(a.q)
+                            s.append(False)
+                        elif isinstance(a,int) or isinstance(a,Integer):
+                            l.append(1)
+                            s.append(False)
+                        elif isinstance(a**2,Rational):
+                            square = True
+                            a2 = a**2
+                            l.append(a2.q)
+                            s.append(True)
+                else:
+                    return 1
+        if square:
+            for k in range(len(l)):
+                if not s[k]:
+                    l[k] = l[k]**2
+        m = mcm_llista(l)
+        if square:
+            m = sqrt(m)
+        return m
     #
     #
     #
@@ -7260,15 +7380,51 @@ self.diagonalitzable</p></div>
     &#34;&#34;&#34;
     Retorna quin factor comú podem treure de la matriu
     &#34;&#34;&#34;
-    d = []
+    l = []
+    s = []
+    square = False
     for i in range(self.files):
         for j in range(self.columnes):
-            k = self[i,j]
-        if (isinstance(k,int) or isinstance(k,Integer)):
-            d.append(k)
-        else:
-            return 1
-    return (mcd_llista(d))</code></pre>
+            k = self.matriu[i,j]
+            if isinstance(k,Rational):
+                l.append(k.q)
+                s.append(False)
+            elif isinstance(k,int) or isinstance(k,Integer):
+                l.append(1)
+                s.append(False)
+            elif isinstance(k**2,Rational):
+                square = True
+                k2 = k**2
+                fac = factorint(k2.p)
+                for p, e in fac.items():
+                    if e % 2 == 1:
+                        l.append(p)
+                        s.append(True)
+                l.append(k2.q)
+                s.append(True)
+            elif isinstance(k,Add):
+                for a in k.args:
+                    if isinstance(a,Rational):
+                        l.append(a.q)
+                        s.append(False)
+                    elif isinstance(a,int) or isinstance(a,Integer):
+                        l.append(1)
+                        s.append(False)
+                    elif isinstance(a**2,Rational):
+                        square = True
+                        a2 = a**2
+                        l.append(a2.q)
+                        s.append(True)
+            else:
+                return 1
+    if square:
+        for k in range(len(l)):
+            if not s[k]:
+                l[k] = l[k]**2
+    m = mcm_llista(l)
+    if square:
+        m = sqrt(m)
+    return m</code></pre>
 </details>
 <div class="desc"><p>Retorna quin factor comú podem treure de la matriu</p></div>
 </dd>
@@ -7767,6 +7923,26 @@ columnes: llista de columnes</p></div>
 <h2 id="parametres">Paràmetres</h2>
 <p>l: llista de substitucions</p></div>
 </dd>
+<dt id="Algebra.Matriu.tots_enters"><code class="name flex">
+<span>def <span class="ident">tots_enters</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tots_enters(self):
+    &#34;&#34;&#34;
+    Retorna True si tots els coeficients de la matriu són nombres enters
+    &#34;&#34;&#34;
+    for i in range(self.files):
+        for j in range(self.columnes):
+            if not (isinstance(self[i,j],Integer) or isinstance(self[i,j],int)):
+                return False
+    return True</code></pre>
+</details>
+<div class="desc"><p>Retorna True si tots els coeficients de la matriu són nombres enters</p></div>
+</dd>
 <dt id="Algebra.Matriu.tots_enters_racionals"><code class="name flex">
 <span>def <span class="ident">tots_enters_racionals</span></span>(<span>self)</span>
 </code></dt>
@@ -7923,16 +8099,9 @@ columnes: llista de columnes</p></div>
         eix = focus - vertex
         p = 2 * eix.length()
         eix.radsimplificar()
-        s = SubespaiVectorial([eix])
-        base = s.amplia_base_suplementari(unitaria=True)
-        v1, v2 = base.vecs
-        if v1[0] &lt; 0:
-            v1 = -v1
-        if v2[1] &lt; 0:
-            v2 = -v2
-        if eix * v2 &lt; 0:
-            p = -p
-        base.vecs = [v1,v2]
+        v2 = eix
+        v1 = Vector([v2[1],-v2[0]])
+        base = Base([v1,v2],unitaria=True)
         m = Matriu(Matrix(3,3,[1,0,0,0,0,-p,0,-p,0]))
         r = ReferenciaAfi(vertex,base)
         Conica.__init__(self,m,r)
@@ -7963,8 +8132,13 @@ columnes: llista de columnes</p></div>
                 eix.simplificar()
                 if eix[0]**2 + eix[1]**2 &lt;= 5 and random.randint(0,10) &gt; 0:
                     continue
-                trobat = vertex[0] != focus[0] and vertex[1] != focus[1]
-        return cls(vertex,focus)
+                if vertex[0] == focus[0] or vertex[1] == focus[1]:
+                    continue
+                q = cls(vertex,focus)
+                if q is None or q.canonica is None:
+                    continue
+                trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -8222,6 +8396,7 @@ de límits (-x,x) i (-y,y)</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
@@ -8249,8 +8424,7 @@ de límits (-x,x) i (-y,y)</p></div>
     def __new__(cls,a2,b2,vertex,eix1,eix2):
         &#34;&#34;&#34;
         Constructor.
-        Retorna el paraboloide el·líptic amb vèrtex &#34;vertex&#34; i semieixos l*a2
-        i l*b2, on l és la longitud de eix3
+        Retorna el paraboloide el·líptic amb vèrtex &#34;vertex&#34; i semieixos a2 i b2
         Paràmetres:
            a2, b2: nombres enters positius
            eix1: direcció de l&#39;eix principal (de les x&#39;)
@@ -8284,22 +8458,24 @@ de límits (-x,x) i (-y,y)</p></div>
             return None
         a2 = sympify(a2)
         b2 = sympify(b2)
-        if not a2.is_integer or not b2.is_integer:
-            return None
         return super(Quadrica,cls).__new__(cls)
     #
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
-        q = base.quadrats_longituds()
-        t = a2 * b2
-        a2 = t // a2
-        b2 = t // b2
-        t *= sqrt(q[2])
-        m = Matriu(Matrix([[a2,0,0,0],[0,b2,0,0],[0,0,0,-t/2],[0,0,-t/2,0]]))
+        if a2.is_integer and b2.is_integer:
+            g = mcm_llista([a2,b2])
+        else:
+            g = a2 * b2
+        a2 = g / a2
+        b2 = g / b2
+        m = Matriu(Matrix([[a2,0,0,0],[0,b2,0,0],[0,0,0,-g/2],[0,0,-g/2,0]]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -8332,9 +8508,18 @@ de límits (-x,x) i (-y,y)</p></div>
             a2 = c[a]
             a = random.randint(0,len(c) - 1)
             b2 = c[a]
-            trobat = a2 != b2
-        a2, b2 = sorted([a2,b2])[::-1]
-        return cls(a2,b2,vertex,eix1,eix2)
+            if a2 == b2:
+                continue
+            a2, b2 = sorted([a2,b2])[::-1]
+            eix3 = eix1.cross(eix2,simplificar=True)
+            p = eix3.length()
+            a2 *= p
+            b2 *= p
+            q = cls(a2,b2,vertex,eix1,eix2)
+            if q is None or q.canonica is None:
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -8495,6 +8680,7 @@ de límits (-x,x) i (-y,y)</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -8523,10 +8709,10 @@ de límits (-x,x) i (-y,y)</p></div>
     def __new__(cls,a2,b2,vertex,eix1,eix2):
         &#34;&#34;&#34;
         Constructor.
-        Retorna el paraboloide hiperbòlic amb vèrtex &#34;vertex&#34; i semieixos l*a2
-        i l*b2, on l és la longitud de eix3
+        Retorna el paraboloide hiperbòlic amb quadrats delsm semieixos a2 i b2
+        z&#39; = frac{x&#39;^2}{a2} - frac{y&#39;^2}{b2}
         Paràmetres:
-           a2, b2: nombres enters positius
+           a2, b2: semieixos
            eix1: direcció de l&#39;eix principal (de les x&#39;)
            eix2: en pricipi és la direcció de l&#39;eix de les y&#39;, però si no és
                  perpendicular a eix1, es calcula el perpendicular que està
@@ -8558,26 +8744,24 @@ de límits (-x,x) i (-y,y)</p></div>
             return None
         a2 = sympify(a2)
         b2 = sympify(b2)
-        if not a2.is_integer or not b2.is_integer:
-            return None
         return super(Quadrica,cls).__new__(cls)
     #
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
-        s = SubespaiVectorial([eix1,eix2])
-        base = s.amplia_base(unitaria=True)
+        if eix1.dot(eix2) != 0:
+            eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+            eix2.simplificar()
+        eix3 = eix1.cross(eix2,simplificar=True)
+        base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
-        g = mcd_llista([a2,b2])
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
-        q = base.quadrats_longituds()
-        if random.randint(0,1):
-            t /= sqrt(q[2])
+        if a2.is_integer and b2.is_integer:
+            g = mcm_llista([a2,b2])
         else:
-            t *= sqrt(q[2])
-        m = Matriu(Matrix([[b2,0,0,0],[0,-a2,0,0],[0,0,0,-t/2],[0,0,-t/2,0]]))
+            g = a2 * b2
+        a2 = g / a2
+        b2 = g / b2
+        m = Matriu(Matrix([[a2,0,0,0],[0,-b2,0,0],[0,0,0,-g/2],[0,0,-g/2,0]]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -8611,6 +8795,10 @@ de límits (-x,x) i (-y,y)</p></div>
             a = random.randint(0,len(c) - 1)
             b2 = c[a]
             trobat = a2 != b2
+        eix3 = eix1.cross(eix2,simplificar=True)
+        p = eix3.length()
+        a2 *= p
+        b2 *= p
         return cls(a2,b2,vertex,eix1,eix2)
     #
     #
@@ -8772,6 +8960,7 @@ de límits (-x,x) i (-y,y)</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
@@ -9977,7 +10166,8 @@ v = Vector(3,1,-2)</p></div>
             a = a.inserta_fila(3,Vector([0,0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * self.matriu * b
-        self.canonica.simplificar()
+            t = self.canonica.factor_comu()
+            self.canonica = t * self.canonica
     #
     #
     #
@@ -9989,7 +10179,6 @@ v = Vector(3,1,-2)</p></div>
         x, y, z = symbols(&#39;x y z&#39;)
         m = Matriu.matriu_columna(Vector([x,y,z,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
         return mylatex(r[0,0].expand()) + &#34; = 0&#34;
     #
     #
@@ -10006,11 +10195,27 @@ v = Vector(3,1,-2)</p></div>
     #
     #
     #
+    def matrius(self):
+        &#34;&#34;&#34;
+        Retorna les matrius Q i L i el terme independent f a punt
+        per a utilitzar-les em el Sagemath
+        &#34;&#34;&#34;
+        Q = f&#34;Q = {self.canonica[0:3,0:3]}\n&#34;
+        Q = Q.replace(&#34;Matrix&#34;,&#34;matrix&#34;)
+        L = f&#34;L = {self.canonica[3,0:3]}\n&#34;
+        L = L.replace(&#34;Matrix([&#34;,&#34;vector(&#34;)
+        L = L.replace(&#34;]]&#34;,&#34;]&#34;)
+        f = f&#34;f = {self.canonica[3,3]}\n&#34;
+        return Q + L + f
+        
+    #
+    #
+    #
     def matriu_en_referencia(self,referencia=ReferenciaAfi.canonica()):
         &#34;&#34;&#34;
         Retorna la matriu projectiva de la quàdrica en la referencia &#39;referencia&#39;
         Paràmetres:
-          referencia: Element de la classe ReferenciaAfi 
+          referencia: Element de la classe ReferenciaAfi
         &#34;&#34;&#34;
         a = referencia.base.matriu()
         a = a.inserta_columna(3,referencia.origen)
@@ -10422,13 +10627,6 @@ v = Vector(3,1,-2)</p></div>
                 #
                 # Con
                 #
-                if a2.is_integer and b2.is_integer and c2.is_integer:
-                    g = abs(mcm_llista([a2,b2,c2]))
-                else:
-                    g = a2 * b2 * c2
-                a2 = g / a2
-                b2 = g / b2
-                c2 = g / c2
                 return Con(a2,b2,-c2,s,v1[0][1],v1[1][1])
             elif tip &gt; 0:
                 #
@@ -10524,12 +10722,6 @@ v = Vector(3,1,-2)</p></div>
                 vertex = Punt(solve([es1,es2,eq],x,y,z)[0])
                 a2 =  -2 * ep / t1
                 b2 =  -2 * ep / t2
-                if a2 &lt; 0:
-                    a2, b2 = b2, a2
-                    vec1, vec2 = vec2, vec1
-                    vec3 *= -1
-                a2 /= vec3.length()
-                b2 /= vec3.length()
                 return ParaboloideHiperbolic(a2,-b2,vertex,vec1,vec2)
         if len(positius) + len(negatius) == 1:
             #
@@ -10789,7 +10981,7 @@ prime: nombre de primes que escriurem a l'equació</p></div>
     &#34;&#34;&#34;
     Retorna la matriu projectiva de la quàdrica en la referencia &#39;referencia&#39;
     Paràmetres:
-      referencia: Element de la classe ReferenciaAfi 
+      referencia: Element de la classe ReferenciaAfi
     &#34;&#34;&#34;
     a = referencia.base.matriu()
     a = a.inserta_columna(3,referencia.origen)
@@ -10810,6 +11002,30 @@ prime: nombre de primes que escriurem a l'equació</p></div>
 <div class="desc"><p>Retorna la matriu projectiva de la quàdrica en la referencia 'referencia'</p>
 <h2 id="parametres">Paràmetres</h2>
 <p>referencia: Element de la classe ReferenciaAfi</p></div>
+</dd>
+<dt id="Algebra.Quadrica.matrius"><code class="name flex">
+<span>def <span class="ident">matrius</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def matrius(self):
+    &#34;&#34;&#34;
+    Retorna les matrius Q i L i el terme independent f a punt
+    per a utilitzar-les em el Sagemath
+    &#34;&#34;&#34;
+    Q = f&#34;Q = {self.canonica[0:3,0:3]}\n&#34;
+    Q = Q.replace(&#34;Matrix&#34;,&#34;matrix&#34;)
+    L = f&#34;L = {self.canonica[3,0:3]}\n&#34;
+    L = L.replace(&#34;Matrix([&#34;,&#34;vector(&#34;)
+    L = L.replace(&#34;]]&#34;,&#34;]&#34;)
+    f = f&#34;f = {self.canonica[3,3]}\n&#34;
+    return Q + L + f</code></pre>
+</details>
+<div class="desc"><p>Retorna les matrius Q i L i el terme independent f a punt
+per a utilitzar-les em el Sagemath</p></div>
 </dd>
 <dt id="Algebra.Quadrica.referencia_principal"><code class="name flex">
 <span>def <span class="ident">referencia_principal</span></span>(<span>self)</span>
@@ -10913,7 +11129,7 @@ prime: nombre de primes que escriurem a l'equació</p></div>
             if el.args[0] not in self.quadrats:
                 self.quadrats.append(el.args[0])
         elif isinstance(el,int) or isinstance(el,Integer):
-            if el not in self.enters:
+            if el not in self.enters and el != 0:
                 self.enters.append(el)
         else:
             for k in el.args:
@@ -11016,7 +11232,7 @@ self.fraccions</p>
         if el.args[0] not in self.quadrats:
             self.quadrats.append(el.args[0])
     elif isinstance(el,int) or isinstance(el,Integer):
-        if el not in self.enters:
+        if el not in self.enters and el != 0:
             self.enters.append(el)
     else:
         for k in el.args:
@@ -13688,16 +13904,16 @@ prime: nombre de primes a les incògnites</p></div>
             return None
         return super(Tetraedre,cls).__new__(cls)
     #
-    # 
-    #  
+    #
+    #
     def __init__(self,p1,p2,p3,p4):
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3
         self.p4 = p4
     #
-    # 
-    #  
+    #
+    #
     @classmethod
     def aleatori(cls):
         trobat = False
@@ -13705,12 +13921,12 @@ prime: nombre de primes a les incògnites</p></div>
             ps = []
             for i in range(4):
                 ps.append(Punt.aleatori(maxim=4,nuls=False))
-            v1 = ps[1]  - ps[0] 
+            v1 = ps[1]  - ps[0]
             v2 = ps[2]  - ps[0]
-            v3 = ps[3]   - ps[0]  
+            v3 = ps[3]   - ps[0]
             m = Matriu.from_vectors_columna([v1,v2,v3])
             trobat = m.determinant() != 0
-        return cls(*ps)                    
+        return cls(*ps)
     #
     #
     #
@@ -13721,7 +13937,7 @@ prime: nombre de primes a les incògnites</p></div>
         m = Matriu.from_vectors_columna([v1,v2,v3])
         return Rational(1,6) * abs(m.determinant())
     #
-    # 
+    #
     #
     def plans_de_les_cares(self):
         P1 = PlaAfi(self.p1, self.p2 - self.p1, self.p3 - self.p1)
@@ -13730,8 +13946,8 @@ prime: nombre de primes a les incògnites</p></div>
         P4 = PlaAfi(self.p2, self.p3 - self.p2, self.p4 - self.p2)
         return (P1,P2,P3,P4)
     #
-    # 
-    #  
+    #
+    #
     def vertexs(self):
         return (self.p1,self.p2,self.p3,self.p4)</code></pre>
 </details>
@@ -17198,6 +17414,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
@@ -17358,6 +17575,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Matriu.sistema_propi" href="#Algebra.Matriu.sistema_propi">sistema_propi</a></code></li>
 <li><code><a title="Algebra.Matriu.submatriu" href="#Algebra.Matriu.submatriu">submatriu</a></code></li>
 <li><code><a title="Algebra.Matriu.subs" href="#Algebra.Matriu.subs">subs</a></code></li>
+<li><code><a title="Algebra.Matriu.tots_enters" href="#Algebra.Matriu.tots_enters">tots_enters</a></code></li>
 <li><code><a title="Algebra.Matriu.tots_enters_racionals" href="#Algebra.Matriu.tots_enters_racionals">tots_enters_racionals</a></code></li>
 <li><code><a title="Algebra.Matriu.tots_uns_i_zeros" href="#Algebra.Matriu.tots_uns_i_zeros">tots_uns_i_zeros</a></code></li>
 <li><code><a title="Algebra.Matriu.transformacio_elemental" href="#Algebra.Matriu.transformacio_elemental">transformacio_elemental</a></code></li>
@@ -17453,6 +17671,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Quadrica.hiperboloideduesfulles" href="#Algebra.Quadrica.hiperboloideduesfulles">hiperboloideduesfulles</a></code></li>
 <li><code><a title="Algebra.Quadrica.hiperboloideunafulla" href="#Algebra.Quadrica.hiperboloideunafulla">hiperboloideunafulla</a></code></li>
 <li><code><a title="Algebra.Quadrica.matriu_en_referencia" href="#Algebra.Quadrica.matriu_en_referencia">matriu_en_referencia</a></code></li>
+<li><code><a title="Algebra.Quadrica.matrius" href="#Algebra.Quadrica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloideelliptic" href="#Algebra.Quadrica.paraboloideelliptic">paraboloideelliptic</a></code></li>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>

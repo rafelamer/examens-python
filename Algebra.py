@@ -1750,6 +1750,18 @@ class Matriu:
     #
     #
     #
+    def tots_enters(self):
+        """
+        Retorna True si tots els coeficients de la matriu són nombres enters
+        """
+        for i in range(self.files):
+            for j in range(self.columnes):
+                if not (isinstance(self[i,j],Integer) or isinstance(self[i,j],int)):
+                    return False
+        return True
+    #
+    #
+    #
     def tots_enters_racionals(self):
         """
         Retorna True si tots els coeficients de la matriu són nombres enters o racionals
@@ -2504,6 +2516,11 @@ class Matriu:
                 elif isinstance(k**2,Rational):
                     square = True
                     k2 = k**2
+                    fac = factorint(k2.p)
+                    for p, e in fac.items():
+                        if e % 2 == 1:
+                            l.append(p)
+                            s.append(True)
                     l.append(k2.q)
                     s.append(True)
                 elif isinstance(k,Add):
@@ -2520,7 +2537,7 @@ class Matriu:
                             l.append(a2.q)
                             s.append(True)
                 else:
-                    return matriu_latex(self.matriu,format=self.format)
+                    return 1
         if square:
             for k in range(len(l)):
                 if not s[k]:
@@ -5983,7 +6000,6 @@ class Conica(object):
             b = a.inversa()
             self.canonica = b.transposada() * matriu * b
             self.canonica = self.canonica.factor_comu() * self.canonica
-
     #
     #
     #
@@ -6077,11 +6093,25 @@ class Conica(object):
         x, y = symbols('x y')
         m = Matriu.matriu_columna(Vector([x,y,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
         return mylatex(r[0,0].expand()) + " = 0"
-        #
-        #
-        #
+    #
+    #
+    #
+    def matrius(self):
+        """
+        Retorna les matrius Q i L i el terme independent f a punt
+        per a utilitzar-les em el Sagemath
+        """
+        Q = f"Q = {self.canonica[0:2,0:2]}\n"
+        Q = Q.replace("Matrix","matrix")
+        L = f"L = {self.canonica[2,0:2]}\n"
+        L = L.replace("Matrix([","vector(")
+        L = L.replace("]]","]")
+        f = f"f = {self.canonica[2,2]}\n"
+        return Q + L + f
+    #
+    #
+    #
     def equacio(self):
         """
         Retorna l'equació en latex de l'equació de la quàdrica
@@ -6728,8 +6758,13 @@ class Parabola(Conica):
                 eix.simplificar()
                 if eix[0]**2 + eix[1]**2 <= 5 and random.randint(0,10) > 0:
                     continue
-                trobat = vertex[0] != focus[0] and vertex[1] != focus[1]
-        return cls(vertex,focus)
+                if vertex[0] == focus[0] or vertex[1] == focus[1]:
+                    continue
+                q = cls(vertex,focus)
+                if q is None or q.canonica is None:
+                    continue
+                trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -6867,7 +6902,8 @@ class Quadrica(object):
             a = a.inserta_fila(3,Vector([0,0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * self.matriu * b
-        self.canonica = self.canonica.factor_comu() * self.canonica
+            t = self.canonica.factor_comu()
+            self.canonica = t * self.canonica
     #
     #
     #
@@ -6879,7 +6915,6 @@ class Quadrica(object):
         x, y, z = symbols('x y z')
         m = Matriu.matriu_columna(Vector([x,y,z,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
         return mylatex(r[0,0].expand()) + " = 0"
     #
     #
@@ -6893,6 +6928,22 @@ class Quadrica(object):
         r = m.transposada() * self.canonica * m
         r.simplificar()
         return r[0,0].expand()
+    #
+    #
+    #
+    def matrius(self):
+        """
+        Retorna les matrius Q i L i el terme independent f a punt
+        per a utilitzar-les em el Sagemath
+        """
+        Q = f"Q = {self.canonica[0:3,0:3]}\n"
+        Q = Q.replace("Matrix","matrix")
+        L = f"L = {self.canonica[3,0:3]}\n"
+        L = L.replace("Matrix([","vector(")
+        L = L.replace("]]","]")
+        f = f"f = {self.canonica[3,3]}\n"
+        return Q + L + f
+        
     #
     #
     #
@@ -7953,11 +8004,14 @@ class Con(Quadrica):
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
             g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
         else:
-            g = a2 * b2 * c2
-        a2 = g / a2
-        b2 = g / b2
-        c2 = g / c2
+            g = a2 * b2* c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,-c2,0]))
         Quadrica.__init__(self,m,r)
     #
@@ -7966,7 +8020,7 @@ class Con(Quadrica):
     @classmethod
     def aleatoria(cls,canonica=False):
         """
-        Retorna un hiperboloide de dues fulles de manera aleatòria aleatòria
+        Retorna un con de manera aleatòria aleatòria
         """
         if canonica:
             v = [Vector(1,0,0),Vector(0,1,0),Vector(0,0,1)]
@@ -7994,8 +8048,12 @@ class Con(Quadrica):
             a = random.randint(0,len(c) - 1)
             c2 = c[a]
             trobat = a2 != b2 or a2 != c2
-        a2, b2 = sorted([a2,b2])[::-1]
-        return cls(a2,b2,c2,centre,eix1,eix2)
+            a2, b2 = sorted([a2,b2])[::-1]
+            q = cls(a2,b2,c2,centre,eix1,eix2)
+            if q is None or q.canonica is None:
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -8358,8 +8416,7 @@ class ParaboloideElliptic(Quadrica):
     def __new__(cls,a2,b2,vertex,eix1,eix2):
         """
         Constructor.
-        Retorna el paraboloide el·líptic amb vèrtex "vertex" i semieixos l*a2
-        i l*b2, on l és la longitud de eix3
+        Retorna el paraboloide el·líptic amb vèrtex "vertex" i semieixos a2 i b2
         Paràmetres:
            a2, b2: nombres enters positius
            eix1: direcció de l'eix principal (de les x')
@@ -8393,8 +8450,6 @@ class ParaboloideElliptic(Quadrica):
             return None
         a2 = sympify(a2)
         b2 = sympify(b2)
-        if not a2.is_integer or not b2.is_integer:
-            return None
         return super(Quadrica,cls).__new__(cls)
     #
     #
@@ -8406,12 +8461,13 @@ class ParaboloideElliptic(Quadrica):
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
-        q = base.quadrats_longituds()
-        t = a2 * b2
-        a2 = t // a2
-        b2 = t // b2
-        t *= sqrt(q[2])
-        m = Matriu(Matrix([[a2,0,0,0],[0,b2,0,0],[0,0,0,-t/2],[0,0,-t/2,0]]))
+        if a2.is_integer and b2.is_integer:
+            g = mcm_llista([a2,b2])
+        else:
+            g = a2 * b2
+        a2 = g / a2
+        b2 = g / b2
+        m = Matriu(Matrix([[a2,0,0,0],[0,b2,0,0],[0,0,0,-g/2],[0,0,-g/2,0]]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -8444,9 +8500,18 @@ class ParaboloideElliptic(Quadrica):
             a2 = c[a]
             a = random.randint(0,len(c) - 1)
             b2 = c[a]
-            trobat = a2 != b2
-        a2, b2 = sorted([a2,b2])[::-1]
-        return cls(a2,b2,vertex,eix1,eix2)
+            if a2 == b2:
+                continue
+            a2, b2 = sorted([a2,b2])[::-1]
+            eix3 = eix1.cross(eix2,simplificar=True)
+            p = eix3.length()
+            a2 *= p
+            b2 *= p
+            q = cls(a2,b2,vertex,eix1,eix2)
+            if q is None or q.canonica is None:
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -8506,7 +8571,7 @@ class ParaboloideHiperbolic(Quadrica):
     def __new__(cls,a2,b2,vertex,eix1,eix2):
         """
         Constructor.
-        Retorna el paraboloide hiperbòlic amb quadrats delsm semieixos a2 i b3
+        Retorna el paraboloide hiperbòlic amb quadrats delsm semieixos a2 i b2
         z' = frac{x'^2}{a2} - frac{y'^2}{b2}
         Paràmetres:
            a2, b2: semieixos
@@ -8592,6 +8657,10 @@ class ParaboloideHiperbolic(Quadrica):
             a = random.randint(0,len(c) - 1)
             b2 = c[a]
             trobat = a2 != b2
+        eix3 = eix1.cross(eix2,simplificar=True)
+        p = eix3.length()
+        a2 *= p
+        b2 *= p
         return cls(a2,b2,vertex,eix1,eix2)
     #
     #

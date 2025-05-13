@@ -134,6 +134,9 @@ class Impresora(Printer):
         to_print = [write_coeff(a) for a in expr_args]
         to_print[0] = str(latex(expr_args[0]))
         return "".join(a for a in to_print)
+    
+def enter(u):
+    return isinstance(u,int) or isinstance(u,Integer)
 
 def mylatex(e):
     p, q, r, s = symbols('p q u v')
@@ -157,6 +160,8 @@ def mcd_llista(llista):
     """
     Retorna el màxim comú divisor d'una llista d'enters
     """
+    if len(llista) == 0:
+        return 1
     f = 1
     for k in llista:
         if isinstance(k,Rational):
@@ -380,7 +385,7 @@ class Radicals(object):
         if isinstance(el,Pow) and el.args[1] == Rational(1,2):
             if el.args[0] not in self.quadrats:
                 self.quadrats.append(el.args[0])
-        elif isinstance(el,int) or isinstance(el,Integer):
+        elif enter(el):
             if el not in self.enters and el != 0:
                 self.enters.append(el)
         else:
@@ -398,7 +403,7 @@ class Radicals(object):
         """
         if isinstance(el,Pow):
             return
-        if isinstance(el,int) or isinstance(el,Integer):
+        if enter(el):
             return
         if isinstance(el,Rational):
             if el.q not in self.fraccions:
@@ -526,7 +531,7 @@ class Vector(object):
         Retorna True si totes les components del vector són nombres enters
         """
         for k in self.components:
-            if not (isinstance(k,Integer) or isinstance(k,int)):
+            if not enter(k):
                 return False
         return True
     #
@@ -552,7 +557,7 @@ class Vector(object):
             if isinstance(k,Rational):
                 l.append(k.q)
                 s.append(False)
-            elif isinstance(k,int) or isinstance(k,Integer):
+            elif enter(k):
                 l.append(1)
                 s.append(False)
             elif isinstance(k**2,Rational):
@@ -565,7 +570,7 @@ class Vector(object):
                     if isinstance(a,Rational):
                         l.append(a.q)
                         s.append(False)
-                    elif isinstance(a,int) or isinstance(a,Integer):
+                    elif enter(a):
                         l.append(1)
                         s.append(False)
                     elif isinstance(a**2,Rational):
@@ -601,7 +606,7 @@ class Vector(object):
             g = mcd_llista(r)
         except:
             g = 1
-        if isinstance(m,int) or isinstance(m,Integer):
+        if enter(m):
             if isinstance(self,Punt):
                 return Rational(g,m) , Punt([Rational(m,g)*k for k in self.components])
             else:
@@ -641,7 +646,7 @@ class Vector(object):
             if isinstance(k,Rational):
                 l.append(k.q)
                 s.append(False)
-            elif isinstance(k,int) or isinstance(k,Integer):
+            elif enter(k):
                 l.append(1)
                 s.append(False)
             elif isinstance(k**2,Rational):
@@ -654,7 +659,7 @@ class Vector(object):
                     if isinstance(a,Rational):
                         l.append(a.q)
                         s.append(False)
-                    elif isinstance(a,int) or isinstance(a,Integer):
+                    elif enter(a):
                         l.append(1)
                         s.append(False)
                     elif isinstance(a**2,Rational):
@@ -948,9 +953,7 @@ class Vector(object):
             k = self.components[i]
             if isinstance(k,Rational):
                 d.append(k.q)
-            elif isinstance(k,int):
-                pass
-            elif isinstance(k,Integer):
+            elif enter(k):
                 pass
             else:
                 return
@@ -1664,12 +1667,11 @@ class Matriu:
             return 3, None
         s = self.matriu[fp,k]
         t = self.matriu[fc,k]
-        if isinstance(s,int) or isinstance(s,Integer):
-             if isinstance(t,int) or isinstance(t,Integer):
-                 d = mcd_llista([t,s])
-                 if abs(d) != 1:
-                     s /= d
-                     t /= d
+        if enter(s) and enter(t):
+            d = mcd_llista([t,s])
+            if abs(d) != 1:
+                s /= d
+                t /= d
         if s < 0:
             s, t = -s, -t
         self.matriu[fc,:] = s * self.matriu[fc,:] - t * self.matriu[fp,:]
@@ -1756,7 +1758,7 @@ class Matriu:
         """
         for i in range(self.files):
             for j in range(self.columnes):
-                if not (isinstance(self[i,j],Integer) or isinstance(self[i,j],int)):
+                if not enter(self[i,j]):
                     return False
         return True
     #
@@ -1768,7 +1770,7 @@ class Matriu:
         """
         for i in range(self.files):
             for j in range(self.columnes):
-                if not (isinstance(self[i,j],Integer) or isinstance(self[i,j],int) or isinstance(self[i,j],Rational)):
+                if not (enter(self[i,j]) or isinstance(self[i,j],Rational)):
                     return False
         return True
     #
@@ -1991,52 +1993,25 @@ class Matriu:
         """
         Retorna l'expressió en LaTeX de la matriu
         """
-        l = []
-        s = []
-        square = False
-        for i in range(self.files):
-            for j in range(self.columnes):
-                k = self.matriu[i,j]
-                if isinstance(k,Rational):
-                    l.append(k.q)
-                    s.append(False)
-                elif isinstance(k,int) or isinstance(k,Integer):
-                    l.append(1)
-                    s.append(False)
-                elif isinstance(k**2,Rational):
-                    square = True
-                    k2 = k**2
-                    l.append(k2.q)
-                    s.append(True)
-                elif isinstance(k,Add):
-                    for a in k.args:
-                        if isinstance(a,Rational):
-                            l.append(a.q)
-                            s.append(False)
-                        elif isinstance(a,int) or isinstance(a,Integer):
-                            l.append(1)
-                            s.append(False)
-                        elif isinstance(a**2,Rational):
-                            square = True
-                            a2 = a**2
-                            l.append(a2.q)
-                            s.append(True)
-                else:
-                    return matriu_latex(self.matriu,format=self.format)
-        if square:
-            for k in range(len(l)):
-                if not s[k]:
-                    l[k] = l[k]**2
-        m = mcm_llista(l)
-        if square:
-            m = sqrt(m)
-        l = []
-        for i in range(self.files):
-            for j in range(self.columnes):
-                l.append(m * self.matriu[i,j])
+        n2, n1 = self.factor_comu()
         s = ""
-        if m != 1:
-            s = f"\\deufrac{{1}}{{{latex(m)}}}"
+        producte = False
+        if enter(n1) and enter(n2):
+                if n2 != 1:
+                    s = f"\\frac{{{n1}}}{{{n2}}}"
+                    producte = True
+                    pr = Rational(n2,n1)
+        else:
+            s = f"\\frac{{{n1}}}{{{n2}}}"
+            pr = n2 / n1
+            producte = True
+        l = []
+        for i in range(self.files):
+            for j in range(self.columnes):
+                if producte:
+                    l.append(pr * self.matriu[i,j])
+                else:
+                    l.append(self.matriu[i,j]) 
         m = Matrix(self.files,self.columnes,l)
         n = Matriu(m)
         self.format = n.calcula_format()
@@ -2501,51 +2476,70 @@ class Matriu:
         """
         Retorna quin factor comú podem treure de la matriu
         """
-        l = []
-        s = []
-        square = False
+        n = []
+        d = []
+        sn = []
+        sd = []
         for i in range(self.files):
             for j in range(self.columnes):
                 k = self.matriu[i,j]
+                if k == 0:
+                    continue
                 if isinstance(k,Rational):
-                    l.append(k.q)
-                    s.append(False)
+                    n.append(k.p)
+                    d.append(k.q)
                 elif isinstance(k,int) or isinstance(k,Integer):
-                    l.append(1)
-                    s.append(False)
+                    n.append(k)
+                elif isinstance(k**2,int) or isinstance(k**2,Integer):
+                    sn.append(k**2)
                 elif isinstance(k**2,Rational):
-                    square = True
                     k2 = k**2
-                    fac = factorint(k2.p)
-                    for p, e in fac.items():
-                        if e % 2 == 1:
-                            l.append(p)
-                            s.append(True)
-                    l.append(k2.q)
-                    s.append(True)
+                    sn.append(k2.p)
+                    sd.append(k2.q)
                 elif isinstance(k,Add):
                     for a in k.args:
+                        if isinstance(a,int) or isinstance(a,Integer):
+                            n.append(a)
                         if isinstance(a,Rational):
-                            l.append(a.q)
-                            s.append(False)
-                        elif isinstance(a,int) or isinstance(a,Integer):
-                            l.append(1)
-                            s.append(False)
+                            n.append(a.p)
+                            d.append(a.q)
                         elif isinstance(a**2,Rational):
-                            square = True
                             a2 = a**2
-                            l.append(a2.q)
-                            s.append(True)
+                            fac = factorint(a2.p)
+                            for p, e in fac.items():
+                                if e % 2 == 1:
+                                    sn.append(p)
+                            sd.append(k2.q)
                 else:
-                    return 1
-        if square:
-            for k in range(len(l)):
-                if not s[k]:
-                    l[k] = l[k]**2
-        m = mcm_llista(l)
-        if square:
-            m = sqrt(m)
-        return m
+                    return 1, 1
+        n = mcd_llista(n)
+        d = mcm_llista(d)
+        sn = mcd_llista(sn)
+        sd = mcm_llista(sd)
+        sq = d*sqrt(sd)/(n*sqrt(sn))
+        n1 = 1
+        n2 = 1
+        if isinstance(sq,int) or isinstance(sq,Integer):
+            n1 = 1
+            n2 = sq
+        elif isinstance(sq,Rational):
+            n1 = sq.q
+            n2 = sq.p
+        elif isinstance(sq,Pow):
+            n1 = 1
+            n2 = sq
+        elif isinstance(sq,Mul):
+            for a in sq.args:
+                if isinstance(a,int) or isinstance(a,Integer):
+                    n1 = 1
+                    n2 = a
+                elif isinstance(a,Rational):
+                    n1 = a.q
+                    n2 = a.p
+                else:
+                    n1 *= 1
+                    n2 *= a
+        return n2,n1
     #
     #
     #
@@ -6902,8 +6896,27 @@ class Quadrica(object):
             a = a.inserta_fila(3,Vector([0,0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * self.matriu * b
-            t = self.canonica.factor_comu()
-            self.canonica = t * self.canonica
+            n2, n1 = self.canonica.factor_comu()
+            if enter(n1) and enter(n2):
+                pr = Rational(n2,n1)
+            else:
+                pr = n2 / n1
+            self.canonica = pr * self.canonica
+            if self.canonica is not None:
+                f = self.primer_element_no_nul()
+                if self.canonica[f] < 0:
+                    self.canonica *= -1
+    #
+    #
+    #
+    def primer_element_no_nul(self):
+        """
+        Determina el primer no nul de la matriu self.canonica en un ordre determinat
+        """
+        for k in ((0,0),(1,1),(2,2),(0,1),(0,2),(1,2),(0,3),(1,3),(2,3)):
+            if self.canonica[k] != 0:
+                return k
+        return None
     #
     #
     #
@@ -7022,7 +7035,7 @@ class Quadrica(object):
             e = Ellipsoide.aleatoria(canonica=canonica)
             if canonica:
                 trobat = True
-            else:
+            elif e is not None and e.canonica is not None:
                 trobat = e.canonica.norma_maxim() <= maxim and e.canonica.nzeros() < 3 and e.canonica.max_diagonal() < diagonal
         return e
     #
@@ -7043,7 +7056,7 @@ class Quadrica(object):
             h = HiperboloideUnaFulla.aleatoria(canonica=canonica)
             if canonica:
                 trobat = True
-            else:
+            elif h is not None and h.canonica is not None:
                 trobat = h.canonica.norma_maxim() <= maxim and h.canonica.nzeros() < 3 and h.canonica.max_diagonal() < diagonal
         return h
     #
@@ -7064,7 +7077,7 @@ class Quadrica(object):
             h = HiperboloideDuesFulles.aleatoria(canonica=canonica)
             if canonica:
                 trobat = True
-            else:
+            elif h is not None and h.canonica is not None:
                 trobat = h.canonica.norma_maxim() <= maxim and h.canonica.nzeros() < 3 and h.canonica.max_diagonal() < diagonal
         return h
     #
@@ -7085,7 +7098,7 @@ class Quadrica(object):
             c = Con.aleatoria(canonica=canonica)
             if canonica:
                 trobat = True
-            else:
+            elif c is not None and c.canonica is not None:
                 trobat = c.canonica.norma_maxim() <= maxim and c.canonica.nzeros() < 3 and c.canonica.max_diagonal() < diagonal
         return c
     #
@@ -7106,7 +7119,7 @@ class Quadrica(object):
             c = CilindreElliptic.aleatoria(canonica=canonica)
             if canonica:
                 trobat = True
-            else:
+            elif c is not None and c.canonica is not None:
                 trobat = c.canonica.norma_maxim() <= maxim and c.canonica.nzeros() < 3 and c.canonica.max_diagonal() < diagonal
         return c
     #
@@ -7127,7 +7140,7 @@ class Quadrica(object):
             c = CilindreHiperbolic.aleatoria(canonica=canonica)
             if canonica:
                 trobat = True
-            else:
+            elif c is not None and c.canonica is not None:
                 trobat = c.canonica.norma_maxim() <= maxim and c.canonica.nzeros() < 3 and c.canonica.max_diagonal() < diagonal
         return c
     #
@@ -7148,7 +7161,7 @@ class Quadrica(object):
             p = ParaboloideElliptic.aleatoria(canonica=canonica)
             if canonica:
                 trobat = True
-            else:
+            elif p is not None and p.canonica is not None:
                 trobat = p.canonica.norma_maxim() <= maxim and p.canonica.nzeros() < 3 and p.canonica.max_diagonal() < diagonal
         return p
     #
@@ -7171,11 +7184,10 @@ class Quadrica(object):
                 trobat = True
             else:
                 a, b = p.semieixos()
-                if not isinstance(a**4,int) and not isinstance(a**4,Integer):
+                if not enter(a**4) or not enter(b**4):
                     continue
-                if not isinstance(b**4,int) and not isinstance(b**4,Integer):
-                    continue
-                trobat = p.canonica.norma_maxim() <= maxim and p.canonica.nzeros() < 3 and p.canonica.max_diagonal() < diagonal
+                if p is not None and p.canonica is not None:
+                    trobat = p.canonica.norma_maxim() <= maxim and p.canonica.nzeros() < 3 and p.canonica.max_diagonal() < diagonal
         return p
     #
     #
@@ -7199,7 +7211,8 @@ class Quadrica(object):
                 p = c.parametre()
                 if not isinstance(p**4,int) and  not isinstance(p**4,Integer):
                     continue
-                trobat = c.canonica.norma_maxim() <= maxim and c.canonica.nzeros() < 3 and c.canonica.max_diagonal() < diagonal
+                elif c is not None and c.canonica is not None:
+                    trobat = c.canonica.norma_maxim() <= maxim and c.canonica.nzeros() < 3 and c.canonica.max_diagonal() < diagonal
         return c
     #
     #
@@ -7213,6 +7226,7 @@ class Quadrica(object):
             diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
         """
         r = random.randint(0,9)
+        print(f"Random: {r}")
         if r == 0:
             return Quadrica.ellipsoide(maxim,diagonal,canonica)
         if r == 1:
@@ -7568,7 +7582,7 @@ class Ellipsoide(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -7585,8 +7599,12 @@ class Ellipsoide(Quadrica):
             a = random.randint(0,len(c) - 1)
             c2 = c[a]
             trobat = a2 != b2 or a2 != c2
-        a2, b2, c2 = sorted([a2,b2,c2])[::-1]
-        return cls(a2,b2,c2,centre,eix1,eix2)
+            a2, b2, c2 = sorted([a2,b2,c2])[::-1]
+            q = cls(a2,b2,c2,centre,eix1,eix2)
+            if q is None or q.canonica is None  :
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -7720,7 +7738,7 @@ class HiperboloideUnaFulla(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -7736,9 +7754,14 @@ class HiperboloideUnaFulla(Quadrica):
             b2 = c[a]
             a = random.randint(0,len(c) - 1)
             c2 = c[a]
-            trobat = a2 != b2 or a2 != c2
-        a2, b2 = sorted([a2,b2])[::-1]
-        return cls(a2,b2,c2,centre,eix1,eix2)
+            if a2 == b2 or a2 == c2:
+                continue
+            a2, b2 = sorted([a2,b2])[::-1]
+            q = cls(a2,b2,c2,centre,eix1,eix2)
+            if q is None or q.canonica is None  :
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -7872,7 +7895,7 @@ class HiperboloideDuesFulles(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -7888,9 +7911,14 @@ class HiperboloideDuesFulles(Quadrica):
             b2 = c[a]
             a = random.randint(0,len(c) - 1)
             c2 = c[a]
-            trobat = a2 != b2 or a2 != c2
-        a2, b2 = sorted([a2,b2])[::-1]
-        return cls(a2,b2,c2,centre,eix1,eix2)
+            if a2 == b2 or a2 == c2:
+                continue
+            a2, b2 = sorted([a2,b2])[::-1]
+            q = cls(a2,b2,c2,centre,eix1,eix2)
+            if q is None or q.canonica is None  :
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -8031,7 +8059,7 @@ class Con(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -8184,7 +8212,7 @@ class CilindreElliptic(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -8198,9 +8226,14 @@ class CilindreElliptic(Quadrica):
             a2 = c[a]
             a = random.randint(0,len(c) - 1)
             b2 = c[a]
-            trobat = a2 != b2
-        a2, b2 = sorted([a2,b2])[::-1]
-        return cls(a2,b2,centre,eix1,eix2)
+            if a2 == b2:
+                continue
+            a2, b2 = sorted([a2,b2])[::-1]
+            q = cls(a2,b2,centre,eix1,eix2)
+            if q is None or q.canonica is None  :
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -8333,7 +8366,7 @@ class CilindreHiperbolic(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -8347,8 +8380,13 @@ class CilindreHiperbolic(Quadrica):
             a2 = c[a]
             a = random.randint(0,len(c) - 1)
             b2 = c[a]
-            trobat = a2 != b2
-        return cls(a2,b2,centre,eix1,eix2)
+            if a2 == b2:
+                continue
+            q = cls(a2,b2,centre,eix1,eix2)
+            if q is None or q.canonica is None  :
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #
@@ -8486,7 +8524,7 @@ class ParaboloideElliptic(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -8642,7 +8680,7 @@ class ParaboloideHiperbolic(Quadrica):
             while not trobat:
                 eix1 = Vector.aleatori(l=3,maxim=3)
                 eix2 = Vector.aleatori(l=3,maxim=3)
-                if eix1.nzeros() > 1 or eix2.nzeros() > 1:
+                if eix1.nzeros() > 0 or eix2.nzeros() > 0:
                     continue
                 trobat = Matriu.from_vectors_columna([eix1,eix2]).rank() == 2
         trobat = False
@@ -8657,11 +8695,15 @@ class ParaboloideHiperbolic(Quadrica):
             a = random.randint(0,len(c) - 1)
             b2 = c[a]
             trobat = a2 != b2
-        eix3 = eix1.cross(eix2,simplificar=True)
-        p = eix3.length()
-        a2 *= p
-        b2 *= p
-        return cls(a2,b2,vertex,eix1,eix2)
+            eix3 = eix1.cross(eix2,simplificar=True)
+            p = eix3.length()
+            a2 *= p
+            b2 *= p
+            q = cls(a2,b2,vertex,eix1,eix2)
+            if q is None or q.canonica is None:
+                continue
+            trobat = q.canonica.tots_enters()
+        return q
     #
     #
     #

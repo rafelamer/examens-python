@@ -7226,7 +7226,6 @@ class Quadrica(object):
             diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
         """
         r = random.randint(0,9)
-        print(f"Random: {r}")
         if r == 0:
             return Quadrica.ellipsoide(maxim,diagonal,canonica)
         if r == 1:
@@ -7552,9 +7551,10 @@ class Ellipsoide(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -7708,9 +7708,10 @@ class HiperboloideUnaFulla(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -7865,9 +7866,10 @@ class HiperboloideDuesFulles(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -8024,9 +8026,10 @@ class Con(Quadrica):
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -8183,9 +8186,10 @@ class CilindreElliptic(Quadrica):
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -8337,9 +8341,10 @@ class CilindreHiperbolic(Quadrica):
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -8493,9 +8498,10 @@ class ParaboloideElliptic(Quadrica):
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
@@ -8649,9 +8655,10 @@ class ParaboloideHiperbolic(Quadrica):
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
@@ -8797,9 +8804,10 @@ class CilindreParabolic(Quadrica):
     #
     #
     def __init__(self,p,vertex,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)

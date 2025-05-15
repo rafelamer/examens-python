@@ -1997,12 +1997,12 @@ class Matriu:
         s = ""
         producte = False
         if enter(n1) and enter(n2):
-                if n2 != 1:
-                    s = f"\\frac{{{n1}}}{{{n2}}}"
+                if abs(n2) != 1:
+                    s = f"\\deufrac{{{latex(n1)}}}{{{latex(n2)}}}"
                     producte = True
                     pr = Rational(n2,n1)
         else:
-            s = f"\\frac{{{n1}}}{{{n2}}}"
+            s = f"\\deufrac{{{latex(n1)}}}{{{latex(n2)}}}"
             pr = n2 / n1
             producte = True
         l = []
@@ -2480,15 +2480,18 @@ class Matriu:
         d = []
         sn = []
         sd = []
+        totsquadrats = True
         for i in range(self.files):
             for j in range(self.columnes):
                 k = self.matriu[i,j]
                 if k == 0:
                     continue
                 if isinstance(k,Rational):
+                    totsquadrats = False
                     n.append(k.p)
                     d.append(k.q)
                 elif isinstance(k,int) or isinstance(k,Integer):
+                    totsquadrats = False
                     n.append(k)
                 elif isinstance(k**2,int) or isinstance(k**2,Integer):
                     sn.append(k**2)
@@ -2497,26 +2500,31 @@ class Matriu:
                     sn.append(k2.p)
                     sd.append(k2.q)
                 elif isinstance(k,Add):
+                    totsquadrats = False
+                    n1 = []
+                    n2 = []
                     for a in k.args:
                         if isinstance(a,int) or isinstance(a,Integer):
-                            n.append(a)
+                            n1.append(a)
                         if isinstance(a,Rational):
-                            n.append(a.p)
-                            d.append(a.q)
+                            n1.append(a.p)
+                            n2.append(a.q)
                         elif isinstance(a**2,Rational):
+                            n1.append(1)
                             a2 = a**2
-                            fac = factorint(a2.p)
-                            for p, e in fac.items():
-                                if e % 2 == 1:
-                                    sn.append(p)
-                            sd.append(k2.q)
+                            n2.append(a2.q)
+                    n.append(mcd_llista(n1))
+                    d.append(mcd_llista(n2))
                 else:
                     return 1, 1
         n = mcd_llista(n)
         d = mcm_llista(d)
         sn = mcd_llista(sn)
         sd = mcm_llista(sd)
-        sq = d*sqrt(sd)/(n*sqrt(sn))
+        if totsquadrats:
+            sq = d*sqrt(sd)/(n*sqrt(sn))
+        else:
+            sq = Rational(d,n)
         n1 = 1
         n2 = 1
         if isinstance(sq,int) or isinstance(sq,Integer):

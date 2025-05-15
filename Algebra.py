@@ -1551,6 +1551,16 @@ class Base(object):
         v = c * components
         components = [x.simplify() for x in v.components]
         return Vector(components)
+    #
+    #
+    #
+    def positius(self):
+        """
+        Canvia de signe, si és necessari, els vectors per tal que els primers 
+        coeficients no nuls siguin positius 
+        """
+        for k in range(len(self.vecs)):
+            self.vecs[k].simplificar(positiu=True)
 
 
 class Matriu:
@@ -2512,9 +2522,10 @@ class Matriu:
                         elif isinstance(a**2,Rational):
                             n1.append(1)
                             a2 = a**2
-                            n2.append(a2.q)
+                            if enter(sqrt(a2.q)):
+                                n2.append(sqrt(a2.q))
                     n.append(mcd_llista(n1))
-                    d.append(mcd_llista(n2))
+                    d.append(mcm_llista(n2))
                 else:
                     return 1, 1
         n = mcd_llista(n)

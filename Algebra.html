@@ -838,7 +838,17 @@ Si és True, retorna $(1,2,3)$, $(3,5,2)$ i $(1,-2,3)$</p></div>
         components = Vector(vector.components + [0])
         v = c * components
         components = [x.simplify() for x in v.components]
-        return Vector(components)</code></pre>
+        return Vector(components)
+    #
+    #
+    #
+    def positius(self):
+        &#34;&#34;&#34;
+        Canvia de signe, si és necessari, els vectors per tal que els primers 
+        coeficients no nuls siguin positius 
+        &#34;&#34;&#34;
+        for k in range(len(self.vecs)):
+            self.vecs[k].simplificar(positiu=True)</code></pre>
 </details>
 <div class="desc"><p>Classe que ens permetrà representar bases de R^n</p>
 <h2 id="atributs">Atributs</h2>
@@ -1049,6 +1059,25 @@ els vectors de la base</p></div>
 </details>
 <div class="desc"><p>Fa que tingui orientació positiva canviant, si cal, de signe l'últim
 vector</p></div>
+</dd>
+<dt id="Algebra.Base.positius"><code class="name flex">
+<span>def <span class="ident">positius</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def positius(self):
+    &#34;&#34;&#34;
+    Canvia de signe, si és necessari, els vectors per tal que els primers 
+    coeficients no nuls siguin positius 
+    &#34;&#34;&#34;
+    for k in range(len(self.vecs)):
+        self.vecs[k].simplificar(positiu=True)</code></pre>
+</details>
+<div class="desc"><p>Canvia de signe, si és necessari, els vectors per tal que els primers
+coeficients no nuls siguin positius</p></div>
 </dd>
 <dt id="Algebra.Base.quadrats_longituds"><code class="name flex">
 <span>def <span class="ident">quadrats_longituds</span></span>(<span>self)</span>
@@ -1263,9 +1292,10 @@ inicial i final</p></div>
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -1564,9 +1594,10 @@ inicial i final</p></div>
     #
     #
     def __init__(self,a2,b2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -1862,9 +1893,10 @@ inicial i final</p></div>
     #
     #
     def __init__(self,p,vertex,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
@@ -2084,9 +2116,10 @@ inicial i final</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -3313,9 +3346,10 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -5313,9 +5347,10 @@ base canònica</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -5609,9 +5644,10 @@ base canònica</p></div>
     #
     #
     def __init__(self,a2,b2,c2,centre,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
@@ -6418,12 +6454,12 @@ Ho he trobat a StackOverflow.</p></div>
         s = &#34;&#34;
         producte = False
         if enter(n1) and enter(n2):
-                if n2 != 1:
-                    s = f&#34;\\frac{{{n1}}}{{{n2}}}&#34;
+                if abs(n2) != 1:
+                    s = f&#34;\\deufrac{{{latex(n1)}}}{{{latex(n2)}}}&#34;
                     producte = True
                     pr = Rational(n2,n1)
         else:
-            s = f&#34;\\frac{{{n1}}}{{{n2}}}&#34;
+            s = f&#34;\\deufrac{{{latex(n1)}}}{{{latex(n2)}}}&#34;
             pr = n2 / n1
             producte = True
         l = []
@@ -6901,15 +6937,18 @@ Ho he trobat a StackOverflow.</p></div>
         d = []
         sn = []
         sd = []
+        totsquadrats = True
         for i in range(self.files):
             for j in range(self.columnes):
                 k = self.matriu[i,j]
                 if k == 0:
                     continue
                 if isinstance(k,Rational):
+                    totsquadrats = False
                     n.append(k.p)
                     d.append(k.q)
                 elif isinstance(k,int) or isinstance(k,Integer):
+                    totsquadrats = False
                     n.append(k)
                 elif isinstance(k**2,int) or isinstance(k**2,Integer):
                     sn.append(k**2)
@@ -6918,26 +6957,32 @@ Ho he trobat a StackOverflow.</p></div>
                     sn.append(k2.p)
                     sd.append(k2.q)
                 elif isinstance(k,Add):
+                    totsquadrats = False
+                    n1 = []
+                    n2 = []
                     for a in k.args:
                         if isinstance(a,int) or isinstance(a,Integer):
-                            n.append(a)
+                            n1.append(a)
                         if isinstance(a,Rational):
-                            n.append(a.p)
-                            d.append(a.q)
+                            n1.append(a.p)
+                            n2.append(a.q)
                         elif isinstance(a**2,Rational):
+                            n1.append(1)
                             a2 = a**2
-                            fac = factorint(a2.p)
-                            for p, e in fac.items():
-                                if e % 2 == 1:
-                                    sn.append(p)
-                            sd.append(k2.q)
+                            if enter(sqrt(a2.q)):
+                                n2.append(sqrt(a2.q))
+                    n.append(mcd_llista(n1))
+                    d.append(mcm_llista(n2))
                 else:
                     return 1, 1
         n = mcd_llista(n)
         d = mcm_llista(d)
         sn = mcd_llista(sn)
         sd = mcm_llista(sd)
-        sq = d*sqrt(sd)/(n*sqrt(sn))
+        if totsquadrats:
+            sq = d*sqrt(sd)/(n*sqrt(sn))
+        else:
+            sq = Rational(d,n)
         n1 = 1
         n2 = 1
         if isinstance(sq,int) or isinstance(sq,Integer):
@@ -7420,15 +7465,18 @@ self.diagonalitzable</p></div>
     d = []
     sn = []
     sd = []
+    totsquadrats = True
     for i in range(self.files):
         for j in range(self.columnes):
             k = self.matriu[i,j]
             if k == 0:
                 continue
             if isinstance(k,Rational):
+                totsquadrats = False
                 n.append(k.p)
                 d.append(k.q)
             elif isinstance(k,int) or isinstance(k,Integer):
+                totsquadrats = False
                 n.append(k)
             elif isinstance(k**2,int) or isinstance(k**2,Integer):
                 sn.append(k**2)
@@ -7437,26 +7485,32 @@ self.diagonalitzable</p></div>
                 sn.append(k2.p)
                 sd.append(k2.q)
             elif isinstance(k,Add):
+                totsquadrats = False
+                n1 = []
+                n2 = []
                 for a in k.args:
                     if isinstance(a,int) or isinstance(a,Integer):
-                        n.append(a)
+                        n1.append(a)
                     if isinstance(a,Rational):
-                        n.append(a.p)
-                        d.append(a.q)
+                        n1.append(a.p)
+                        n2.append(a.q)
                     elif isinstance(a**2,Rational):
+                        n1.append(1)
                         a2 = a**2
-                        fac = factorint(a2.p)
-                        for p, e in fac.items():
-                            if e % 2 == 1:
-                                sn.append(p)
-                        sd.append(k2.q)
+                        if enter(sqrt(a2.q)):
+                            n2.append(sqrt(a2.q))
+                n.append(mcd_llista(n1))
+                d.append(mcm_llista(n2))
             else:
                 return 1, 1
     n = mcd_llista(n)
     d = mcm_llista(d)
     sn = mcd_llista(sn)
     sd = mcm_llista(sd)
-    sq = d*sqrt(sd)/(n*sqrt(sn))
+    if totsquadrats:
+        sq = d*sqrt(sd)/(n*sqrt(sn))
+    else:
+        sq = Rational(d,n)
     n1 = 1
     n2 = 1
     if isinstance(sq,int) or isinstance(sq,Integer):
@@ -8518,9 +8572,10 @@ de límits (-x,x) i (-y,y)</p></div>
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
@@ -8805,9 +8860,10 @@ de límits (-x,x) i (-y,y)</p></div>
     #
     #
     def __init__(self,a2,b2,vertex,eix1,eix2):
+        eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-            eix2.simplificar()
+        eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
@@ -10557,7 +10613,6 @@ v = Vector(3,1,-2)</p></div>
             diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
         &#34;&#34;&#34;
         r = random.randint(0,9)
-        print(f&#34;Random: {r}&#34;)
         if r == 0:
             return Quadrica.ellipsoide(maxim,diagonal,canonica)
         if r == 1:
@@ -17451,6 +17506,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Base.matriu" href="#Algebra.Base.matriu">matriu</a></code></li>
 <li><code><a title="Algebra.Base.orientacio_positiva" href="#Algebra.Base.orientacio_positiva">orientacio_positiva</a></code></li>
 <li><code><a title="Algebra.Base.ortogonal" href="#Algebra.Base.ortogonal">ortogonal</a></code></li>
+<li><code><a title="Algebra.Base.positius" href="#Algebra.Base.positius">positius</a></code></li>
 <li><code><a title="Algebra.Base.quadrats_longituds" href="#Algebra.Base.quadrats_longituds">quadrats_longituds</a></code></li>
 <li><code><a title="Algebra.Base.set_unitaria" href="#Algebra.Base.set_unitaria">set_unitaria</a></code></li>
 <li><code><a title="Algebra.Base.te_orientacio_positiva" href="#Algebra.Base.te_orientacio_positiva">te_orientacio_positiva</a></code></li>

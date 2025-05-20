@@ -1481,7 +1481,7 @@ class Base(object):
                 if a > m:
                     m = a
             trobat = m <= maxim
-        return cls(base,unitaria)
+        return cls(base,unitaria=unitaria)
     #
     #
     #
@@ -3711,6 +3711,8 @@ class ReferenciaAfi(object):
             mzeros: Màxim nombre de zeros que apareixen a la base
             unitaria: si és True la matriu del canvi de base tindrà determinant 1 o -1
         """
+        if euclidiana:
+            unitaria = True
         origen = Punt.aleatori(l=dimensio,maxim=maxim,nuls=False)
         if not euclidiana:
             m = Matriu.invertible(ordre=dimensio,maxim=maxim,mzeros=mzeros,unitaria=unitaria)
@@ -6012,7 +6014,29 @@ class Conica(object):
             a = a.inserta_fila(2,Vector([0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * matriu * b
-            self.canonica = self.canonica.factor_comu() * self.canonica
+            self.canonica.matriu.simplify()
+            n2, n1 = self.canonica.factor_comu()
+            if enter(n1) and enter(n2):
+                pr = Rational(n2,n1)
+            else:
+                pr = n2 / n1
+            self.canonica = pr * self.canonica
+            if self.canonica is not None:
+                f = self.primer_element_no_nul()
+                if self.canonica[f] < 0:
+                    self.canonica *= -1
+    #
+    #
+    #
+    def primer_element_no_nul(self):
+        """
+        Determina el primer no nul de la matriu self.canonica en un ordre determinat
+        """
+        for k in ((0,0),(1,1),(0,1),(0,2),(1,2)):
+            if self.canonica[k] != 0:
+                return k
+        return None
+    #
     #
     #
     #
@@ -6089,10 +6113,16 @@ class Conica(object):
         vertex = Punt(solve([es,eq],s[0],s[1])[0])
         ref = ReferenciaAfi(vertex,b)
         ep = veps[1].dot(l)/veps[1].length()
-        if t1 < 0:
-            p = - ep/t1
+        if b.te_orientacio_positiva():
+            if t1 < 0:
+                p = - ep/t1
+            else:
+                p = ep / t1
         else:
-            p = ep / t1
+            if t1 < 0:
+                p = ep/t1
+            else:
+                p = - ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
         return Parabola(vertex,focus)
     #
@@ -6915,6 +6945,7 @@ class Quadrica(object):
             a = a.inserta_fila(3,Vector([0,0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * self.matriu * b
+            self.canonica.matriu.simplify()
             n2, n1 = self.canonica.factor_comu()
             if enter(n1) and enter(n2):
                 pr = Rational(n2,n1)

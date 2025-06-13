@@ -539,6 +539,85 @@ class Vector(object):
     #
     #
     #
+    def factor_comu2(self):
+        """
+          Retorna quin factor comú podem treure de la matriu
+        """
+        n = []
+        d = []
+        sn = []
+        sd = []
+        totsquadrats = True
+        for i in range(self.dimensio):
+            k = self.components[i]
+            if k == 0:
+                continue
+            if isinstance(k,Rational):
+                totsquadrats = False
+                n.append(k.p)
+                d.append(k.q)
+            elif isinstance(k,int) or isinstance(k,Integer):
+                totsquadrats = False
+                n.append(k)
+            elif isinstance(k**2,int) or isinstance(k**2,Integer):
+                sn.append(k**2)
+            elif isinstance(k**2,Rational):
+                k2 = k**2
+                sn.append(k2.p)
+                sd.append(k2.q)
+            elif isinstance(k,Add):
+                totsquadrats = False
+                n1 = []
+                n2 = []
+                for a in k.args:
+                    if isinstance(a,int) or isinstance(a,Integer):
+                        n1.append(a)
+                    if isinstance(a,Rational):
+                        n1.append(a.p)
+                        n2.append(a.q)
+                    elif isinstance(a**2,Rational):
+                        n1.append(1)
+                        a2 = a**2
+                        if enter(sqrt(a2.q)):
+                            n2.append(sqrt(a2.q))
+                n.append(mcd_llista(n1))
+                d.append(mcm_llista(n2))
+            else:
+                return 1, 1
+        n = mcd_llista(n)
+        d = mcm_llista(d)
+        sn = mcd_llista(sn)
+        sd = mcm_llista(sd)
+        if totsquadrats:
+            sq = d*sqrt(sd)/(n*sqrt(sn))
+        else:
+            sq = Rational(d,n)
+        n1 = 1
+        n2 = 1
+        if isinstance(sq,int) or isinstance(sq,Integer):
+            n1 = 1
+            n2 = sq
+        elif isinstance(sq,Rational):
+            n1 = sq.q
+            n2 = sq.p
+        elif isinstance(sq,Pow):
+            n1 = 1
+            n2 = sq
+        elif isinstance(sq,Mul):
+            for a in sq.args:
+                if isinstance(a,int) or isinstance(a,Integer):
+                    n1 = 1
+                    n2 = a
+                elif isinstance(a,Rational):
+                    n1 = a.q
+                    n2 = a.p
+                else:
+                    n1 *= 1
+                    n2 *= a
+        return n2,n1    
+    #
+    #
+    #
     def factor_comu(self):
         """
         En cas que totes les components del vector sigui enteres o racionals,
@@ -1039,6 +1118,7 @@ class Vector(object):
         Retorna l'expressió en latex del vector.
         Paràmetres:
             unitari: si unitari és True, el retorna dividit per la seva longitud
+            xxxxxxxxxxxxxxxxxxxxxx
         """
         if unitari:
             f,v = self.factor_comu()
@@ -1112,6 +1192,7 @@ class Vector(object):
         """
         Retorna l'expressió en LaTeX d'un vector de dimensió 4 en format
         quaternió
+        xxxxxxxxxxxxxxxxxxxxxxxx
         """
         i, j, k = symbols("i j k")
         if self.dimensio != 4:
@@ -1536,7 +1617,7 @@ class Base(object):
     #
     #
     #
-    def vector_de_components_ampliat(self,vector):
+    def vector_de_components_ampliat(self,vector,positiu=True):
         """
         Retorna un nou vector expressat en la base canònica del
         del que en aquesta base té components "vector"
@@ -1552,7 +1633,11 @@ class Base(object):
         components = Vector(vector.components + [0])
         v = c * components
         components = [x.simplify() for x in v.components]
-        return Vector(components)
+        v = Vector(components)
+        n1, n2 = v.factor_comu2()
+        v = v*(1/n1)
+        v.simplificar(positiu=positiu)
+        return v
     #
     #
     #
@@ -3984,6 +4069,7 @@ class PlaAfi(object):
         """
         Retorna, si és possible, un punt de coordenades enteres del pla afí
         que passa pel punt p i té vectors directors u i v
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         """
         if p is None:
             p = self.p
@@ -4280,6 +4366,7 @@ class RectaAfi(object):
         """
         Retorna, si és possible, un punt de coordenades enteres de la recta
         que passa pel punt p i té vector director u
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         """
         if p is None:
             p = self.p
@@ -6284,6 +6371,30 @@ class Conica(object):
         Retorna l'eix secundari com a recta afí
         """
         return RectaAfi(self.ref.origen,self.ref.base.vecs[1])
+    #
+    #
+    #
+    def matriu_en_referencia(self,referencia=ReferenciaAfi.canonica()):
+        """
+        Retorna la matriu projectiva de la cònica en la referencia 'referencia'
+        Paràmetres:
+          referencia: Element de la classe ReferenciaAfi
+        """
+        a = referencia.base.matriu()
+        a = a.inserta_columna(2,referencia.origen)
+        a = a.inserta_fila(3,Vector([0,0,1]))
+        mat = a.transposada() * self.canonica * a
+        denom = []
+        mat.simplificar()
+        for i in range(mat.columnes):
+            for j in range(mat.files):
+                if isinstance(mat.matriu[i,j],Mul):
+                    for b in mat.matriu[i,j].args:
+                        if isinstance(b,Rational):
+                            denom.append(b.q)
+        mcm =  mcm_llista(denom)
+        mat = mcm * mat
+        return mat
 
 class Ellipse(Conica):
     """
@@ -7508,8 +7619,6 @@ class Quadrica(object):
                 if a2 < 0:
                     a2, b2 = -a2,-b2
                     v2 = -v2
-                a2 /= v3.length()
-                b2 /= v3.length()
                 return ParaboloideElliptic(a2,b2,vertex,v1,v2)
             if len(positius) == 1:
                 #
@@ -7531,7 +7640,7 @@ class Quadrica(object):
                 return ParaboloideHiperbolic(a2,-b2,vertex,vec1,vec2)
         if len(positius) + len(negatius) == 1:
             #
-            # Cilindre parabòlic
+            # Cilindre parabòlic xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
             #
             if len(s) > 0:
                 return None
@@ -8991,6 +9100,7 @@ class RectaRegressio(object):
     def equacio(self):
         """
         Retorna l'equació de la recta de regressió expressada en LaTeX
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         """
         x = symbols('x')
         n = Vector.nul(dim=2)

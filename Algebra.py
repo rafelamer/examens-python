@@ -177,6 +177,8 @@ def mcm_llista(llista):
         return 1
     mcm = llista[0]
     for i in llista[1:]:
+        if not enter(i):
+            continue
         mcm = mcm * i // gcd(mcm, i)
     return mcm
 
@@ -782,7 +784,7 @@ class Vector(object):
             w = Vector(3,3,1,2)
             p = v * w
         """
-        types = [Rational,float,int,Float,Pow,Add,Mul]
+        types = [Rational,float,int,Float,Pow,Add,Mul,Symbol]
         for t in types:
             if isinstance(other,t):
                 if isinstance(self,Punt):
@@ -2722,7 +2724,6 @@ class EquacioLineal:
             a: Vector amb els coeficients de les incògnites
             b: terme independents
             amp: si és True l'equació s'escriurà amb el &= per al LaTeX
-            prime: nombre de primes que s'escriuran a les incògnites
         """
         if not isinstance(a,Vector):
             return None
@@ -6024,7 +6025,7 @@ class Conica(object):
             if self.canonica is not None:
                 f = self.primer_element_no_nul()
                 if self.canonica[f] < 0:
-                    self.canonica *= -1
+                    self.canonica = -self.canonica
     #
     #
     #
@@ -6176,6 +6177,8 @@ class Conica(object):
         trobat = False
         while not trobat:
             e = Ellipse.aleatoria(canonica=canonica)
+            if e is None or e.canonica is None:
+                continue
             trobat = canonica or e.canonica.norma_maxim() <= maxim
         return e
     #
@@ -6191,6 +6194,8 @@ class Conica(object):
         trobat = False
         while not trobat:
             h = Hiperbola.aleatoria(canonica=canonica,focus=focus)
+            if h is None or h.canonica is None:
+                continue
             trobat = canonica or h.canonica.norma_maxim() <= maxim
         return h
     #
@@ -6206,6 +6211,8 @@ class Conica(object):
         trobat = False
         while not trobat:
             p = Parabola.aleatoria(canonica=canonica)
+            if p is None or p.canonica is None:
+                continue
             trobat = canonica or p.canonica.norma_maxim() <= maxim
         return p
     #
@@ -6955,7 +6962,7 @@ class Quadrica(object):
             if self.canonica is not None:
                 f = self.primer_element_no_nul()
                 if self.canonica[f] < 0:
-                    self.canonica *= -1
+                    self.canonica = -self.canonica
     #
     #
     #
@@ -7608,11 +7615,16 @@ class Ellipsoide(Quadrica):
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcm_llista([a2,b2,c2])
-        t = g
-        a2 = g // a2
-        b2 = g // b2
-        c2 = g // c2
+        if a2.is_integer and b2.is_integer and c2.is_integer:
+            g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
+        else:
+            g = a2 * b2 * c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,c2,-g]))
         Quadrica.__init__(self,m,r)
     #
@@ -7765,11 +7777,16 @@ class HiperboloideUnaFulla(Quadrica):
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcm_llista([a2,b2,c2])
-        t = g
-        a2 = g // a2
-        b2 = g // b2
-        c2 = g // c2
+        if a2.is_integer and b2.is_integer and c2.is_integer:
+            g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
+        else:
+            g = a2 * b2 * c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,-c2,-g]))
         Quadrica.__init__(self,m,r)
     #
@@ -7923,11 +7940,16 @@ class HiperboloideDuesFulles(Quadrica):
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcm_llista([a2,b2,c2])
-        t = g
-        a2 = g // a2
-        b2 = g // b2
-        c2 = g // c2
+        if a2.is_integer and b2.is_integer and c2.is_integer:
+            g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
+        else:
+            g = a2 * b2 * c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,-c2,g]))
         Quadrica.__init__(self,m,r)
     #

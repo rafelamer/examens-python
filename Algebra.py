@@ -9052,6 +9052,83 @@ class CilindreParabolic(Quadrica):
         return f"z' = -\\frac{{x'^2}}{{ {latex(-2 * p)} }}"
 
 
+class SuperficieRevolucio(object):
+    """
+    Classe per treballar amb rectes de regressió
+    Atributs:
+        P: punt de la corba que gira
+
+        punt: punt del pla 
+        
+        X: punt (x,y,z) de la superfície de revolució
+        
+        C: centre de la circumferència que descriu el punt P
+                
+        eix: eix de rotació, 'X', 'Y' o 'Z' convertits a 0, 1 o 2
+
+        syms: símbols que apareixen al punt P
+    """
+    #
+    #
+    #
+    def __new__(cls,P=None,eix='X',punt=None):
+        if punt is not None:
+            if not isinstance(punt,Punt):
+                return None
+            if punt.dimensio != 3:
+               return None
+        try:
+            eix = eix.upper()
+        except:
+            eix = None
+        if eix not in ('X','Y','Z'):
+            return None
+        if P is None:
+            return None
+        return super(SuperficieRevolucio,cls).__new__(cls)
+    #
+    #
+    #
+    def __init__(cls,P=None,eix='X',punt=None):
+        x, y, z = symbols('x y z')
+        eixos = {'X' : 0,'Y' : 1,'Z' : 2}
+        cls.eix = eixos[eix]
+        cls.X = Punt([x,y,z])
+        if punt is None:
+            punt = Punt.aleatori(l=3,maxim=3,nuls=False)
+        punt[cls.eix] = 0
+        cls.punt = Punt(punt.components)
+        cls.P = P
+        cls.syms = set()
+        for expr in cls.P.components:
+            try:
+                cls.syms = cls.syms | expr.free_symbols
+            except:
+                pass
+        cls.C = Punt(cls.P.components)
+        for i in (0,1,2):
+            if i != cls.eix:
+                cls.C[i] = cls.punt[i]
+    #
+    #
+    #
+    def equacio(self):
+        eq = (self.X-self.C).length()**2 - (self.P-self.C).length()**2
+        var = self.X[self.eix]
+        if len(self.syms) != 1:
+            return None
+        for i in self.syms:
+            s = solve(var - self.C[self.eix],i)
+            eq1 = eq.subs(i,s[0]).expand()
+        if eq1.is_polynomial() and Poly(eq1).total_degree() == 2:
+            q = Quadrica.from_equacio(eq1)
+            return q
+        str = latex(eq1,order='grlex')
+        if str[0] == '-':
+            eq1 = -eq1
+        return(eq1.expand())
+
+
 class RectaRegressio(object):
     """
     Classe per treballar amb rectes de regressió

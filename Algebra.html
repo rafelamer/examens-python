@@ -192,6 +192,8 @@ columna de la matriu</p></div>
         return 1
     mcm = llista[0]
     for i in llista[1:]:
+        if not enter(i):
+            continue
         mcm = mcm * i // gcd(mcm, i)
     return mcm</code></pre>
 </details>
@@ -769,7 +771,7 @@ Si és True, retorna $(1,2,3)$, $(3,5,2)$ i $(1,-2,3)$</p></div>
                 if a &gt; m:
                     m = a
             trobat = m &lt;= maxim
-        return cls(base,unitaria)
+        return cls(base,unitaria=unitaria)
     #
     #
     #
@@ -822,7 +824,7 @@ Si és True, retorna $(1,2,3)$, $(3,5,2)$ i $(1,-2,3)$</p></div>
     #
     #
     #
-    def vector_de_components_ampliat(self,vector):
+    def vector_de_components_ampliat(self,vector,positiu=True):
         &#34;&#34;&#34;
         Retorna un nou vector expressat en la base canònica del
         del que en aquesta base té components &#34;vector&#34;
@@ -838,7 +840,11 @@ Si és True, retorna $(1,2,3)$, $(3,5,2)$ i $(1,-2,3)$</p></div>
         components = Vector(vector.components + [0])
         v = c * components
         components = [x.simplify() for x in v.components]
-        return Vector(components)
+        v = Vector(components)
+        n1, n2 = v.factor_comu2()
+        v = v*(1/n1)
+        v.simplificar(positiu=positiu)
+        return v
     #
     #
     #
@@ -1160,14 +1166,14 @@ que en aquesta base té components "vec"</p>
 <p>vec: vector</p></div>
 </dd>
 <dt id="Algebra.Base.vector_de_components_ampliat"><code class="name flex">
-<span>def <span class="ident">vector_de_components_ampliat</span></span>(<span>self, vector)</span>
+<span>def <span class="ident">vector_de_components_ampliat</span></span>(<span>self, vector, positiu=True)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def vector_de_components_ampliat(self,vector):
+<pre><code class="python">def vector_de_components_ampliat(self,vector,positiu=True):
     &#34;&#34;&#34;
     Retorna un nou vector expressat en la base canònica del
     del que en aquesta base té components &#34;vector&#34;
@@ -1183,7 +1189,11 @@ que en aquesta base té components "vec"</p>
     components = Vector(vector.components + [0])
     v = c * components
     components = [x.simplify() for x in v.components]
-    return Vector(components)</code></pre>
+    v = Vector(components)
+    n1, n2 = v.factor_comu2()
+    v = v*(1/n1)
+    v.simplificar(positiu=positiu)
+    return v</code></pre>
 </details>
 <div class="desc"><p>Retorna un nou vector expressat en la base canònica del
 del que en aquesta base té components "vector"
@@ -2418,7 +2428,29 @@ inicial i final</p></div>
             a = a.inserta_fila(2,Vector([0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * matriu * b
-            self.canonica = self.canonica.factor_comu() * self.canonica
+            self.canonica.matriu.simplify()
+            n2, n1 = self.canonica.factor_comu()
+            if enter(n1) and enter(n2):
+                pr = Rational(n2,n1)
+            else:
+                pr = n2 / n1
+            self.canonica = pr * self.canonica
+            if self.canonica is not None:
+                f = self.primer_element_no_nul()
+                if self.canonica[f] &lt; 0:
+                    self.canonica = -self.canonica
+    #
+    #
+    #
+    def primer_element_no_nul(self):
+        &#34;&#34;&#34;
+        Determina el primer no nul de la matriu self.canonica en un ordre determinat
+        &#34;&#34;&#34;
+        for k in ((0,0),(1,1),(0,1),(0,2),(1,2)):
+            if self.canonica[k] != 0:
+                return k
+        return None
+    #
     #
     #
     #
@@ -2495,10 +2527,16 @@ inicial i final</p></div>
         vertex = Punt(solve([es,eq],s[0],s[1])[0])
         ref = ReferenciaAfi(vertex,b)
         ep = veps[1].dot(l)/veps[1].length()
-        if t1 &lt; 0:
-            p = - ep/t1
+        if b.te_orientacio_positiva():
+            if t1 &lt; 0:
+                p = - ep/t1
+            else:
+                p = ep / t1
         else:
-            p = ep / t1
+            if t1 &lt; 0:
+                p = ep/t1
+            else:
+                p = - ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
         return Parabola(vertex,focus)
     #
@@ -2552,6 +2590,8 @@ inicial i final</p></div>
         trobat = False
         while not trobat:
             e = Ellipse.aleatoria(canonica=canonica)
+            if e is None or e.canonica is None:
+                continue
             trobat = canonica or e.canonica.norma_maxim() &lt;= maxim
         return e
     #
@@ -2567,6 +2607,8 @@ inicial i final</p></div>
         trobat = False
         while not trobat:
             h = Hiperbola.aleatoria(canonica=canonica,focus=focus)
+            if h is None or h.canonica is None:
+                continue
             trobat = canonica or h.canonica.norma_maxim() &lt;= maxim
         return h
     #
@@ -2582,6 +2624,8 @@ inicial i final</p></div>
         trobat = False
         while not trobat:
             p = Parabola.aleatoria(canonica=canonica)
+            if p is None or p.canonica is None:
+                continue
             trobat = canonica or p.canonica.norma_maxim() &lt;= maxim
         return p
     #
@@ -2652,7 +2696,31 @@ inicial i final</p></div>
         &#34;&#34;&#34;
         Retorna l&#39;eix secundari com a recta afí
         &#34;&#34;&#34;
-        return RectaAfi(self.ref.origen,self.ref.base.vecs[1])</code></pre>
+        return RectaAfi(self.ref.origen,self.ref.base.vecs[1])
+    #
+    #
+    #
+    def matriu_en_referencia(self,referencia=ReferenciaAfi.canonica()):
+        &#34;&#34;&#34;
+        Retorna la matriu projectiva de la cònica en la referencia &#39;referencia&#39;
+        Paràmetres:
+          referencia: Element de la classe ReferenciaAfi
+        &#34;&#34;&#34;
+        a = referencia.base.matriu()
+        a = a.inserta_columna(2,referencia.origen)
+        a = a.inserta_fila(3,Vector([0,0,1]))
+        mat = a.transposada() * self.canonica * a
+        denom = []
+        mat.simplificar()
+        for i in range(mat.columnes):
+            for j in range(mat.files):
+                if isinstance(mat.matriu[i,j],Mul):
+                    for b in mat.matriu[i,j].args:
+                        if isinstance(b,Rational):
+                            denom.append(b.q)
+        mcm =  mcm_llista(denom)
+        mat = mcm * mat
+        return mat</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb còniques. L'objectiu no és classificar còniques,
 sinó generar coniques a partir dels elements característics o de manera
@@ -2762,6 +2830,40 @@ Només per a el·lipses, hipèrboles i paràboles</p></div>
 </details>
 <div class="desc"><p>Retorna l'equació en latex de l'equació de la quàdrica</p></div>
 </dd>
+<dt id="Algebra.Conica.matriu_en_referencia"><code class="name flex">
+<span>def <span class="ident">matriu_en_referencia</span></span>(<span>self, referencia=\left\{(0,0,0);(1,0,0),(0,1,0),(0,0,1)\right\})</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def matriu_en_referencia(self,referencia=ReferenciaAfi.canonica()):
+    &#34;&#34;&#34;
+    Retorna la matriu projectiva de la cònica en la referencia &#39;referencia&#39;
+    Paràmetres:
+      referencia: Element de la classe ReferenciaAfi
+    &#34;&#34;&#34;
+    a = referencia.base.matriu()
+    a = a.inserta_columna(2,referencia.origen)
+    a = a.inserta_fila(3,Vector([0,0,1]))
+    mat = a.transposada() * self.canonica * a
+    denom = []
+    mat.simplificar()
+    for i in range(mat.columnes):
+        for j in range(mat.files):
+            if isinstance(mat.matriu[i,j],Mul):
+                for b in mat.matriu[i,j].args:
+                    if isinstance(b,Rational):
+                        denom.append(b.q)
+    mcm =  mcm_llista(denom)
+    mat = mcm * mat
+    return mat</code></pre>
+</details>
+<div class="desc"><p>Retorna la matriu projectiva de la cònica en la referencia 'referencia'</p>
+<h2 id="parametres">Paràmetres</h2>
+<p>referencia: Element de la classe ReferenciaAfi</p></div>
+</dd>
 <dt id="Algebra.Conica.matrius"><code class="name flex">
 <span>def <span class="ident">matrius</span></span>(<span>self)</span>
 </code></dt>
@@ -2785,6 +2887,25 @@ Només per a el·lipses, hipèrboles i paràboles</p></div>
 </details>
 <div class="desc"><p>Retorna les matrius Q i L i el terme independent f a punt
 per a utilitzar-les em el Sagemath</p></div>
+</dd>
+<dt id="Algebra.Conica.primer_element_no_nul"><code class="name flex">
+<span>def <span class="ident">primer_element_no_nul</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def primer_element_no_nul(self):
+    &#34;&#34;&#34;
+    Determina el primer no nul de la matriu self.canonica en un ordre determinat
+    &#34;&#34;&#34;
+    for k in ((0,0),(1,1),(0,1),(0,2),(1,2)):
+        if self.canonica[k] != 0:
+            return k
+    return None</code></pre>
+</details>
+<div class="desc"><p>Determina el primer no nul de la matriu self.canonica en un ordre determinat</p></div>
 </dd>
 <dt id="Algebra.Conica.referencia_principal"><code class="name flex">
 <span>def <span class="ident">referencia_principal</span></span>(<span>self)</span>
@@ -3280,8 +3401,10 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matriu_en_referencia" href="#Algebra.Conica.matriu_en_referencia">matriu_en_referencia</a></code></li>
 <li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
+<li><code><a title="Algebra.Conica.primer_element_no_nul" href="#Algebra.Conica.primer_element_no_nul">primer_element_no_nul</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
 <li><code><a title="Algebra.Conica.vectors" href="#Algebra.Conica.vectors">vectors</a></code></li>
@@ -3353,11 +3476,16 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcm_llista([a2,b2,c2])
-        t = g
-        a2 = g // a2
-        b2 = g // b2
-        c2 = g // c2
+        if a2.is_integer and b2.is_integer and c2.is_integer:
+            g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
+        else:
+            g = a2 * b2 * c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,c2,-g]))
         Quadrica.__init__(self,m,r)
     #
@@ -3667,7 +3795,6 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
             a: Vector amb els coeficients de les incògnites
             b: terme independents
             amp: si és True l&#39;equació s&#39;escriurà amb el &amp;= per al LaTeX
-            prime: nombre de primes que s&#39;escriuran a les incògnites
         &#34;&#34;&#34;
         if not isinstance(a,Vector):
             return None
@@ -3885,8 +4012,7 @@ terme independent b</p>
 <h2 id="parametres">Paràmetres</h2>
 <p>a: Vector amb els coeficients de les incògnites
 b: terme independents
-amp: si és True l'equació s'escriurà amb el &amp;= per al LaTeX
-prime: nombre de primes que s'escriuran a les incògnites</p></div>
+amp: si és True l'equació s'escriurà amb el &amp;= per al LaTeX</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -5281,8 +5407,10 @@ base canònica</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matriu_en_referencia" href="#Algebra.Conica.matriu_en_referencia">matriu_en_referencia</a></code></li>
 <li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
+<li><code><a title="Algebra.Conica.primer_element_no_nul" href="#Algebra.Conica.primer_element_no_nul">primer_element_no_nul</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
 <li><code><a title="Algebra.Conica.vectors" href="#Algebra.Conica.vectors">vectors</a></code></li>
@@ -5354,11 +5482,16 @@ base canònica</p></div>
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcm_llista([a2,b2,c2])
-        t = g
-        a2 = g // a2
-        b2 = g // b2
-        c2 = g // c2
+        if a2.is_integer and b2.is_integer and c2.is_integer:
+            g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
+        else:
+            g = a2 * b2 * c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,-c2,g]))
         Quadrica.__init__(self,m,r)
     #
@@ -5651,11 +5784,16 @@ base canònica</p></div>
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcm_llista([a2,b2,c2])
-        t = g
-        a2 = g // a2
-        b2 = g // b2
-        c2 = g // c2
+        if a2.is_integer and b2.is_integer and c2.is_integer:
+            g = abs(mcm_llista([a2,b2,c2]))
+            a2 = g // a2
+            b2 = g // b2
+            c2 = g // c2
+        else:
+            g = a2 * b2 * c2
+            a2 = g / a2
+            b2 = g / b2
+            c2 = g / c2
         m = Matriu.diagonal(Vector([a2,b2,-c2,-g]))
         Quadrica.__init__(self,m,r)
     #
@@ -8505,8 +8643,10 @@ de límits (-x,x) i (-y,y)</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matriu_en_referencia" href="#Algebra.Conica.matriu_en_referencia">matriu_en_referencia</a></code></li>
 <li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
+<li><code><a title="Algebra.Conica.primer_element_no_nul" href="#Algebra.Conica.primer_element_no_nul">primer_element_no_nul</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
 <li><code><a title="Algebra.Conica.vectors" href="#Algebra.Conica.vectors">vectors</a></code></li>
@@ -9179,6 +9319,7 @@ de límits (-x,x) i (-y,y)</p></div>
         &#34;&#34;&#34;
         Retorna, si és possible, un punt de coordenades enteres del pla afí
         que passa pel punt p i té vectors directors u i v
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         &#34;&#34;&#34;
         if p is None:
             p = self.p
@@ -9610,6 +9751,7 @@ El resultat pot ser None, una recta o un pla.</p>
     &#34;&#34;&#34;
     Retorna, si és possible, un punt de coordenades enteres del pla afí
     que passa pel punt p i té vectors directors u i v
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     &#34;&#34;&#34;
     if p is None:
         p = self.p
@@ -9639,7 +9781,8 @@ El resultat pot ser None, una recta o un pla.</p>
     return p</code></pre>
 </details>
 <div class="desc"><p>Retorna, si és possible, un punt de coordenades enteres del pla afí
-que passa pel punt p i té vectors directors u i v</p></div>
+que passa pel punt p i té vectors directors u i v
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.simetric"><code class="name flex">
 <span>def <span class="ident">simetric</span></span>(<span>self, punt)</span>
@@ -10204,6 +10347,7 @@ v = Vector(3,1,-2)</p></div>
 <li><code><a title="Algebra.Vector.dot" href="#Algebra.Vector.dot">dot</a></code></li>
 <li><code><a title="Algebra.Vector.es_proporcional" href="#Algebra.Vector.es_proporcional">es_proporcional</a></code></li>
 <li><code><a title="Algebra.Vector.factor_comu" href="#Algebra.Vector.factor_comu">factor_comu</a></code></li>
+<li><code><a title="Algebra.Vector.factor_comu2" href="#Algebra.Vector.factor_comu2">factor_comu2</a></code></li>
 <li><code><a title="Algebra.Vector.latex" href="#Algebra.Vector.latex">latex</a></code></li>
 <li><code><a title="Algebra.Vector.length" href="#Algebra.Vector.length">length</a></code></li>
 <li><code><a title="Algebra.Vector.maxim" href="#Algebra.Vector.maxim">maxim</a></code></li>
@@ -10283,6 +10427,7 @@ v = Vector(3,1,-2)</p></div>
             a = a.inserta_fila(3,Vector([0,0,0,1]))
             b = a.inversa()
             self.canonica = b.transposada() * self.matriu * b
+            self.canonica.matriu.simplify()
             n2, n1 = self.canonica.factor_comu()
             if enter(n1) and enter(n2):
                 pr = Rational(n2,n1)
@@ -10292,7 +10437,7 @@ v = Vector(3,1,-2)</p></div>
             if self.canonica is not None:
                 f = self.primer_element_no_nul()
                 if self.canonica[f] &lt; 0:
-                    self.canonica *= -1
+                    self.canonica = -self.canonica
     #
     #
     #
@@ -10838,8 +10983,6 @@ v = Vector(3,1,-2)</p></div>
                 if a2 &lt; 0:
                     a2, b2 = -a2,-b2
                     v2 = -v2
-                a2 /= v3.length()
-                b2 /= v3.length()
                 return ParaboloideElliptic(a2,b2,vertex,v1,v2)
             if len(positius) == 1:
                 #
@@ -10861,7 +11004,7 @@ v = Vector(3,1,-2)</p></div>
                 return ParaboloideHiperbolic(a2,-b2,vertex,vec1,vec2)
         if len(positius) + len(negatius) == 1:
             #
-            # Cilindre parabòlic
+            # Cilindre parabòlic xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
             #
             if len(s) &gt; 0:
                 return None
@@ -11553,6 +11696,7 @@ self.quadrats</p>
         &#34;&#34;&#34;
         Retorna, si és possible, un punt de coordenades enteres de la recta
         que passa pel punt p i té vector director u
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         &#34;&#34;&#34;
         if p is None:
             p = self.p
@@ -12068,6 +12212,7 @@ El resultat pot ser None, un punt o una recta.</p>
     &#34;&#34;&#34;
     Retorna, si és possible, un punt de coordenades enteres de la recta
     que passa pel punt p i té vector director u
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     &#34;&#34;&#34;
     if p is None:
         p = self.p
@@ -12087,7 +12232,8 @@ El resultat pot ser None, un punt o una recta.</p>
     return p</code></pre>
 </details>
 <div class="desc"><p>Retorna, si és possible, un punt de coordenades enteres de la recta
-que passa pel punt p i té vector director u</p></div>
+que passa pel punt p i té vector director u
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 </dd>
 <dt id="Algebra.RectaAfi.simetric"><code class="name flex">
 <span>def <span class="ident">simetric</span></span>(<span>self, punt)</span>
@@ -12168,6 +12314,7 @@ que passa pel punt p i té vector director u</p></div>
     def equacio(self):
         &#34;&#34;&#34;
         Retorna l&#39;equació de la recta de regressió expressada en LaTeX
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         &#34;&#34;&#34;
         x = symbols(&#39;x&#39;)
         n = Vector.nul(dim=2)
@@ -12259,6 +12406,7 @@ max: valor màxim de les ys</p></div>
 <pre><code class="python">def equacio(self):
     &#34;&#34;&#34;
     Retorna l&#39;equació de la recta de regressió expressada en LaTeX
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     &#34;&#34;&#34;
     x = symbols(&#39;x&#39;)
     n = Vector.nul(dim=2)
@@ -12270,7 +12418,8 @@ max: valor màxim de les ys</p></div>
         return f&#34;y = {mylatex(eq)}&#34;
     return f&#34;y = \\frac{{ {mylatex(eq)} }}{{ {a.q} }}&#34;</code></pre>
 </details>
-<div class="desc"><p>Retorna l'equació de la recta de regressió expressada en LaTeX</p></div>
+<div class="desc"><p>Retorna l'equació de la recta de regressió expressada en LaTeX
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 </dd>
 <dt id="Algebra.RectaRegressio.error_quadratic"><code class="name flex">
 <span>def <span class="ident">error_quadratic</span></span>(<span>self)</span>
@@ -12674,6 +12823,8 @@ aleatori: només s'aplica a dimensió 3 i genera unes equacions implícites no t
             mzeros: Màxim nombre de zeros que apareixen a la base
             unitaria: si és True la matriu del canvi de base tindrà determinant 1 o -1
         &#34;&#34;&#34;
+        if euclidiana:
+            unitaria = True
         origen = Punt.aleatori(l=dimensio,maxim=maxim,nuls=False)
         if not euclidiana:
             m = Matriu.invertible(ordre=dimensio,maxim=maxim,mzeros=mzeros,unitaria=unitaria)
@@ -14020,6 +14171,129 @@ prime: nombre de primes a les incògnites</p></div>
     return SubespaiVectorial(a.nucli())</code></pre>
 </details>
 <div class="desc"><p>Retorna el suplementari ortogonal</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="Algebra.SuperficieRevolucio"><code class="flex name class">
+<span>class <span class="ident">SuperficieRevolucio</span></span>
+<span>(</span><span>P=None, eix='X', punt=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SuperficieRevolucio(object):
+    &#34;&#34;&#34;
+    Classe per treballar amb rectes de regressió
+    Atributs:
+        P: punt de la corba que gira
+
+        punt: punt del pla 
+        
+        X: punt (x,y,z) de la superfície de revolució
+        
+        C: centre de la circumferència que descriu el punt P
+                
+        eix: eix de rotació, &#39;X&#39;, &#39;Y&#39; o &#39;Z&#39; convertits a 0, 1 o 2
+
+        syms: símbols que apareixen al punt P
+    &#34;&#34;&#34;
+    #
+    #
+    #
+    def __new__(cls,P=None,eix=&#39;X&#39;,punt=None):
+        if punt is not None:
+            if not isinstance(punt,Punt):
+                return None
+            if punt.dimensio != 3:
+               return None
+        try:
+            eix = eix.upper()
+        except:
+            eix = None
+        if eix not in (&#39;X&#39;,&#39;Y&#39;,&#39;Z&#39;):
+            return None
+        if P is None:
+            return None
+        return super(SuperficieRevolucio,cls).__new__(cls)
+    #
+    #
+    #
+    def __init__(cls,P=None,eix=&#39;X&#39;,punt=None):
+        x, y, z = symbols(&#39;x y z&#39;)
+        eixos = {&#39;X&#39; : 0,&#39;Y&#39; : 1,&#39;Z&#39; : 2}
+        cls.eix = eixos[eix]
+        cls.X = Punt([x,y,z])
+        if punt is None:
+            punt = Punt.aleatori(l=3,maxim=3,nuls=False)
+        punt[cls.eix] = 0
+        cls.punt = Punt(punt.components)
+        cls.P = P
+        cls.syms = set()
+        for expr in cls.P.components:
+            try:
+                cls.syms = cls.syms | expr.free_symbols
+            except:
+                pass
+        cls.C = Punt(cls.P.components)
+        for i in (0,1,2):
+            if i != cls.eix:
+                cls.C[i] = cls.punt[i]
+    #
+    #
+    #
+    def equacio(self):
+        eq = (self.X-self.C).length()**2 - (self.P-self.C).length()**2
+        var = self.X[self.eix]
+        if len(self.syms) != 1:
+            return None
+        for i in self.syms:
+            s = solve(var - self.C[self.eix],i)
+            eq1 = eq.subs(i,s[0]).expand()
+        if eq1.is_polynomial() and Poly(eq1).total_degree() == 2:
+            q = Quadrica.from_equacio(eq1)
+            return q
+        str = latex(eq1,order=&#39;grlex&#39;)
+        if str[0] == &#39;-&#39;:
+            eq1 = -eq1
+        return(eq1.expand())</code></pre>
+</details>
+<div class="desc"><p>Classe per treballar amb rectes de regressió</p>
+<h2 id="atributs">Atributs</h2>
+<p>P: punt de la corba que gira</p>
+<p>punt: punt del pla </p>
+<p>X: punt (x,y,z) de la superfície de revolució</p>
+<p>C: centre de la circumferència que descriu el punt P</p>
+<p>eix: eix de rotació, 'X', 'Y' o 'Z' convertits a 0, 1 o 2</p>
+<p>syms: símbols que apareixen al punt P</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="Algebra.SuperficieRevolucio.equacio"><code class="name flex">
+<span>def <span class="ident">equacio</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def equacio(self):
+    eq = (self.X-self.C).length()**2 - (self.P-self.C).length()**2
+    var = self.X[self.eix]
+    if len(self.syms) != 1:
+        return None
+    for i in self.syms:
+        s = solve(var - self.C[self.eix],i)
+        eq1 = eq.subs(i,s[0]).expand()
+    if eq1.is_polynomial() and Poly(eq1).total_degree() == 2:
+        q = Quadrica.from_equacio(eq1)
+        return q
+    str = latex(eq1,order=&#39;grlex&#39;)
+    if str[0] == &#39;-&#39;:
+        eq1 = -eq1
+    return(eq1.expand())</code></pre>
+</details>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -16191,6 +16465,85 @@ varietat afi</p>
     #
     #
     #
+    def factor_comu2(self):
+        &#34;&#34;&#34;
+          Retorna quin factor comú podem treure de la matriu
+        &#34;&#34;&#34;
+        n = []
+        d = []
+        sn = []
+        sd = []
+        totsquadrats = True
+        for i in range(self.dimensio):
+            k = self.components[i]
+            if k == 0:
+                continue
+            if isinstance(k,Rational):
+                totsquadrats = False
+                n.append(k.p)
+                d.append(k.q)
+            elif isinstance(k,int) or isinstance(k,Integer):
+                totsquadrats = False
+                n.append(k)
+            elif isinstance(k**2,int) or isinstance(k**2,Integer):
+                sn.append(k**2)
+            elif isinstance(k**2,Rational):
+                k2 = k**2
+                sn.append(k2.p)
+                sd.append(k2.q)
+            elif isinstance(k,Add):
+                totsquadrats = False
+                n1 = []
+                n2 = []
+                for a in k.args:
+                    if isinstance(a,int) or isinstance(a,Integer):
+                        n1.append(a)
+                    if isinstance(a,Rational):
+                        n1.append(a.p)
+                        n2.append(a.q)
+                    elif isinstance(a**2,Rational):
+                        n1.append(1)
+                        a2 = a**2
+                        if enter(sqrt(a2.q)):
+                            n2.append(sqrt(a2.q))
+                n.append(mcd_llista(n1))
+                d.append(mcm_llista(n2))
+            else:
+                return 1, 1
+        n = mcd_llista(n)
+        d = mcm_llista(d)
+        sn = mcd_llista(sn)
+        sd = mcm_llista(sd)
+        if totsquadrats:
+            sq = d*sqrt(sd)/(n*sqrt(sn))
+        else:
+            sq = Rational(d,n)
+        n1 = 1
+        n2 = 1
+        if isinstance(sq,int) or isinstance(sq,Integer):
+            n1 = 1
+            n2 = sq
+        elif isinstance(sq,Rational):
+            n1 = sq.q
+            n2 = sq.p
+        elif isinstance(sq,Pow):
+            n1 = 1
+            n2 = sq
+        elif isinstance(sq,Mul):
+            for a in sq.args:
+                if isinstance(a,int) or isinstance(a,Integer):
+                    n1 = 1
+                    n2 = a
+                elif isinstance(a,Rational):
+                    n1 = a.q
+                    n2 = a.p
+                else:
+                    n1 *= 1
+                    n2 *= a
+        return n2,n1    
+    #
+    #
+    #
     def factor_comu(self):
         &#34;&#34;&#34;
         En cas que totes les components del vector sigui enteres o racionals,
@@ -16436,7 +16789,7 @@ varietat afi</p>
             w = Vector(3,3,1,2)
             p = v * w
         &#34;&#34;&#34;
-        types = [Rational,float,int,Float,Pow,Add,Mul]
+        types = [Rational,float,int,Float,Pow,Add,Mul,Symbol]
         for t in types:
             if isinstance(other,t):
                 if isinstance(self,Punt):
@@ -16691,6 +17044,7 @@ varietat afi</p>
         Retorna l&#39;expressió en latex del vector.
         Paràmetres:
             unitari: si unitari és True, el retorna dividit per la seva longitud
+            xxxxxxxxxxxxxxxxxxxxxx
         &#34;&#34;&#34;
         if unitari:
             f,v = self.factor_comu()
@@ -16764,6 +17118,7 @@ varietat afi</p>
         &#34;&#34;&#34;
         Retorna l&#39;expressió en LaTeX d&#39;un vector de dimensió 4 en format
         quaternió
+        xxxxxxxxxxxxxxxxxxxxxxxx
         &#34;&#34;&#34;
         i, j, k = symbols(&#34;i j k&#34;)
         if self.dimensio != 4:
@@ -16854,6 +17209,7 @@ positius: Si els coeficients han de set tots positius</p></div>
     &#34;&#34;&#34;
     Retorna l&#39;expressió en LaTeX d&#39;un vector de dimensió 4 en format
     quaternió
+    xxxxxxxxxxxxxxxxxxxxxxxx
     &#34;&#34;&#34;
     i, j, k = symbols(&#34;i j k&#34;)
     if self.dimensio != 4:
@@ -16869,7 +17225,8 @@ positius: Si els coeficients han de set tots positius</p></div>
     return f&#34;{s}\\left({r}\\right)&#34;</code></pre>
 </details>
 <div class="desc"><p>Retorna l'expressió en LaTeX d'un vector de dimensió 4 en format
-quaternió</p></div>
+quaternió
+xxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 </dd>
 <dt id="Algebra.Vector.clona"><code class="name flex">
 <span>def <span class="ident">clona</span></span>(<span>self)</span>
@@ -17125,6 +17482,93 @@ torna el racional que es pot treure factor comú i el vector simplificat.
 Si hi ha components que no són ni enteres ni racionals, torna 1 i el mateix
 vector</p></div>
 </dd>
+<dt id="Algebra.Vector.factor_comu2"><code class="name flex">
+<span>def <span class="ident">factor_comu2</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def factor_comu2(self):
+    &#34;&#34;&#34;
+      Retorna quin factor comú podem treure de la matriu
+    &#34;&#34;&#34;
+    n = []
+    d = []
+    sn = []
+    sd = []
+    totsquadrats = True
+    for i in range(self.dimensio):
+        k = self.components[i]
+        if k == 0:
+            continue
+        if isinstance(k,Rational):
+            totsquadrats = False
+            n.append(k.p)
+            d.append(k.q)
+        elif isinstance(k,int) or isinstance(k,Integer):
+            totsquadrats = False
+            n.append(k)
+        elif isinstance(k**2,int) or isinstance(k**2,Integer):
+            sn.append(k**2)
+        elif isinstance(k**2,Rational):
+            k2 = k**2
+            sn.append(k2.p)
+            sd.append(k2.q)
+        elif isinstance(k,Add):
+            totsquadrats = False
+            n1 = []
+            n2 = []
+            for a in k.args:
+                if isinstance(a,int) or isinstance(a,Integer):
+                    n1.append(a)
+                if isinstance(a,Rational):
+                    n1.append(a.p)
+                    n2.append(a.q)
+                elif isinstance(a**2,Rational):
+                    n1.append(1)
+                    a2 = a**2
+                    if enter(sqrt(a2.q)):
+                        n2.append(sqrt(a2.q))
+            n.append(mcd_llista(n1))
+            d.append(mcm_llista(n2))
+        else:
+            return 1, 1
+    n = mcd_llista(n)
+    d = mcm_llista(d)
+    sn = mcd_llista(sn)
+    sd = mcm_llista(sd)
+    if totsquadrats:
+        sq = d*sqrt(sd)/(n*sqrt(sn))
+    else:
+        sq = Rational(d,n)
+    n1 = 1
+    n2 = 1
+    if isinstance(sq,int) or isinstance(sq,Integer):
+        n1 = 1
+        n2 = sq
+    elif isinstance(sq,Rational):
+        n1 = sq.q
+        n2 = sq.p
+    elif isinstance(sq,Pow):
+        n1 = 1
+        n2 = sq
+    elif isinstance(sq,Mul):
+        for a in sq.args:
+            if isinstance(a,int) or isinstance(a,Integer):
+                n1 = 1
+                n2 = a
+            elif isinstance(a,Rational):
+                n1 = a.q
+                n2 = a.p
+            else:
+                n1 *= 1
+                n2 *= a
+    return n2,n1    </code></pre>
+</details>
+<div class="desc"><p>Retorna quin factor comú podem treure de la matriu</p></div>
+</dd>
 <dt id="Algebra.Vector.latex"><code class="name flex">
 <span>def <span class="ident">latex</span></span>(<span>self, unitari=False)</span>
 </code></dt>
@@ -17138,6 +17582,7 @@ vector</p></div>
     Retorna l&#39;expressió en latex del vector.
     Paràmetres:
         unitari: si unitari és True, el retorna dividit per la seva longitud
+        xxxxxxxxxxxxxxxxxxxxxx
     &#34;&#34;&#34;
     if unitari:
         f,v = self.factor_comu()
@@ -17149,7 +17594,8 @@ vector</p></div>
 </details>
 <div class="desc"><p>Retorna l'expressió en latex del vector.</p>
 <h2 id="parametres">Paràmetres</h2>
-<p>unitari: si unitari és True, el retorna dividit per la seva longitud</p></div>
+<p>unitari: si unitari és True, el retorna dividit per la seva longitud
+xxxxxxxxxxxxxxxxxxxxxx</p></div>
 </dd>
 <dt id="Algebra.Vector.length"><code class="name flex">
 <span>def <span class="ident">length</span></span>(<span>self)</span>
@@ -17567,8 +18013,10 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Conica.equacio" href="#Algebra.Conica.equacio">equacio</a></code></li>
 <li><code><a title="Algebra.Conica.from_equacio" href="#Algebra.Conica.from_equacio">from_equacio</a></code></li>
 <li><code><a title="Algebra.Conica.hiperbola" href="#Algebra.Conica.hiperbola">hiperbola</a></code></li>
+<li><code><a title="Algebra.Conica.matriu_en_referencia" href="#Algebra.Conica.matriu_en_referencia">matriu_en_referencia</a></code></li>
 <li><code><a title="Algebra.Conica.matrius" href="#Algebra.Conica.matrius">matrius</a></code></li>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
+<li><code><a title="Algebra.Conica.primer_element_no_nul" href="#Algebra.Conica.primer_element_no_nul">primer_element_no_nul</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
 <li><code><a title="Algebra.Conica.vectors" href="#Algebra.Conica.vectors">vectors</a></code></li>
@@ -17919,6 +18367,12 @@ u.simplificar()</p></div>
 </ul>
 </li>
 <li>
+<h4><code><a title="Algebra.SuperficieRevolucio" href="#Algebra.SuperficieRevolucio">SuperficieRevolucio</a></code></h4>
+<ul class="">
+<li><code><a title="Algebra.SuperficieRevolucio.equacio" href="#Algebra.SuperficieRevolucio.equacio">equacio</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="Algebra.Tetraedre" href="#Algebra.Tetraedre">Tetraedre</a></code></h4>
 <ul class="">
 <li><code><a title="Algebra.Tetraedre.aleatori" href="#Algebra.Tetraedre.aleatori">aleatori</a></code></li>
@@ -17999,6 +18453,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Vector.dot" href="#Algebra.Vector.dot">dot</a></code></li>
 <li><code><a title="Algebra.Vector.es_proporcional" href="#Algebra.Vector.es_proporcional">es_proporcional</a></code></li>
 <li><code><a title="Algebra.Vector.factor_comu" href="#Algebra.Vector.factor_comu">factor_comu</a></code></li>
+<li><code><a title="Algebra.Vector.factor_comu2" href="#Algebra.Vector.factor_comu2">factor_comu2</a></code></li>
 <li><code><a title="Algebra.Vector.latex" href="#Algebra.Vector.latex">latex</a></code></li>
 <li><code><a title="Algebra.Vector.length" href="#Algebra.Vector.length">length</a></code></li>
 <li><code><a title="Algebra.Vector.maxim" href="#Algebra.Vector.maxim">maxim</a></code></li>

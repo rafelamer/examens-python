@@ -169,6 +169,19 @@ def mcd_llista(llista):
     llista = [f*x for x in llista]
     return reduce(gcd, llista)
 
+def max_abs_llista(llista):
+    """
+    Retorna el màxim dels vectors absoluts d'una llista
+    """
+    if len(llista) == 0:
+        return 0
+    maxim = 0
+    for k in llista:
+        if abs(k) > maxim:
+            maxim = abs(k)
+    return maxim
+    
+
 def mcm_llista(llista):
     """
     Retorna el mínim comú múltiple d'una llista d'enters
@@ -7640,7 +7653,7 @@ class Quadrica(object):
                 return ParaboloideHiperbolic(a2,-b2,vertex,vec1,vec2)
         if len(positius) + len(negatius) == 1:
             #
-            # Cilindre parabòlic xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            # Cilindre parabòlic
             #
             if len(s) > 0:
                 return None
@@ -9119,14 +9132,37 @@ class SuperficieRevolucio(object):
             return None
         for i in self.syms:
             s = solve(var - self.C[self.eix],i)
-            eq1 = eq.subs(i,s[0]).expand()
+            eq1 = eq.subs(i,s[1]).expand()
         if eq1.is_polynomial() and Poly(eq1).total_degree() == 2:
             q = Quadrica.from_equacio(eq1)
-            return q
+            return q,None
+        d = eq1.as_coefficients_dict()
+        d = list(d.values())
+        d = [x.q for x in d if x.q != 1]
+        m = 1
+        d = eq1.as_coefficients_dict()
+        d = d.values()
+        d = [x.q for x in d if x.q > 1]
+        if len(d) > 0:
+            m = mcm_llista(d)
+        eq1 = m * eq1
+        d = eq1.as_coefficients_dict()
+        for k, v in d.items():
+            if isinstance(k,Pow) and k.args[1] == Rational(1,2):
+                eq2 = k * v
+        eq1 = eq1 - eq2
         str = latex(eq1,order='grlex')
         if str[0] == '-':
             eq1 = -eq1
-        return(eq1.expand())
+        d = (eq2**2).as_coefficients_dict()
+        d = d.values()
+        m = mcd_llista(d)
+        if eq2 != 0:
+            return (Eq(eq1**2,-eq2**2),d)
+        str = latex(eq1,order='grlex')
+        if str[0] == '-':
+            eq1 = -eq1
+        return(eq1.expand(),None)
 
 
 class RectaRegressio(object):

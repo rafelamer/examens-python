@@ -9132,7 +9132,7 @@ class SuperficieRevolucio(object):
             return None
         for i in self.syms:
             s = solve(var - self.C[self.eix],i)
-            eq1 = eq.subs(i,s[1]).expand()
+            eq1 = eq.subs(i,s[0]).expand()
         if eq1.is_polynomial() and Poly(eq1).total_degree() == 2:
             q = Quadrica.from_equacio(eq1)
             return q,None
@@ -9146,6 +9146,7 @@ class SuperficieRevolucio(object):
         if len(d) > 0:
             m = mcm_llista(d)
         eq1 = m * eq1
+        eq2 = 0
         d = eq1.as_coefficients_dict()
         for k, v in d.items():
             if isinstance(k,Pow) and k.args[1] == Rational(1,2):
@@ -9154,11 +9155,13 @@ class SuperficieRevolucio(object):
         str = latex(eq1,order='grlex')
         if str[0] == '-':
             eq1 = -eq1
-        d = (eq2**2).as_coefficients_dict()
-        d = d.values()
-        m = mcd_llista(d)
+        try:
+            d = (eq2**2).as_coefficients_dict()
+            d = d.values()
+        except:
+            d = []
         if eq2 != 0:
-            return (Eq(eq1**2,-eq2**2),d)
+            return (Eq(eq1**2,eq2**2),d)
         str = latex(eq1,order='grlex')
         if str[0] == '-':
             eq1 = -eq1

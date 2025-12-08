@@ -8387,11 +8387,7 @@ class CilindreElliptic(Quadrica):
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcd_llista([a2,b2])
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
-        m = Matriu.diagonal(Vector([b2,a2,0,-t]))
+        m = Matriu.diagonal(Vector([b2,a2,0,-a2*b2]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -8542,11 +8538,7 @@ class CilindreHiperbolic(Quadrica):
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcd_llista([a2,b2])
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
-        m = Matriu.diagonal(Vector([b2,-a2,0,-t]))
+        m = Matriu.diagonal(Vector([b2,-a2,0,-a2*b2]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -9105,7 +9097,7 @@ class SuperficieRevolucio(object):
     def __init__(cls,P=None,eix='X',punt=None):
         x, y, z = symbols('x y z')
         eixos = {'X' : 0,'Y' : 1,'Z' : 2}
-        cls.eix = eixos[eix]
+        cls.eix = eixos[eix.upper()]
         cls.X = Punt([x,y,z])
         if punt is None:
             punt = Punt.aleatori(l=3,maxim=3,nuls=False)

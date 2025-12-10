@@ -7557,7 +7557,7 @@ class Quadrica(object):
                 #
                 # Con
                 #
-                return Con(a2,b2,-c2,s,v1[0][1],v1[1][1])
+                return Con(1/a2,1/b2,-1/c2,s,v1[0][1],v1[1][1])
             elif tip > 0:
                 #
                 # Hiperboloide de dues fulles

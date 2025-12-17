@@ -7399,14 +7399,14 @@ class Quadrica(object):
     #
     #
     @classmethod
-    def aleatoria(cls,maxim=30,diagonal=15,canonica=False):
+    def aleatoria(cls,maxim=30,diagonal=15,canonica=False,maxr=10):
         """
         Retorna una quàdrica de manera aleatòria
         Paràmetres:
             maxim: valor màxim de la matriu projectiva de la quàdrica
             diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
         """
-        r = random.randint(0,9)
+        r = random.randint(0,maxr)
         if r == 0:
             return Quadrica.ellipsoide(maxim,diagonal,canonica)
         if r == 1:

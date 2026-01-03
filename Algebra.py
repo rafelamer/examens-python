@@ -3544,6 +3544,16 @@ class PlaVectorial(object):
     #
     #
     #
+    def base_ortonormal(self):
+        """
+        Retorna una base ortonormal del pla vectorial
+        """
+        b = self.base_ortogonal()
+        b.set_unitaria()
+        return(b)
+    #
+    #
+    #
     def projeccio_ortogonal(self,u):
         """
         Retorna la projecció ortogonal del vector u sobre el pla.
@@ -4173,8 +4183,19 @@ class PlaAfi(object):
         v1 = self.u1
         u2 = self.u2
         v2 = v1.dot(v1) * u2 - v1.dot(u2) * v1
-        v2.simplificar()
-        return [v1,v2]
+        v1.simplificar(positiu=True)
+        v2.simplificar(positiu=True)
+        return Base([v1,v2])
+    #
+    #
+    #
+    def base_ortonormal(self):
+        """
+        Retorna una base ortonormal del pla afí
+        """
+        b = self.base_ortogonal()
+        b.set_unitaria()
+        return(b)
     #
     #
     #
@@ -6465,7 +6486,7 @@ class Ellipse(Conica):
     #
     #
     @classmethod
-    def aleatoria(cls,canonica=False,):
+    def aleatoria(cls,canonica=False):
         """
         Retorna una el·lipse aleatòria
         """
@@ -7785,7 +7806,7 @@ class Ellipsoide(Quadrica):
             trobat = a2 != b2 or a2 != c2
             a2, b2, c2 = sorted([a2,b2,c2])[::-1]
             q = cls(a2,b2,c2,centre,eix1,eix2)
-            if q is None or q.canonica is None  :
+            if q is None or q.canonica is None:
                 continue
             trobat = q.canonica.tots_enters()
         return q

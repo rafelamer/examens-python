@@ -9017,7 +9017,6 @@ class CilindreParabolic(Quadrica):
         eix2.simplificar(positiu=False)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
-        print(base)
         r = ReferenciaAfi(vertex,base)
         m = Matriu(Matrix([[1,0,0,0],[0,0,0,0],[0,0,0,-p],[0,0,-p,0]]))
         Quadrica.__init__(self,m,r)

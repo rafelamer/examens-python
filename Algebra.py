@@ -7700,7 +7700,7 @@ class Quadrica(object):
                 k += 1
             ep = v3.dot(l)/v3.length()
             a2 =  -2 * ep / t1
-            return CilindreParabolic(a2/2,v,v1,v2)
+            return CilindreParabolic(-a2/2,v,v1,v2)
 
 
 class Ellipsoide(Quadrica):
@@ -9011,12 +9011,13 @@ class CilindreParabolic(Quadrica):
     #
     #
     def __init__(self,p,vertex,eix1,eix2):
-        eix1.simplificar(positiu=True)
+        eix1.simplificar(positiu=False)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-        eix2.simplificar(positiu=True)
+        eix2.simplificar(positiu=False)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
+        print(base)
         r = ReferenciaAfi(vertex,base)
         m = Matriu(Matrix([[1,0,0,0],[0,0,0,0],[0,0,0,-p],[0,0,-p,0]]))
         Quadrica.__init__(self,m,r)

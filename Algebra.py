@@ -7683,6 +7683,7 @@ class Quadrica(object):
                 v = negatius
             t1 = v[0][0]
             v1 = v[0][1]
+            v1.simplificar(positiu=True)
             v2 = v1.cross(l,simplificar=True)
             v3 = v1.cross(v2,simplificar=True)
             es = t1 * v1.dot(Vector(x,y,z)) + v1.dot(l)
@@ -7699,7 +7700,7 @@ class Quadrica(object):
                     break
                 k += 1
             ep = v3.dot(l)/v3.length()
-            a2 =  -2 * ep / t1
+            a2 =  2 * ep / t1
             return CilindreParabolic(-a2/2,v,v1,v2)
 
 

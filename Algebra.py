@@ -6128,6 +6128,7 @@ class Conica(object):
     def __init__(self,matriu,ref=None):
         self.ref = ref
         self.matriu = matriu
+        self.by2 = True
         if ref is None:
             self.canonica = matriu
         else:
@@ -6147,6 +6148,11 @@ class Conica(object):
                 f = self.primer_element_no_nul()
                 if self.canonica[f] < 0:
                     self.canonica = -self.canonica
+    #
+    #
+    #
+    def no_by2(self):
+        self.by2 = False
     #
     #
     #
@@ -6258,7 +6264,11 @@ class Conica(object):
         x, y = symbols('x y')
         m = Matriu.matriu_columna(Vector([x,y,1]))
         r = m.transposada() * self.canonica * m
-        return mylatex(r[0,0].expand()) + " = 0"
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return mylatex(r[0,0].expand()/mcd) + " = 0"
     #
     #
     #
@@ -7089,6 +7099,7 @@ class Quadrica(object):
     def __init__(self,matriu,ref=None):
         self.ref = ref
         self.matriu = matriu
+        self.by2 = True
         if ref is None:
             self.canonica = matriu
         else:
@@ -7111,6 +7122,11 @@ class Quadrica(object):
     #
     #
     #
+    def set_noby2(self):
+        self.by2 = False
+    #
+    #
+    #
     def primer_element_no_nul(self):
         """
         Determina el primer no nul de la matriu self.canonica en un ordre determinat
@@ -7130,7 +7146,11 @@ class Quadrica(object):
         x, y, z = symbols('x y z')
         m = Matriu.matriu_columna(Vector([x,y,z,1]))
         r = m.transposada() * self.canonica * m
-        return mylatex(r[0,0].expand()) + " = 0"
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return mylatex(r[0,0].expand()/mcd) + " = 0"
     #
     #
     #

@@ -3,7 +3,7 @@
 """
 Filename:   Algebra.py
 Author:     Rafel Amer (rafel.amer AT upc.edu)
-Copyright:  Rafel Amer 2020--2025
+Copyright:  Rafel Amer 2020--2026
 Disclaimer: This program is provided "as is", without warranty of any kind,
             either expressed or implied, including, but not linmited to, the
             implied warranties of merchantability and fitness for a particular
@@ -6237,14 +6237,14 @@ class Conica(object):
         ep = veps[1].dot(l)/veps[1].length()
         if b.te_orientacio_positiva():
             if t1 < 0:
-                p = - ep/t1
-            else:
-                p = ep / t1
-        else:
-            if t1 < 0:
                 p = ep/t1
             else:
                 p = - ep / t1
+        else:
+            if t1 < 0:
+                p = - ep/t1
+            else:
+                p = ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
         return Parabola(vertex,focus)
     #
@@ -7008,6 +7008,7 @@ class Parabola(Conica):
         Retorna el focus de la paràbola
         """
         p2 = self.parametre() / 2
+        print (self.matriu)
         if self.matriu[2,1] > 0:
             p2 *= -1
         return self.ref.punt_de_coordenades(Punt([0,p2]))

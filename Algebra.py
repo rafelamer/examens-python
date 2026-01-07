@@ -7008,7 +7008,6 @@ class Parabola(Conica):
         Retorna el focus de la paràbola
         """
         p2 = self.parametre() / 2
-        print (self.matriu)
         if self.matriu[2,1] > 0:
             p2 *= -1
         return self.ref.punt_de_coordenades(Punt([0,p2]))

@@ -6151,7 +6151,7 @@ class Conica(object):
     #
     #
     #
-    def no_by2(self):
+    def set_noby2(self):
         self.by2 = False
     #
     #

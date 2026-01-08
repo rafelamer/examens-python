@@ -6932,7 +6932,6 @@ class Parabola(Conica):
         v2.radsimplificar()
         t = 1
         for i in (0,1):
-            print(eix[i]*v2[i])
             if eix[i] * v2[i] < 0:
                 t = -1
                 break

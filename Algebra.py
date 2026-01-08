@@ -6244,7 +6244,6 @@ class Conica(object):
         ep = veps[1].dot(l)/veps[1].length()
         p = - ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
-        print(focus)
         return Parabola(vertex,focus)
     #
     #
@@ -6929,8 +6928,15 @@ class Parabola(Conica):
     def __init__(self,vertex,focus):
         eix = focus - vertex
         p = 2 * eix.length()
-        eix.radsimplificar()
-        v2 = eix
+        v2 = Vector(eix.components)
+        v2.radsimplificar()
+        t = 1
+        for i in (0,1):
+            print(eix[i]*v2[i])
+            if eix[i] * v2[i] < 0:
+                t = -1
+                break
+        v2 = t * v2
         v1 = Vector([v2[1],-v2[0]])
         base = Base([v1,v2],unitaria=True)
         m = Matriu(Matrix(3,3,[1,0,0,0,0,-p,0,-p,0]))

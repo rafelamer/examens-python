@@ -6234,24 +6234,17 @@ class Conica(object):
         if t1 == 0:
             t1, t2 = t2, t1
             veps.reverse()
-        veps[0].simplificar()
-        veps[1].simplificar()
+        veps[0].simplificar(positiu=False)
+        veps[1].simplificar(positiu=False)
         b = Base(veps,unitaria=True)
+        b.orientacio_positiva()
         es = t1 * veps[0].dot(Vector(s[0],s[1])) + veps[0].dot(l)
         vertex = Punt(solve([es,eq],s[0],s[1])[0])
         ref = ReferenciaAfi(vertex,b)
         ep = veps[1].dot(l)/veps[1].length()
-        if b.te_orientacio_positiva():
-            if t1 < 0:
-                p = ep/t1
-            else:
-                p = - ep / t1
-        else:
-            if t1 < 0:
-                p = - ep/t1
-            else:
-                p = ep / t1
+        p = - ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
+        print(focus)
         return Parabola(vertex,focus)
     #
     #
@@ -6287,14 +6280,21 @@ class Conica(object):
     #
     #
     #
-    def equacio(self):
+    def equacio(self,vars=None):
         """
-        Retorna l'equació en latex de l'equació de la quàdrica
+        Retorna l'equació de la cònica
         """
-        x, y = symbols('x y')
-        m = Matriu.matriu_columna(Vector([x,y,1]))
+        if vars is None:
+            x, y = symbols('x y')
+            m = Matriu.matriu_columna(Vector([x,y,1]))
+        else:
+            m = vars
         r = m.transposada() * self.canonica * m
-        return r[0,0].expand()
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return r[0,0].expand()/mcd
     #
     #
     #
@@ -7156,13 +7156,16 @@ class Quadrica(object):
     #
     def equacio(self):
         """
-        Retorna l'equació en latex de l'equació de la quàdrica
+        Retorna l'equació de l'equació de la quàdrica
         """
         x, y, z = symbols('x y z')
         m = Matriu.matriu_columna(Vector([x,y,z,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
-        return r[0,0].expand()
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return r[0,0].expand()/mcd
     #
     #
     #
@@ -7691,6 +7694,9 @@ class Quadrica(object):
                 vertex = Punt(solve([es1,es2,eq],x,y,z)[0])
                 a2 =  -2 * ep / t1
                 b2 =  -2 * ep / t2
+                if a2 < 0:
+                    a2, b2 = b2, a2
+                    vec1, vec2 = vec2, vec1
                 return ParaboloideHiperbolic(a2,-b2,vertex,vec1,vec2)
         if len(positius) + len(negatius) == 1:
             #

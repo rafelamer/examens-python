@@ -8768,6 +8768,10 @@ class ParaboloideElliptic(Quadrica):
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
         if a2.is_integer and b2.is_integer:

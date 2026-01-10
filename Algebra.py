@@ -3764,7 +3764,7 @@ class RectaVectorial(object):
         n = a.nucli()
         if len(n) == 1:
             return RectaVectorial(n[0])
-        return PlaVectorial(n)
+        return PlaVectorial(*n)
 
 
 class ReferenciaAfi(object):
@@ -7786,6 +7786,16 @@ class Ellipsoide(Quadrica):
         eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+        eix3 = eix1.cross(eix2,simplificar=True)
+        if b2 == c2:
+            S = RectaVectorial(eix1)
+            eix2 = S.ortogonal().u1
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        if a2 == c2:
+            S = RectaVectorial(eix2)
+            eix1 = S.ortogonal().u1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
@@ -7950,6 +7960,10 @@ class HiperboloideUnaFulla(Quadrica):
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
@@ -8113,6 +8127,10 @@ class HiperboloideDuesFulles(Quadrica):
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
@@ -8278,6 +8296,10 @@ class Con(Quadrica):
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
@@ -8438,6 +8460,10 @@ class CilindreElliptic(Quadrica):
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         m = Matriu.diagonal(Vector([b2,a2,0,-a2*b2]))
@@ -8587,8 +8613,8 @@ class CilindreHiperbolic(Quadrica):
         eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-        eix2.simplificar(positiu=True)
-        eix3 = eix1.cross(eix2,simplificar=True)
+        eix2.simplificar(positiu=False)
+        eix3 = eix1.cross(eix2,simplificar=False)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         m = Matriu.diagonal(Vector([b2,-a2,0,-a2*b2]))

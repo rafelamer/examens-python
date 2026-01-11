@@ -554,7 +554,7 @@ class Vector(object):
     #
     def factor_comu2(self):
         """
-          Retorna quin factor comú podem treure de la matriu
+          Retorna quin factor comú podem treure del vector
         """
         n = []
         d = []
@@ -627,7 +627,7 @@ class Vector(object):
                 else:
                     n1 *= 1
                     n2 *= a
-        return n2,n1    
+        return n2, n1    
     #
     #
     #
@@ -710,6 +710,22 @@ class Vector(object):
         else:
             return g/m , Vector([m/g*k for k in self.components])
     #
+    #
+    #
+    def maxim_factor_comu(self):
+        """
+        Retorna el màxim del numerador i denominador del factor comú
+        """
+        f, _ = self.factor_comu()
+        if enter(f):
+            return abs(f)
+        m = 1
+        if isinstance(f,Rational):
+            m = abs(f.p)
+            if abs(f.q) > m:
+                m = abs(f.q)
+        return m
+    # 
     #
     #
     def es_proporcional(self,other):

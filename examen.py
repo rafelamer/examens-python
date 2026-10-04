@@ -3,7 +3,7 @@
 """
 Filename:   examen.py
 Author:     Rafel Amer (rafel.amer AT upc.edu)
-Copyright:  Rafel Amer 2020-2024
+Copyright:  Rafel Amer 2020-2026
 Disclaimer: This program is provided "as is", without warranty of any kind,
             either expressed or implied, including, but not linmited to, the
             implied warranties of merchantability and fitness for a particular
@@ -44,6 +44,7 @@ class Examen:
         self.parser = OptionParser()
         self.parser.add_option("--examen",dest="examen",default=None)
         self.parser.add_option("--estudiants",dest="estudiants",default=None)
+        self.parser.add_option("--grup",dest="grup",default=None)
         self.parser.add_option("--full",dest="full")
         self.parser.add_option("--problemes",dest="problemes",default=None)
         self.parser.add_option("--possibles-problemes",dest="possibles",default=None)
@@ -69,7 +70,7 @@ class Examen:
     #
     #
     #
-    def estudiants_from_ods(self,file):
+    def estudiants_from_ods(self,file,grups):
         result = []
         for e in file.values:
             try:
@@ -83,14 +84,21 @@ class Examen:
                          'email'   : e[3],
                          'grup'    : e[4] 
                         }
-                result.append(dades)
+                if grups is not None:
+                    trobat = False
+                    for gr in grups:
+                        trobat = trobat or e[4].find(gr) == 0
+                    if trobat:
+                        result.append(dades)
+                else:
+                    result.append(dades)
             except:
                 pass
         return result
     #
     #
     #
-    def estudiants_from_excel(self,file):
+    def estudiants_from_excel(self,file,grups):
         result = []
         for index, e in f.iterrows():
             try:
@@ -104,14 +112,21 @@ class Examen:
                          'email'   : e[3],
                          'grup'    : e[4] 
                         }
-                result.append(dades)
+                if grups is not None:
+                    trobat = False
+                    for gr in grups:
+                        trobat = trobat or e[4].find(gr) == 0
+                    if trobat:
+                        result.append(dades)
+                else:
+                    result.append(dades)
             except:
                 pass
         return result
     #
     #
     #
-    def estudiants_from_csv(self,file):
+    def estudiants_from_csv(self,file,grups):
         regex = re.compile(r'^\s*#.*$',re.IGNORECASE)
         result = []
         count =  0
@@ -128,7 +143,14 @@ class Examen:
                          'email'   : e[3],
                          'grup'    : e[4] 
                         }
-                result.append(dades)
+                if grups is not None:
+                    trobat = False
+                    for gr in grups:
+                        trobat = trobat or e[4].find(gr) == 0
+                    if trobat:
+                        result.append(dades)
+                else:
+                    result.append(dades)
             except:
                 pass
         return result
@@ -140,6 +162,7 @@ class Examen:
         print("Opcions:")
         print("   --examen=<fitxer>                   : Fitxer LaTeX amb el model d'examen")
         print("   --estudiants=<fitxer>               : Fitxer amb nom:cognoms dels estudiants")
+        print("   --grup=<grups>                      : Grups d'estudiants per als que es genera l'examen")
         print("   --full=<nom del full>               : Nom del full del fitxer .ods")
         print("   --problemes=<nombre|llista>         : Nombre de problemes o llista de problemes")
         print("   --possibles-problemes=<nombre>      : Nombre de possibles problemes")
@@ -193,6 +216,10 @@ class Examen:
         except:
             self.nombreexamens = None
         self.problemes = prob
+        try:
+            grup = self.options.grup.split(',')
+        except:
+            grup = None
         #
         # Comprovacions
         #
@@ -262,18 +289,18 @@ class Examen:
             if kind is not None and kind.mime == 'application/vnd.oasis.opendocument.spreadsheet':
                 try:
                     f = read_ods(est,full,headers=False)
-                    self.estudiants = self.estudiants_from_ods(f)
+                    self.estudiants = self.estudiants_from_ods(f,grup)
                 except:
                     print("Can't open ODS file or sheet")
                     sys.exit(0)
             elif kind is not None and kind.mime in ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                                                     'application/vnd.ms-excel']:
                 f = pandas.read_excel(est,full,header=None)
-                self.estudiants = self.estudiants_from_excel(f)
+                self.estudiants = self.estudiants_from_excel(f,grup)
             else:
                 try:
                     f = open(self.options.estudiants,"r")
-                    self.estudiants = self.estudiants_from_csv(f)
+                    self.estudiants = self.estudiants_from_csv(f,grup)
                     f.close()
                 except:
                     print("Can't open CSV file")
@@ -316,6 +343,7 @@ class Examen:
             except:
                 pass
         self.count = count + 1
+
     #
     #
     #
@@ -327,7 +355,9 @@ class Examen:
             filename = "examen%04d" % nombre
             filename = filename.replace(" ","0")
         else:
-            relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'GRUP' : estudiant['grup'], 'ENUNCIATS' : enunciats,'MODEL' : ""}
+            if nombre is None:
+                nombre = ""
+            relacio = {'COGNOMS' : estudiant['cognoms'], 'NOM' : estudiant['nom'], 'GRUP' : estudiant['grup'], 'ENUNCIATS' : enunciats,'MODEL' : f"{nombre}"}
             filename = f"{estudiant['cognoms']}-{estudiant['nom']}".lower().replace(' ','-')
             filename = unidecode.unidecode(filename)
             filename = filename.replace("'","")
@@ -602,9 +632,8 @@ class Examen:
         except:
             print (f"Error llegint el fitxer JSON {self.options.fitxerdades}")
             sys.exit(0)
-
         dir = self.crea_carpeta_tex()
-        nombre = 1
+        nombre = 0
         if self.nombreexamens is None:
             iterator = self.estudiants
         else:
@@ -612,13 +641,24 @@ class Examen:
         #
         # Generem els PDF
         #
+        ks = list(js.keys())
+        random.shuffle(ks)
+        total = len(ks)
+        nombre = 1
+        count = 0
         for e in iterator:
             examen = []
             if isinstance(e,dict):
-                dades = js[e['email']]
+                if len(ks) < len(iterator):
+                    nombre = ks[count % total]
+                    dades = js[nombre]
+                    count += 1
+                else:
+                    nombre += 1
+                    dades = js[e['email']]
             else:
+                nombre += 1
                 dades = js[f"{nombre}"]
-            ##### self.probs = [int(x.replace('problema','')) for x in dades.keys() if x not in ('DATAEXAMEN','ORDER')]
             ordering = dades['ORDER']
             for i in ordering:
                 relacio = dades[f"problema{i}"]
@@ -626,8 +666,7 @@ class Examen:
                 for k,v in relacio.items():
                     p = p.replace(k,v)
                 examen.append(p)
-            self.generar_examen(examen,e,nombre)
-            nombre += 1
+            self.generar_examen(examen,e,int(nombre))
         self.borra_fitxers()
         os.chdir(dir)
     #

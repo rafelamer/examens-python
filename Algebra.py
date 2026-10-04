@@ -3056,6 +3056,8 @@ class SistemaEquacions:
         """
         if not isinstance(a,Matriu):
             return None
+        if isinstance(b,Matriu):
+            b = b.vectors_columna()[0]
         if not isinstance(b,Vector):
             return None
         if a.files != b.dimensio:
@@ -3070,6 +3072,8 @@ class SistemaEquacions:
     #
     #
     def __init__(self,a,b,unknowns=None,prime=0):
+        if isinstance(b,Matriu):
+            b = b.vectors_columna()[0]
         self.A = a
         self.B = b
         self.solucio = None

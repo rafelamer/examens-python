@@ -10,6 +10,8 @@
 %
 % Packages
 %
+\RequirePackage[many]{tcolorbox}
+\RequirePackage{color}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{babel}
 \RequirePackage{microtype}
@@ -48,6 +50,8 @@
 \setboolean{use@mtpro}{false}
 \newboolean{use@times}
 \setboolean{use@times}{false}
+\newboolean{use@mlmodern}
+\setboolean{use@mlmodern}{false}
 \newboolean{use@apretat}
 \setboolean{use@apretat}{false}
 \newboolean{use@test}
@@ -96,6 +100,10 @@
 }
 \DeclareOption{erewhon}{
  \setboolean{use@erewhon}{true}
+ \catcode`\·=\active
+}
+\DeclareOption{mlmodern}{
+ \setboolean{use@mlmodern}{true}
  \catcode`\·=\active
 }
 \DeclareOption{caflish}{
@@ -180,26 +188,26 @@
 \DeclareOption{nic}{
  \setboolean{nomicognoms}{true}
  \setboolean{solucions}{false}
- \voffset=-1.4in
- \headheight=1.1in
+ \voffset=-2in
+ \headheight=1.3in
 }
 \DeclareOption{NIC}{
  \setboolean{nomicognoms}{true}
  \setboolean{solucions}{false}
- \voffset=-1.4in
- \headheight=1.1in
+ \voffset=-2in
+ \headheight=1.3in
 }
 \DeclareOption{sol}{
  \setboolean{nomicognoms}{false}
  \setboolean{solucions}{true}
- \voffset=-0.8in
+ \voffset=-2in
  \headheight=0.9in
 }
 \DeclareOption{nicsol}{
  \setboolean{nomicognoms}{true}
  \setboolean{solucions}{true}
  \setboolean{canvipagina}{false}
- \voffset=-1.6in
+ \voffset=-2in
  \headheight=1.1in
 }
 \ProcessOptions\relax
@@ -237,7 +245,7 @@
 % Font
 %
 \ifthenelse{\boolean{use@times}\or\boolean{use@stix}\or\boolean{use@mtpro}\or\boolean{use@palatino}\or\boolean{use@timesnewroman}%
-\or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}\or\boolean{use@caflish}\or\boolean{use@minister}\or\boolean{use@xits}}
+\or\boolean{use@timesstd}\or\boolean{use@minion}\or\boolean{use@century}\or\boolean{use@newcm}\or\boolean{use@erewhon}\or\boolean{use@caflish}\or\boolean{use@minister}\or\boolean{use@xits}\or\boolean{use@mlmodern}}
 {}
 {
  \ifcsname directlua\endcsname
@@ -392,16 +400,25 @@
 \ifthenelse{\boolean{use@erewhon}}{
  \usepackage{fontspec}
  \usepackage{unicode-math}
- \setmathfont{STIXTwoMath}
  \setmainfont{Erewhon}[
   Scale=1.0,
   UprightFont={*-Regular},
   BoldFont={*-Bold},
   ItalicFont={*-Italic},
   BoldItalicFont={*-BoldItalic},
+  SlantedFont={*-RegularSlanted},
+  BoldSlantedFont={*-BoldSlanted},
   SmallCapsFont={*-Regular},
   SmallCapsFeatures={Letters=SmallCaps}]
- \setmathfont[range={\mathbb}]{TeX Gyre Pagella Math}
+  %\setmathfont[BoldFont=Erewhon-Math-Bold]{Erewhon-Math}
+  \setmathfont{STIXTwoMath}
+  \DeclareMicrotypeAlias{Erewhon}{TU} 
+}{}
+\ifthenelse{\boolean{use@mlmodern}}{
+ \usepackage{fontspec}
+ \usepackage{unicode-math}
+ \usepackage{mlmodern}
+ \setmathfont{mlmodern-math}
 }{}
 \ifthenelse{\boolean{use@caflish}}{
  \usepackage{fontspec}
@@ -445,8 +462,8 @@
 %
 % Composici de les pàgines
 %
-\textwidth=18.5cm
-\textheight=24cm
+\textwidth=19cm
+\textheight=25cm
 \marginparsep=11pt
 \footskip=30pt
 \hoffset=-0.3in
@@ -584,7 +601,7 @@
 
 \renewenvironment{itemize}
 {\begin{list}{$\bullet$}
-{\usecounter{@apartats}\leftmargin 3.2em\labelsep 1em\labelwidth 8pt
+{\usecounter{@apartats}\leftmargin 0.2em\labelsep 0.2em\labelwidth 8pt
 \listparindent 0pt\parsep 4pt\itemsep 0pt\topsep 0pt}}
 {\end{list}}
 
@@ -600,10 +617,17 @@
  \par\vspace{0cm}
 }
 %
-\newenvironment{observacio@i}%
-{\par\vspace{8pt minus 1pt}\begingroup\bfseries}%
-{\endgroup\par\vspace{8pt minus 1pt}}
+% Observacio
 %
+\definecolor{colorTFG}{RGB}{79,129,189}
+\newtcolorbox{requadre}[2][]{colback=colorTFG!2!white,
+colframe=colorTFG!75!black,fonttitle=\bfseries,fontupper=\slshape,
+colbacktitle=colorTFG!85!black,enhanced,drop fuzzy shadow,
+attach boxed title to top left={yshift=-2mm,xshift=5mm},
+title=\textbf{#2}, #1}
+\newenvironment{observacio@i}%
+{\begin{requadre}{Observacions}{}}
+{\end{requadre}}
 \newenvironment{historia@i}%
 {\vfill\vspace{8pt minus 1pt}\begingroup\parskip=2pt plus 1pt minus 1pt\scriptsize}%
 {\endgroup}
@@ -665,6 +689,10 @@
 \newcommand{\rn}[1]{{\mathbb R}^{#1}}
 \newcommand{\deufrac}[2]{\scalebox{0.9}{\hbox{\ensuremath{\dfrac{#1}{#2}}}}}
 \DeclareMathOperator{\rang}{rang}
+%
+%
+%
+
 %
 % Ela geminada
 %

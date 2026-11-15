@@ -5778,6 +5778,11 @@ class TransformacioAfi:
     #
     #
     #
+    def transformacio_lineal(self):
+        return self.transformacio
+    #
+    #
+    #
     def rang(self):
         """
         Retorna el rang de la transfoprmació afí

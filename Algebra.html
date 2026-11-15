@@ -10,7 +10,7 @@ Algebra.py
 Author:
 Rafel Amer (rafel.amer AT upc.edu)
 Copyright:
-Rafel Amer 2020--2025
+Rafel Amer 2020--2026
 Disclaimer: This program is provided &#34;as is&#34;, …">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
@@ -47,7 +47,7 @@ Algebra.py
 Author:
 Rafel Amer (rafel.amer AT upc.edu)
 Copyright:
-Rafel Amer 2020&ndash;2025
+Rafel Amer 2020&ndash;2026
 Disclaimer: This program is provided "as is", without warranty of any kind,
 either expressed or implied, including, but not linmited to, the
 implied warranties of merchantability and fitness for a particular
@@ -119,8 +119,9 @@ the Free Software Foundation, either version 3 of the License, or
     return (text.replace(&#39;LINES&#39;,&#34;\\\\ &#34;.join(lines)))</code></pre>
 </details>
 <div class="desc"><p>Retorna l'expressió en latex d'una matriu del tipus Matrix del sympy</p>
-<h2 id="parametres">Parametres</h2>
-<p>format:
+<p>Parametres
+-----=
+format:
 format de les columnes de la matriu. Per defecte "r"
 ampliada: si es vol separar amb una línia vertical l'última
 columna de la matriu</p></div>
@@ -152,6 +153,28 @@ columna de la matriu</p></div>
     return (slines.replace(&#39;LINES&#39;,&#34;,&#34;.join(lines)))</code></pre>
 </details>
 <div class="desc"><p>Retorna l'expressió en Mathematica d'una matriu del tipus Matrix del sympy</p></div>
+</dd>
+<dt id="Algebra.max_abs_llista"><code class="name flex">
+<span>def <span class="ident">max_abs_llista</span></span>(<span>llista)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def max_abs_llista(llista):
+    &#34;&#34;&#34;
+    Retorna el màxim dels vectors absoluts d&#39;una llista
+    &#34;&#34;&#34;
+    if len(llista) == 0:
+        return 0
+    maxim = 0
+    for k in llista:
+        if abs(k) &gt; maxim:
+            maxim = abs(k)
+    return maxim</code></pre>
+</details>
+<div class="desc"><p>Retorna el màxim dels vectors absoluts d'una llista</p></div>
 </dd>
 <dt id="Algebra.mcd_llista"><code class="name flex">
 <span>def <span class="ident">mcd_llista</span></span>(<span>llista)</span>
@@ -399,8 +422,9 @@ del tipus Matrix del sympy</p></div>
     return (vaps,veps)</code></pre>
 </details>
 <div class="desc"><p>Retorna la llista valors propis i els seus vectors propis.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>result: resultat de la funció eigenvects() del sympy</p></div>
+<p>Paràmetres
+-----=
+result: resultat de la funció eigenvects() del sympy</p></div>
 </dd>
 <dt id="Algebra.vaps_veps_amb_signe"><code class="name flex">
 <span>def <span class="ident">vaps_veps_amb_signe</span></span>(<span>result, signe=1)</span>
@@ -435,8 +459,9 @@ del tipus Matrix del sympy</p></div>
 <div class="desc"><p>Donada una matriu A del sympy, result ha de ser el resultat de la funció
 r = A.eigenvects(). Aleshores aquesta funció retorna la llista valors propis
 positius (signe &gt; 0) o negatius (signe &lt; 0) i els seus vectors propis.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>result: resultat de la funció eigenvects() del sympy
+<p>Paràmetres
+-----=
+result: resultat de la funció eigenvects() del sympy
 signe: positiu o negatiu, en funció de quins valors i vectors propis es volen</p></div>
 </dd>
 <dt id="Algebra.vectors_latex"><code class="name flex">
@@ -465,8 +490,9 @@ signe: positiu o negatiu, en funció de quins valors i vectors propis es volen</
     return txt</code></pre>
 </details>
 <div class="desc"><p>Retorna la llista de vectors l escrita en latex</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>l: llista de vectors o punts
+<p>Paràmetres
+-----=
+l: llista de vectors o punts
 sep: Si és False, retorna (1,2,3),(3,5,2),(1,-2,3)
 Si és True, retorna $(1,2,3)$, $(3,5,2)$ i $(1,-2,3)$</p></div>
 </dd>
@@ -857,8 +883,9 @@ Si és True, retorna $(1,2,3)$, $(3,5,2)$ i $(1,-2,3)$</p></div>
             self.vecs[k].simplificar(positiu=True)</code></pre>
 </details>
 <div class="desc"><p>Classe que ens permetrà representar bases de R^n</p>
-<h2 id="atributs">Atributs</h2>
-<p>vecs: una llista de n vectors de R^n
+<p>Atributs
+-----=
+vecs: una llista de n vectors de R^n
 dimensio: el valor de n
 unitaria: En funcio de si volem imprimir els seus
 vectors unitaris o no</p></div>
@@ -869,8 +896,9 @@ vectors unitaris o no</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una base aleàtoria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>dimensio: Dimensió de l'espai corresponent
+<p>Paràmetres
+-----=
+dimensio: Dimensió de l'espai corresponent
 maxim: Nombre màxim de les components dels seus vectors
 unitaria: Si el determinant ha de ser 1 o -1
 mzeros: Nombre màxim de zeros entre les components dels seus vectors</p></div>
@@ -880,8 +908,9 @@ mzeros: Nombre màxim de zeros entre les components dels seus vectors</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la base canònica</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>dimensio: Dimensió de l'espai corresponent</p></div>
+<p>Paràmetres
+-----=
+dimensio: Dimensió de l'espai corresponent</p></div>
 </dd>
 <dt id="Algebra.Base.from_matriu"><code class="name flex">
 <span>def <span class="ident">from_matriu</span></span>(<span>m)</span>
@@ -895,8 +924,9 @@ Si la matriu no és quadrada o no té rang màxim, retorna None</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una base ortogonal "aleatòria"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: dimensió
+<p>Paràmetres
+-----=
+ordre: dimensió
 maxim: màxim per a les components dels vectors de la base
 unitaria: si és True, la base serà ortonormal</p></div>
 </dd>
@@ -948,8 +978,9 @@ unitaria: si és True, la base serà ortonormal</p></div>
 </details>
 <div class="desc"><p>Retorna en format latex l'expressió del canvi de base de la base
 actual a la base B</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>p1: primes que s'escriuran a les components en la base actual
+<p>Paràmetres
+-----=
+p1: primes que s'escriuran a les components en la base actual
 p2: primes que s'escriuran a les components en la base B</p></div>
 </dd>
 <dt id="Algebra.Base.components_del_vector"><code class="name flex">
@@ -981,8 +1012,9 @@ p2: primes que s'escriuran a les components en la base B</p></div>
 </details>
 <div class="desc"><p>Retorna un nou vector expressat en aquesta base del vector
 que en la base "base" té components "vec"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>vec: components en la base "base"
+<p>Paràmetres
+-----=
+vec: components en la base "base"
 base: Base</p></div>
 </dd>
 <dt id="Algebra.Base.es_ortogonal"><code class="name flex">
@@ -1162,8 +1194,9 @@ en compte si la base és unitària</p></div>
 </details>
 <div class="desc"><p>Retorna un nou vector expressat en la base canònica del vector
 que en aquesta base té components "vec"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>vec: vector</p></div>
+<p>Paràmetres
+-----=
+vec: vector</p></div>
 </dd>
 <dt id="Algebra.Base.vector_de_components_ampliat"><code class="name flex">
 <span>def <span class="ident">vector_de_components_ampliat</span></span>(<span>self, vector, positiu=True)</span>
@@ -1198,8 +1231,9 @@ que en aquesta base té components "vec"</p>
 <div class="desc"><p>Retorna un nou vector expressat en la base canònica del
 del que en aquesta base té components "vector"
 ampliant-lo a una última component nul·la</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>vector: components d'un vector en la base actual</p></div>
+<p>Paràmetres
+-----=
+vector: components d'un vector en la base actual</p></div>
 </dd>
 <dt id="Algebra.Base.vectors"><code class="name flex">
 <span>def <span class="ident">vectors</span></span>(<span>self, unitaris=False)</span>
@@ -1220,8 +1254,9 @@ ampliant-lo a una última component nul·la</p>
     return [v/v.length() for v in self.vecs]</code></pre>
 </details>
 <div class="desc"><p>Retorna els vectors la base</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>unitaris: si és True, els divideix per la seva longitud</p></div>
+<p>Paràmetres
+-----=
+unitaris: si és True, els divideix per la seva longitud</p></div>
 </dd>
 <dt id="Algebra.Base.vectors_latex"><code class="name flex">
 <span>def <span class="ident">vectors_latex</span></span>(<span>self)</span>
@@ -1307,13 +1342,13 @@ inicial i final</p></div>
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcd_llista([a2,b2])
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
-        m = Matriu.diagonal(Vector([b2,a2,0,-t]))
+        m = Matriu.diagonal(Vector([b2,a2,0,-a2*b2]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -1607,15 +1642,11 @@ inicial i final</p></div>
         eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-        eix2.simplificar(positiu=True)
-        eix3 = eix1.cross(eix2,simplificar=True)
+        eix2.simplificar(positiu=False)
+        eix3 = eix1.cross(eix2,simplificar=False)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
-        g = mcd_llista([a2,b2])
-        t = a2 * b2 // g
-        a2 = a2 // g
-        b2 = b2 // g
-        m = Matriu.diagonal(Vector([b2,-a2,0,-t]))
+        m = Matriu.diagonal(Vector([b2,-a2,0,-a2*b2]))
         Quadrica.__init__(self,m,r)
     #
     #
@@ -1903,10 +1934,10 @@ inicial i final</p></div>
     #
     #
     def __init__(self,p,vertex,eix1,eix2):
-        eix1.simplificar(positiu=True)
+        eix1.simplificar(positiu=False)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
-        eix2.simplificar(positiu=True)
+        eix2.simplificar(positiu=False)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
@@ -2131,6 +2162,10 @@ inicial i final</p></div>
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
@@ -2420,6 +2455,7 @@ inicial i final</p></div>
     def __init__(self,matriu,ref=None):
         self.ref = ref
         self.matriu = matriu
+        self.by2 = True
         if ref is None:
             self.canonica = matriu
         else:
@@ -2439,6 +2475,11 @@ inicial i final</p></div>
                 f = self.primer_element_no_nul()
                 if self.canonica[f] &lt; 0:
                     self.canonica = -self.canonica
+    #
+    #
+    #
+    def set_noby2(self):
+        self.by2 = False
     #
     #
     #
@@ -2520,23 +2561,15 @@ inicial i final</p></div>
         if t1 == 0:
             t1, t2 = t2, t1
             veps.reverse()
-        veps[0].simplificar()
-        veps[1].simplificar()
+        veps[0].simplificar(positiu=False)
+        veps[1].simplificar(positiu=False)
         b = Base(veps,unitaria=True)
+        b.orientacio_positiva()
         es = t1 * veps[0].dot(Vector(s[0],s[1])) + veps[0].dot(l)
         vertex = Punt(solve([es,eq],s[0],s[1])[0])
         ref = ReferenciaAfi(vertex,b)
         ep = veps[1].dot(l)/veps[1].length()
-        if b.te_orientacio_positiva():
-            if t1 &lt; 0:
-                p = - ep/t1
-            else:
-                p = ep / t1
-        else:
-            if t1 &lt; 0:
-                p = ep/t1
-            else:
-                p = - ep / t1
+        p = - ep / t1
         focus = ref.punt_de_coordenades(Punt(0,p/2))
         return Parabola(vertex,focus)
     #
@@ -2550,7 +2583,11 @@ inicial i final</p></div>
         x, y = symbols(&#39;x y&#39;)
         m = Matriu.matriu_columna(Vector([x,y,1]))
         r = m.transposada() * self.canonica * m
-        return mylatex(r[0,0].expand()) + &#34; = 0&#34;
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return mylatex(r[0,0].expand()/mcd) + &#34; = 0&#34;
     #
     #
     #
@@ -2569,14 +2606,21 @@ inicial i final</p></div>
     #
     #
     #
-    def equacio(self):
+    def equacio(self,vars=None):
         &#34;&#34;&#34;
-        Retorna l&#39;equació en latex de l&#39;equació de la quàdrica
+        Retorna l&#39;equació de la cònica
         &#34;&#34;&#34;
-        x, y = symbols(&#39;x y&#39;)
-        m = Matriu.matriu_columna(Vector([x,y,1]))
+        if vars is None:
+            x, y = symbols(&#39;x y&#39;)
+            m = Matriu.matriu_columna(Vector([x,y,1]))
+        else:
+            m = vars
         r = m.transposada() * self.canonica * m
-        return r[0,0].expand()
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return r[0,0].expand()/mcd
     #
     #
     #
@@ -2725,8 +2769,9 @@ inicial i final</p></div>
 <div class="desc"><p>Classe per treballar amb còniques. L'objectiu no és classificar còniques,
 sinó generar coniques a partir dels elements característics o de manera
 aleatòria.</p>
-<h2 id="atributs">Atributs</h2>
-<p>ref: referència euclidiana
+<p>Atributs
+-----=
+ref: referència euclidiana
 matriu: matriu projectiva de la cònica en la referència "ref"
 canonica: matriu projectiva de la cònica en la referència canònica</p></div>
 <h3>Subclasses</h3>
@@ -2742,16 +2787,18 @@ canonica: matriu projectiva de la cònica en la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una el·lipse, hipèrbola o paràbola aleatòries</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
+<p>Paràmetres
+-----=
+maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
 </dd>
 <dt id="Algebra.Conica.ellipse"><code class="name flex">
 <span>def <span class="ident">ellipse</span></span>(<span>maxim=30, canonica=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una el·lipse aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
+<p>Paràmetres
+-----=
+maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
 </dd>
 <dt id="Algebra.Conica.from_equacio"><code class="name flex">
 <span>def <span class="ident">from_equacio</span></span>(<span>eq, s=None)</span>
@@ -2765,16 +2812,18 @@ Només per a el·lipses, hipèrboles i paràboles</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una hipèrbola aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
+<p>Paràmetres
+-----=
+maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
 </dd>
 <dt id="Algebra.Conica.parabola"><code class="name flex">
 <span>def <span class="ident">parabola</span></span>(<span>maxim=30, canonica=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una paràbola aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
+<p>Paràmetres
+-----=
+maxim: nombre màxim de la matriu projectiva de la cònica</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -2812,23 +2861,30 @@ Només per a el·lipses, hipèrboles i paràboles</p></div>
 <div class="desc"><p>Retorna l'eix secundari com a recta afí</p></div>
 </dd>
 <dt id="Algebra.Conica.equacio"><code class="name flex">
-<span>def <span class="ident">equacio</span></span>(<span>self)</span>
+<span>def <span class="ident">equacio</span></span>(<span>self, vars=None)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def equacio(self):
+<pre><code class="python">def equacio(self,vars=None):
     &#34;&#34;&#34;
-    Retorna l&#39;equació en latex de l&#39;equació de la quàdrica
+    Retorna l&#39;equació de la cònica
     &#34;&#34;&#34;
-    x, y = symbols(&#39;x y&#39;)
-    m = Matriu.matriu_columna(Vector([x,y,1]))
+    if vars is None:
+        x, y = symbols(&#39;x y&#39;)
+        m = Matriu.matriu_columna(Vector([x,y,1]))
+    else:
+        m = vars
     r = m.transposada() * self.canonica * m
-    return r[0,0].expand()</code></pre>
+    mcd = 1
+    if not self.by2:
+        coefs = list(r[0,0].expand().as_coefficients_dict().values())
+        mcd = mcd_llista(coefs)
+    return r[0,0].expand()/mcd</code></pre>
 </details>
-<div class="desc"><p>Retorna l'equació en latex de l'equació de la quàdrica</p></div>
+<div class="desc"><p>Retorna l'equació de la cònica</p></div>
 </dd>
 <dt id="Algebra.Conica.matriu_en_referencia"><code class="name flex">
 <span>def <span class="ident">matriu_en_referencia</span></span>(<span>self, referencia=\left\{(0,0,0);(1,0,0),(0,1,0),(0,0,1)\right\})</span>
@@ -2861,8 +2917,9 @@ Només per a el·lipses, hipèrboles i paràboles</p></div>
     return mat</code></pre>
 </details>
 <div class="desc"><p>Retorna la matriu projectiva de la cònica en la referencia 'referencia'</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>referencia: Element de la classe ReferenciaAfi</p></div>
+<p>Paràmetres
+-----=
+referencia: Element de la classe ReferenciaAfi</p></div>
 </dd>
 <dt id="Algebra.Conica.matrius"><code class="name flex">
 <span>def <span class="ident">matrius</span></span>(<span>self)</span>
@@ -2923,6 +2980,19 @@ per a utilitzar-les em el Sagemath</p></div>
 </details>
 <div class="desc"><p>Retorna la referencia principal</p></div>
 </dd>
+<dt id="Algebra.Conica.set_noby2"><code class="name flex">
+<span>def <span class="ident">set_noby2</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_noby2(self):
+    self.by2 = False</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
 <dt id="Algebra.Conica.tipus"><code class="name flex">
 <span>def <span class="ident">tipus</span></span>(<span>self)</span>
 </code></dt>
@@ -2967,8 +3037,9 @@ per a utilitzar-les em el Sagemath</p></div>
     return v1, v2</code></pre>
 </details>
 <div class="desc"><p>Retorna els vectors de la base de la referència principal</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>unitaris: si és True, els retorna unitaris</p></div>
+<p>Paràmetres
+-----=
+unitaris: si és True, els retorna unitaris</p></div>
 </dd>
 </dl>
 </dd>
@@ -3037,7 +3108,7 @@ per a utilitzar-les em el Sagemath</p></div>
     #
     #
     @classmethod
-    def aleatoria(cls,canonica=False,):
+    def aleatoria(cls,canonica=False):
         &#34;&#34;&#34;
         Retorna una el·lipse aleatòria
         &#34;&#34;&#34;
@@ -3367,8 +3438,9 @@ per a utilitzar-les em el Sagemath</p></div>
     return f&#34;{str}\nElipse({centre},{vector},{a2},{b2},scaled={scaled},x={x},y={y});\n{clip}&#34;</code></pre>
 </details>
 <div class="desc"><p>Retorna una expressió per fer servir amb el programa Asymtote</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>scaled: factor d'escalat
+<p>Paràmetres
+-----=
+scaled: factor d'escalat
 canonica = valors de partida dels eixos de la referència canònica</p></div>
 </dd>
 <dt id="Algebra.Ellipse.vertexs"><code class="name flex">
@@ -3472,6 +3544,16 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
         eix1.simplificar(positiu=True)
         if eix1.dot(eix2) != 0:
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
+        eix3 = eix1.cross(eix2,simplificar=True)
+        if b2 == c2:
+            S = RectaVectorial(eix1)
+            eix2 = S.ortogonal().u1
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        if a2 == c2:
+            S = RectaVectorial(eix2)
+            eix1 = S.ortogonal().u1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
@@ -3524,7 +3606,7 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
             trobat = a2 != b2 or a2 != c2
             a2, b2, c2 = sorted([a2,b2,c2])[::-1]
             q = cls(a2,b2,c2,centre,eix1,eix2)
-            if q is None or q.canonica is None  :
+            if q is None or q.canonica is None:
                 continue
             trobat = q.canonica.tots_enters()
         return q
@@ -3986,14 +4068,16 @@ canonica = valors de partida dels eixos de la referència canònica</p></div>
         return solve(self.equacio,unknown)[0]</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb equacions lineals.</p>
-<h2 id="atributs">Atributs</h2>
-<p>equacio: terme de l'esquerra en la equacio "eq = 0"
+<p>Atributs
+-----=
+equacio: terme de l'esquerra en la equacio "eq = 0"
 unknowns: incògnites que apareixen a l'equació
 amp: True o False
 prime: nombre de primes que escriurem a l'equació</p>
 <p>Constructor.</p>
-<h2 id="paramentres">Paràmentres</h2>
-<p>eq: expressió lineal que ha de contenir tots els termes, aleshores
+<p>Paràmentres
+-----=
+eq: expressió lineal que ha de contenir tots els termes, aleshores
 l'equació serà "eq = 0". Només guardem la part "eq"
 amp: quan escrivim l'equació en latex ha d'aparèixer &amp;= o només =
 prime: nombre de primes que s'han de posar a les incògnites</p>
@@ -4009,8 +4093,9 @@ e = EquacioLineal(eq)</p></div>
 <dd>
 <div class="desc"><p>Retorna una nova equació amb coeficients de les incògnites el vector "a" i
 terme independent b</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>a: Vector amb els coeficients de les incògnites
+<p>Paràmetres
+-----=
+a: Vector amb els coeficients de les incògnites
 b: terme independents
 amp: si és True l'equació s'escriurà amb el &amp;= per al LaTeX</p></div>
 </dd>
@@ -4322,14 +4407,16 @@ equació l'actual</p></div>
         return s</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb equacions paramètriques</p>
-<h2 id="atributs">Atributs</h2>
-<p>equacio: l'equació paramètrica
+<p>Atributs
+-----=
+equacio: l'equació paramètrica
 b: terme independent de l'equaqció
 coefs: coeficients dels paràmetres
 unknown: incògina de l'equació paramètrica</p>
 <p>Contructor.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eq: equació paramètrica. Ha de ser del tipus
+<p>Paràmetres
+-----=
+eq: equació paramètrica. Ha de ser del tipus
 -x + 2<em>t1 - 3</em>t2 + t3 - 4
 amb el signe menys a la incògnita
 amp: True o False en funció si hem d'escriure &amp;= o només = en la representació
@@ -4342,18 +4429,21 @@ en LaTeX de l'equació</p></div>
 <dd>
 <div class="desc"><p>Genera una equació amb coeficients dels paràmtres el vector "a", terme
 independent b i incògnita número p d'un total de "total".</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>a: vector amb els coeficients dels paràmetres
+<p>Paràmetres
+-----=
+a: vector amb els coeficients dels paràmetres
 b: terme independent
 p: índex que representa la incògnita
 total: nombre total d'incònites</p>
-<h2 id="exemple">Exemple</h2>
-<p>e = EquacioParametrica(Vector(3,-2,1),5,1,4) genera l'equació
+<p>Exemple
+-----=
+e = EquacioParametrica(Vector(3,-2,1),5,1,4) genera l'equació
 - y + 3<em>t1 - 2</em>t2 + t3 + 5
 e = EquacioParametrica(Vector(3,-2,1,3],-5,3,7) genera l'equació
 - x3 + 3<em>t1 - 2</em>t2 + t3 + 3<em>t4 + 7</em>t5 - 5</p>
-<h2 id="observacio">Observació</h2>
-<p>si hi ha un màxim de quatre incògnites, son (x,y,z,t)
+<p>Observació
+-----=
+si hi ha un màxim de quatre incògnites, son (x,y,z,t)
 si n'hi ha més, són (x1,x2,x3,x4,&hellip;)</p></div>
 </dd>
 </dl>
@@ -4435,8 +4525,9 @@ si n'hi ha més, són (x1,x2,x3,x4,&hellip;)</p></div>
         return SistemaEquacions.from_equacions(t,self.A.files,prime)</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb sistemes d'equacions paramètriques</p>
-<h2 id="atributs">Atributs</h2>
-<p>A: matriu dels coeficients dels paràmetres
+<p>Atributs
+-----=
+A: matriu dels coeficients dels paràmetres
 B: vector dels termes independents
 equacions: llista de EquacioParametrica
 nombre: nombre d'equacions</p></div>
@@ -4668,8 +4759,9 @@ sistema</p></div>
         return self.latex(self.base,prime=prime)</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb formes quadràtiques</p>
-<h2 id="atributs">Atributs</h2>
-<p>matriu: matriu de la forma quadrètica en la base canònica
+<p>Atributs
+-----=
+matriu: matriu de la forma quadrètica en la base canònica
 dimensio: n
 vaps: valors propis
 base: base oronormal en la que diagonalitza</p></div>
@@ -4680,8 +4772,9 @@ base: base oronormal en la que diagonalitza</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una forma quadràtica aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: ordre de la matriu simètrica de la forma quadràtica
+<p>Paràmetres
+-----=
+ordre: ordre de la matriu simètrica de la forma quadràtica
 maxim: nombre màxim dels coeficients de la matriu
 vapsnonuls: nombre mínim de valrs propis no nuls</p></div>
 </dd>
@@ -4732,8 +4825,9 @@ vapsnonuls: nombre mínim de valrs propis no nuls</p></div>
 </details>
 <div class="desc"><p>Retorna l'expressió euclidiana reduïda de la forma de polinomi
 expressat en LaTeX</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>prime: nombre de primes que s'escriuran a les variables</p></div>
+<p>Paràmetres
+-----=
+prime: nombre de primes que s'escriuran a les variables</p></div>
 </dd>
 <dt id="Algebra.FormaQuadratica.latex"><code class="name flex">
 <span>def <span class="ident">latex</span></span>(<span>self, base=None, prime=0)</span>
@@ -4780,8 +4874,9 @@ expressat en LaTeX</p>
 </details>
 <div class="desc"><p>Retorna l'expressió en latex de la forma quadràtica com a polinomi
 de segon grau en la base "base"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: base de R^n. No cal que sigui ortormal. Si és None, serà la
+<p>Paràmetres
+-----=
+base: base de R^n. No cal que sigui ortormal. Si és None, serà la
 base canònica
 prime: nombre de primes que s'escriuran a les variables del polinomi
 segon grau</p></div>
@@ -5120,8 +5215,9 @@ segon grau</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una hipèrbola aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>canonica: si els eixos principals són paral·lels als de la
+<p>Paràmetres
+-----=
+canonica: si els eixos principals són paral·lels als de la
 referència canònica
 focus: si els focus han de tenir coordenades enteres</p></div>
 </dd>
@@ -5194,8 +5290,9 @@ focus: si els focus han de tenir coordenades enteres</p></div>
     return str</code></pre>
 </details>
 <div class="desc"><p>Retorna l'equació contínua de l'asímptota amb direccio v en format LaTeX</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: vector director de l'asímptota</p></div>
+<p>Paràmetres
+-----=
+v: vector director de l'asímptota</p></div>
 </dd>
 <dt id="Algebra.Hiperbola.equacio_reduida"><code class="name flex">
 <span>def <span class="ident">equacio_reduida</span></span>(<span>self)</span>
@@ -5347,8 +5444,9 @@ focus: si els focus han de tenir coordenades enteres</p></div>
     return f&#34;{str}\nHiperbola({centre},{vector},{a2},{b2},x={x},y={y},scaled={scaled});\n{clip}&#34;</code></pre>
 </details>
 <div class="desc"><p>Retorna una expressió per fer servir amb el programa Asymtote</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>scaled: factor d'escalat
+<p>Paràmetres
+-----=
+scaled: factor d'escalat
 canonica = valors de partida dels eixos de la referència canònica
 x, y: nombres enters. El gràfic es representarà en una quadricula
 de límits (-x,x) i (-y,y)</p></div>
@@ -5480,6 +5578,10 @@ base canònica</p></div>
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
@@ -5782,6 +5884,10 @@ base canònica</p></div>
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(centre,base)
         if a2.is_integer and b2.is_integer and c2.is_integer:
@@ -7235,8 +7341,9 @@ Ho he trobat a StackOverflow.</p></div>
 Matrix del sympy és que només es poden multiplicar per elements del tipus
 Matrix.
 Ens insteressa poder multiplicar Matrius per Vectors</p>
-<h2 id="atributs">Atributs</h2>
-<p>dimensio: nombre de files de la matriu
+<p>Atributs
+-----=
+dimensio: nombre de files de la matriu
 columnes: nombre de columnes de la matriu
 matriu: matriu de la classe Matrix del sympy
 format: format LateX per a la matriu
@@ -7245,8 +7352,9 @@ diagonalitzable: si és o no diagonalitzable</p>
 vaps: llista de vectors propis de la matriu
 veps: llista de vectors propis de la matriu</p>
 <p>Constructor.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>matrix: matriu del tipus Matrix de sympy
+<p>Paràmetres
+-----=
+matrix: matriu del tipus Matrix de sympy
 per defecte és la matriu unitat d'ordre 3</p></div>
 <h3>Static methods</h3>
 <dl>
@@ -7255,8 +7363,9 @@ per defecte és la matriu unitat d'ordre 3</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Genera una matriu aleatoria.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>f: nombre de files de la matriu
+<p>Paràmetres
+-----=
+f: nombre de files de la matriu
 c: nombre de columnes de la matriu
 maxim: tots els elements tindran valor absolut menor que "maxim"
 nuls: la matriu pot contenir coeficients nuls o no</p></div>
@@ -7266,8 +7375,9 @@ nuls: la matriu pot contenir coeficients nuls o no</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una matriu aleatoria amb rang r.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>f: nombre de files de la matriu
+<p>Paràmetres
+-----=
+f: nombre de files de la matriu
 c: nombre de columnes de la matriu
 r: rang de la matriu
 maxim: tots els elements tindran valor absolut menor que "maxim"
@@ -7278,16 +7388,18 @@ mzeros: nombre màxim de zeros. Si és -1, no hi ha màxim</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una matriu diagonal amb valors "vals" a la diagonal</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>vals: llista d'escalars o vector (class Vector o Punt)</p></div>
+<p>Paràmetres
+-----=
+vals: llista d'escalars o vector (class Vector o Punt)</p></div>
 </dd>
 <dt id="Algebra.Matriu.diagonalitzable"><code class="name flex">
 <span>def <span class="ident">diagonalitzable</span></span>(<span>ordre=3, maxim=5, mzeros=-1, mvaps=3, vapsnuls=False, vapsrepetits=True)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una matriu quadrada aleatoria diagonalitzable.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: nombre de files i columnes de la matriu
+<p>Paràmetres
+-----=
+ordre: nombre de files i columnes de la matriu
 maxim: tots els elements tindran valor absolut menor o igual que "maxim"
 mzeros: si nzeros &gt;= 0, nombre màxim de zeros que tindrà la matrius
 si nzeros &lt; 0, el nombre de zeros no està limitat
@@ -7301,8 +7413,9 @@ vapsrepetits: si hi pot aparèixer valors propis repetits</p></div>
 <dd>
 <div class="desc"><p>Retorna una nova matriu a partir d'una llista de vectors.
 Les components dels vectors seran les columnes de la nova matriu</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: llista de vectors o punts</p></div>
+<p>Paràmetres
+-----=
+v: llista de vectors o punts</p></div>
 </dd>
 <dt id="Algebra.Matriu.from_vectors_fila"><code class="name flex">
 <span>def <span class="ident">from_vectors_fila</span></span>(<span>vecs)</span>
@@ -7310,8 +7423,9 @@ Les components dels vectors seran les columnes de la nova matriu</p>
 <dd>
 <div class="desc"><p>Retorna una nova matriu a partir d'una llista de vectors.
 Les components dels vectors seran les files de la nova matriu</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: llista de vectors o punts</p></div>
+<p>Paràmetres
+-----=
+v: llista de vectors o punts</p></div>
 </dd>
 <dt id="Algebra.Matriu.gram"><code class="name flex">
 <span>def <span class="ident">gram</span></span>(<span>ordre=3, maxim=5, mzeros=-1)</span>
@@ -7319,8 +7433,9 @@ Les components dels vectors seran les files de la nova matriu</p>
 <dd>
 <div class="desc"><p>Retorna una matriu quadrada aleatoria que serà d'un producte escalar,
 és a dir, una matriu de Gram</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: nombre de files i columnes de la matriu
+<p>Paràmetres
+-----=
+ordre: nombre de files i columnes de la matriu
 maxim: tots els elements tindran valor absolut menor o igual que "maxim"
 mzeros: si nzeros &gt;= 0, nombre màxim de zeros que tindrà la matrius
 si nzeros &lt; 0, el nombre de zeros no està limitat</p></div>
@@ -7330,16 +7445,18 @@ si nzeros &lt; 0, el nombre de zeros no està limitat</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la matriu identitat</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: ordre de la matriu identitat</p></div>
+<p>Paràmetres
+-----=
+ordre: ordre de la matriu identitat</p></div>
 </dd>
 <dt id="Algebra.Matriu.invertible"><code class="name flex">
 <span>def <span class="ident">invertible</span></span>(<span>ordre=3, maxim=5, mzeros=-1, unitaria=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una matriu quadrada aleatoria invertible.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: nombre de files i columnes de la matriu
+<p>Paràmetres
+-----=
+ordre: nombre de files i columnes de la matriu
 maxim: tots els elements tindran valor absolut menor que "maxim"
 mzeros: si nzeros &gt;= 0, nombre màxim de zeros que tindrà la matrius
 si nzeros &lt; 0, el nombre de zeros no està limitat
@@ -7350,16 +7467,18 @@ unitaria: si volem que el determinant sigui 1 o -1</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una nova matriu columna a partir de les components del vector v</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: vector o punt</p></div>
+<p>Paràmetres
+-----=
+v: vector o punt</p></div>
 </dd>
 <dt id="Algebra.Matriu.matriu_fila"><code class="name flex">
 <span>def <span class="ident">matriu_fila</span></span>(<span>v)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una nova matriu fila a partir de les components del vector v</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: vector o punt</p></div>
+<p>Paràmetres
+-----=
+v: vector o punt</p></div>
 </dd>
 <dt id="Algebra.Matriu.transformacio_elemental"><code class="name flex">
 <span>def <span class="ident">transformacio_elemental</span></span>(<span>ordre, i, j, s, t)</span>
@@ -7490,8 +7609,9 @@ Retornem la transformació elemental feta en forma de tupla (s,t)</p></div>
     return True</code></pre>
 </details>
 <div class="desc"><p>Retorna True si totes les components del vector són nombres enters o racionals</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>columna: índex de la columna</p></div>
+<p>Paràmetres
+-----=
+columna: índex de la columna</p></div>
 </dd>
 <dt id="Algebra.Matriu.det"><code class="name flex">
 <span>def <span class="ident">det</span></span>(<span>self)</span>
@@ -7701,8 +7821,9 @@ self.diagonalitzable</p></div>
     return Matriu.from_vectors_columna(columnes)</code></pre>
 </details>
 <div class="desc"><p>Retorna una nova matriu amb la columna "columna" insertada a la posició "pos"</p>
-<h2 id="parametrers">Paràmetrers</h2>
-<p>columna: nova columna de la matriu
+<p>Paràmetrers
+-----=
+columna: nova columna de la matriu
 pos: posició que ha d'ocupar la nova columna</p></div>
 </dd>
 <dt id="Algebra.Matriu.inserta_fila"><code class="name flex">
@@ -7731,8 +7852,9 @@ pos: posició que ha d'ocupar la nova columna</p></div>
     return Matriu.from_vectors_fila(files)</code></pre>
 </details>
 <div class="desc"><p>Retorna una nova matriu amb la fila "fila" insertada a la posició "pos"</p>
-<h2 id="parametrers">Paràmetrers</h2>
-<p>fila: nova fila de la matriu
+<p>Paràmetrers
+-----=
+fila: nova fila de la matriu
 pos: posició que ha d'ocupar la nova fila</p></div>
 </dd>
 <dt id="Algebra.Matriu.intercanvia_columnes"><code class="name flex">
@@ -7760,8 +7882,9 @@ pos: posició que ha d'ocupar la nova fila</p></div>
     return Matriu.from_vectors_columna(c)</code></pre>
 </details>
 <div class="desc"><p>Retorna una matriu amb les columnes i i j permutades</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>i, j: índexs de les columnes</p></div>
+<p>Paràmetres
+-----=
+i, j: índexs de les columnes</p></div>
 </dd>
 <dt id="Algebra.Matriu.inversa"><code class="name flex">
 <span>def <span class="ident">inversa</span></span>(<span>self)</span>
@@ -8017,8 +8140,9 @@ Si la matriu no és quadrada retorna None</p></div>
     self.vaps = vaps</code></pre>
 </details>
 <div class="desc"><p>Assigna un llista de valors propis a la variable self.vaps</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>vaps: llista de nombres</p></div>
+<p>Paràmetres
+-----=
+vaps: llista de nombres</p></div>
 </dd>
 <dt id="Algebra.Matriu.set_veps"><code class="name flex">
 <span>def <span class="ident">set_veps</span></span>(<span>self, veps)</span>
@@ -8039,8 +8163,9 @@ Si la matriu no és quadrada retorna None</p></div>
     self.veps = veps</code></pre>
 </details>
 <div class="desc"><p>Assigna un llista de vectors propis simplificats a la variable self.veps</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>vaps: llista de vectors</p></div>
+<p>Paràmetres
+-----=
+vaps: llista de vectors</p></div>
 </dd>
 <dt id="Algebra.Matriu.simplificar"><code class="name flex">
 <span>def <span class="ident">simplificar</span></span>(<span>self)</span>
@@ -8143,8 +8268,9 @@ càlcul dels valors propis de la matriu</p></div>
 </details>
 <div class="desc"><p>Retorna la submatriu determinada per les files "files" i les
 columnes "columnes".</p>
-<h2 id="parametrers">Paràmetrers</h2>
-<p>files: llista de files
+<p>Paràmetrers
+-----=
+files: llista de files
 columnes: llista de columnes</p></div>
 </dd>
 <dt id="Algebra.Matriu.subs"><code class="name flex">
@@ -8167,8 +8293,9 @@ columnes: llista de columnes</p></div>
                 self[i,j] = self[i,j].subs(d)</code></pre>
 </details>
 <div class="desc"><p>Aplica una llista de substitucions</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>l: llista de substitucions</p></div>
+<p>Paràmetres
+-----=
+l: llista de substitucions</p></div>
 </dd>
 <dt id="Algebra.Matriu.tots_enters"><code class="name flex">
 <span>def <span class="ident">tots_enters</span></span>(<span>self)</span>
@@ -8271,8 +8398,9 @@ columnes: llista de columnes</p></div>
     return vecs</code></pre>
 </details>
 <div class="desc"><p>Retorna una llista amb els vectors columna de la matriu</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>simplificar: si és True retornarà els vectors simplificats</p></div>
+<p>Paràmetres
+-----=
+simplificar: si és True retornarà els vectors simplificats</p></div>
 </dd>
 <dt id="Algebra.Matriu.vectors_fila"><code class="name flex">
 <span>def <span class="ident">vectors_fila</span></span>(<span>self, simplificar=False)</span>
@@ -8299,8 +8427,9 @@ columnes: llista de columnes</p></div>
     return vecs</code></pre>
 </details>
 <div class="desc"><p>Retorna una llista amb els vectors fila de la matriu</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>simplificar: si és True retornarà els vectors simplificats</p></div>
+<p>Paràmetres
+-----=
+simplificar: si és True retornarà els vectors simplificats</p></div>
 </dd>
 </dl>
 </dd>
@@ -8345,8 +8474,14 @@ columnes: llista de columnes</p></div>
     def __init__(self,vertex,focus):
         eix = focus - vertex
         p = 2 * eix.length()
-        eix.radsimplificar()
-        v2 = eix
+        v2 = Vector(eix.components)
+        v2.radsimplificar()
+        t = 1
+        for i in (0,1):
+            if eix[i] * v2[i] &lt; 0:
+                t = -1
+                break
+        v2 = t * v2
         v1 = Vector([v2[1],-v2[0]])
         base = Base([v1,v2],unitaria=True)
         m = Matriu(Matrix(3,3,[1,0,0,0,0,-p,0,-p,0]))
@@ -8610,8 +8745,9 @@ columnes: llista de columnes</p></div>
     return f&#34;{str}\nParabola({self.vertex()},{self.focus()},d={d},x={x},y={y},scaled={scaled});\n{clip}&#34;</code></pre>
 </details>
 <div class="desc"><p>Retorna una expressió per fer servir amb el programa Asymtote</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>scaled: factor d'escalat
+<p>Paràmetres
+-----=
+scaled: factor d'escalat
 canonica = valors de partida dels eixos de la referència canònica
 x, y: nombres enters. El gràfic es representarà en una quadricula
 de límits (-x,x) i (-y,y)</p></div>
@@ -8717,6 +8853,10 @@ de límits (-x,x) i (-y,y)</p></div>
             eix2 = eix1.dot(eix1) * eix2 - eix1.dot(eix2) * eix1
         eix2.simplificar(positiu=True)
         eix3 = eix1.cross(eix2,simplificar=True)
+        if a2 == b2:
+            S = RectaVectorial(eix3)
+            eix1 = S.ortogonal().u1
+        eix2 = eix3.cross(eix1,simplificar=True)
         base = Base([eix1,eix2,eix3],ortogonal=True,unitaria=True)
         r = ReferenciaAfi(vertex,base)
         if a2.is_integer and b2.is_integer:
@@ -9410,8 +9550,19 @@ de límits (-x,x) i (-y,y)</p></div>
         v1 = self.u1
         u2 = self.u2
         v2 = v1.dot(v1) * u2 - v1.dot(u2) * v1
-        v2.simplificar()
-        return [v1,v2]
+        v1.simplificar(positiu=True)
+        v2.simplificar(positiu=True)
+        return Base([v1,v2])
+    #
+    #
+    #
+    def base_ortonormal(self):
+        &#34;&#34;&#34;
+        Retorna una base ortonormal del pla afí
+        &#34;&#34;&#34;
+        b = self.base_ortogonal()
+        b.set_unitaria()
+        return(b)
     #
     #
     #
@@ -9514,8 +9665,9 @@ de límits (-x,x) i (-y,y)</p></div>
         return m.rang() == 2</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb plans afins.</p>
-<h2 id="atributs">Atributs</h2>
-<p>u1, u2: vectors directors del pla
+<p>Atributs
+-----=
+u1, u2: vectors directors del pla
 p: punt de pas</p></div>
 <h3>Static methods</h3>
 <dl>
@@ -9530,8 +9682,9 @@ p: punt de pas</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Genera el pla afí que té vector perpendicular "w" i passa pel punt p</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>w: vector associat
+<p>Paràmetres
+-----=
+w: vector associat
 p: punt de pas</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.from_equacio_implicita"><code class="name flex">
@@ -9539,8 +9692,9 @@ p: punt de pas</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna el pla afí que té equació implícita eq</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eq: EquacioLineal</p></div>
+<p>Paràmetres
+-----=
+eq: EquacioLineal</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -9565,8 +9719,9 @@ p: punt de pas</p></div>
     return w.components_en_base(base)</code></pre>
 </details>
 <div class="desc"><p>Retorna un vector perpendicular al pla expressat en la base "base"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: base de l'espai vectorial. Si és None, serà la canònica</p></div>
+<p>Paràmetres
+-----=
+base: base de l'espai vectorial. Si és None, serà la canònica</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.base_ortogonal"><code class="name flex">
 <span>def <span class="ident">base_ortogonal</span></span>(<span>self)</span>
@@ -9583,10 +9738,29 @@ p: punt de pas</p></div>
     v1 = self.u1
     u2 = self.u2
     v2 = v1.dot(v1) * u2 - v1.dot(u2) * v1
-    v2.simplificar()
-    return [v1,v2]</code></pre>
+    v1.simplificar(positiu=True)
+    v2.simplificar(positiu=True)
+    return Base([v1,v2])</code></pre>
 </details>
 <div class="desc"><p>Retorna una base orogonal (vectors directors perpendiculars) del pla</p></div>
+</dd>
+<dt id="Algebra.PlaAfi.base_ortonormal"><code class="name flex">
+<span>def <span class="ident">base_ortonormal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def base_ortonormal(self):
+    &#34;&#34;&#34;
+    Retorna una base ortonormal del pla afí
+    &#34;&#34;&#34;
+    b = self.base_ortogonal()
+    b.set_unitaria()
+    return(b)</code></pre>
+</details>
+<div class="desc"><p>Retorna una base ortonormal del pla afí</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.conte"><code class="name flex">
 <span>def <span class="ident">conte</span></span>(<span>self, punt)</span>
@@ -9610,8 +9784,9 @@ p: punt de pas</p></div>
     return m.rang() == 2</code></pre>
 </details>
 <div class="desc"><p>Retorna si el punt "punt" pertany al pla</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.distancia"><code class="name flex">
 <span>def <span class="ident">distancia</span></span>(<span>self, other)</span>
@@ -9644,8 +9819,9 @@ p: punt de pas</p></div>
     return None</code></pre>
 </details>
 <div class="desc"><p>Retorna la distància entre el pla actual i un punt, una recta o un altre pla</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>other: un punt (classe Punt), una recta (classe RectaAfi) o
+<p>Paràmetres
+-----=
+other: un punt (classe Punt), una recta (classe RectaAfi) o
 un pla (class PlaAfi)</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.equacio_implicita"><code class="name flex">
@@ -9676,8 +9852,9 @@ un pla (class PlaAfi)</p></div>
     return EquacioLineal.coeficients(w,w.dot(c),False,prime)</code></pre>
 </details>
 <div class="desc"><p>Retorna l'expressió de l'equació implícita del pla en la referència "ref"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ref: referència afí
+<p>Paràmetres
+-----=
+ref: referència afí
 prime: nombre de primes que s'escriuran a les incògnites</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.interseccio"><code class="name flex">
@@ -9711,8 +9888,9 @@ prime: nombre de primes que s'escriuran a les incògnites</p></div>
 </details>
 <div class="desc"><p>Retorna la intersecció del pla amb una altre pla o una recta.
 El resultat pot ser None, una recta o un pla.</p>
-<h2 id="parametes">Paràmetes</h2>
-<p>other. PlaAfi o RectaAfi</p></div>
+<p>Paràmetes
+-----=
+other. PlaAfi o RectaAfi</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.projeccio_ortogonal"><code class="name flex">
 <span>def <span class="ident">projeccio_ortogonal</span></span>(<span>self, punt)</span>
@@ -9736,8 +9914,9 @@ El resultat pot ser None, una recta o un pla.</p>
     return (self.p + P.projeccio_ortogonal(punt - self.p)).punt()</code></pre>
 </details>
 <div class="desc"><p>Retorna la projecció ortogonal del punt "punt" sobre el pla</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 <dt id="Algebra.PlaAfi.punt_de_coordenades_enteres"><code class="name flex">
 <span>def <span class="ident">punt_de_coordenades_enteres</span></span>(<span>self, p=None, u=None, v=None)</span>
@@ -9801,8 +9980,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
     return 2*self.projeccio_ortogonal(punt) - punt</code></pre>
 </details>
 <div class="desc"><p>Retorna el simètric del punt "punt" respecte al pla</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 </dl>
 </dd>
@@ -9923,6 +10103,16 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
     #
     #
     #
+    def base_ortonormal(self):
+        &#34;&#34;&#34;
+        Retorna una base ortonormal del pla vectorial
+        &#34;&#34;&#34;
+        b = self.base_ortogonal()
+        b.set_unitaria()
+        return(b)
+    #
+    #
+    #
     def projeccio_ortogonal(self,u):
         &#34;&#34;&#34;
         Retorna la projecció ortogonal del vector u sobre el pla.
@@ -10021,16 +10211,18 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Genera el pla vectorial que té vector perpendicular "w"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: vector no nul de dimensió 3</p></div>
+<p>Paràmetres
+-----=
+v: vector no nul de dimensió 3</p></div>
 </dd>
 <dt id="Algebra.PlaVectorial.from_matriu"><code class="name flex">
 <span>def <span class="ident">from_matriu</span></span>(<span>m)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Crea el pla vectorial generat per les columnes de la matriu "m"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>m: matriu. Ha de tenir 3 files, dues columnes i rang 2</p></div>
+<p>Paràmetres
+-----=
+m: matriu. Ha de tenir 3 files, dues columnes i rang 2</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -10060,8 +10252,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
     return w</code></pre>
 </details>
 <div class="desc"><p>Retorna les components del vector associat en la base "base"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: element de la clase Base</p></div>
+<p>Paràmetres
+-----=
+base: element de la clase Base</p></div>
 </dd>
 <dt id="Algebra.PlaVectorial.base_ortogonal"><code class="name flex">
 <span>def <span class="ident">base_ortogonal</span></span>(<span>self)</span>
@@ -10082,6 +10275,24 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
     return Base([v1,v2])</code></pre>
 </details>
 <div class="desc"><p>Retorna una base ortogonal del pla vectorial</p></div>
+</dd>
+<dt id="Algebra.PlaVectorial.base_ortonormal"><code class="name flex">
+<span>def <span class="ident">base_ortonormal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def base_ortonormal(self):
+    &#34;&#34;&#34;
+    Retorna una base ortonormal del pla vectorial
+    &#34;&#34;&#34;
+    b = self.base_ortogonal()
+    b.set_unitaria()
+    return(b)</code></pre>
+</details>
+<div class="desc"><p>Retorna una base ortonormal del pla vectorial</p></div>
 </dd>
 <dt id="Algebra.PlaVectorial.conte"><code class="name flex">
 <span>def <span class="ident">conte</span></span>(<span>self, u)</span>
@@ -10105,8 +10316,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
     return m.det() == 0</code></pre>
 </details>
 <div class="desc"><p>Retorna si el vector u pertany al pla.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>u: Vector</p></div>
+<p>Paràmetres
+-----=
+u: Vector</p></div>
 </dd>
 <dt id="Algebra.PlaVectorial.equacio_implicita"><code class="name flex">
 <span>def <span class="ident">equacio_implicita</span></span>(<span>self, base=None, prime=0)</span>
@@ -10138,8 +10350,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 <div class="desc"><p>Retorna l'equació implícita del pla en la base "base" en format LaTeX.
 Normalment, si la base no és la canònica es posa prime &gt; 0 perquè el resultat
 sigui de l'estil 2x'-3y'+4z'= 0</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: una base (classe Base). Si és None, serà la canònica
+<p>Paràmetres
+-----=
+base: una base (classe Base). Si és None, serà la canònica
 prime: nombre de primes que s'escriuran a les incògnites</p></div>
 </dd>
 <dt id="Algebra.PlaVectorial.es_associat"><code class="name flex">
@@ -10167,8 +10380,9 @@ prime: nombre de primes que s'escriuran a les incògnites</p></div>
     return m.rang() == 1</code></pre>
 </details>
 <div class="desc"><p>Retorna si el vector és perpendicular al pla.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>u: Vector</p></div>
+<p>Paràmetres
+-----=
+u: Vector</p></div>
 </dd>
 <dt id="Algebra.PlaVectorial.ortogonal"><code class="name flex">
 <span>def <span class="ident">ortogonal</span></span>(<span>self)</span>
@@ -10212,8 +10426,9 @@ prime: nombre de primes que s'escriuran a les incògnites</p></div>
     return t1 * v1 + t2 * v2</code></pre>
 </details>
 <div class="desc"><p>Retorna la projecció ortogonal del vector u sobre el pla.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>u: Vector</p></div>
+<p>Paràmetres
+-----=
+u: Vector</p></div>
 </dd>
 <dt id="Algebra.PlaVectorial.simetric"><code class="name flex">
 <span>def <span class="ident">simetric</span></span>(<span>self, u)</span>
@@ -10236,8 +10451,9 @@ prime: nombre de primes que s'escriuran a les incògnites</p></div>
     return 2*self.projeccio_ortogonal(u) - u</code></pre>
 </details>
 <div class="desc"><p>Retorna el simètric del vector u respecte al pla.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>u: Vector</p></div>
+<p>Paràmetres
+-----=
+u: Vector</p></div>
 </dd>
 </dl>
 </dd>
@@ -10296,11 +10512,13 @@ prime: nombre de primes que s'escriuran a les incògnites</p></div>
 <div class="desc"><p>Classe per treballar amb punts.
 Internament un punt és el mateix que un vector</p>
 <p>Constructor.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>c: Una única llista de nombres o una llista de paràmetres
+<p>Paràmetres
+-----=
+c: Una única llista de nombres o una llista de paràmetres
 que han de ser nombres</p>
-<h2 id="exemples">Exemples</h2>
-<p>u = Vector([2,3,1,2])
+<p>Exemples
+-----=
+u = Vector([2,3,1,2])
 v = Vector(3,1,-2)</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -10330,8 +10548,9 @@ v = Vector(3,1,-2)</p></div>
     return Punt(op.components_en_base(ref.base).components)</code></pre>
 </details>
 <div class="desc"><p>Retorna les coordenades del punt en la referència "ref"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ref: referència de la classe ReferenciaAfi</p></div>
+<p>Paràmetres
+-----=
+ref: referència de la classe ReferenciaAfi</p></div>
 </dd>
 </dl>
 <h3>Inherited members</h3>
@@ -10351,6 +10570,7 @@ v = Vector(3,1,-2)</p></div>
 <li><code><a title="Algebra.Vector.latex" href="#Algebra.Vector.latex">latex</a></code></li>
 <li><code><a title="Algebra.Vector.length" href="#Algebra.Vector.length">length</a></code></li>
 <li><code><a title="Algebra.Vector.maxim" href="#Algebra.Vector.maxim">maxim</a></code></li>
+<li><code><a title="Algebra.Vector.maxim_factor_comu" href="#Algebra.Vector.maxim_factor_comu">maxim_factor_comu</a></code></li>
 <li><code><a title="Algebra.Vector.normalitzar" href="#Algebra.Vector.normalitzar">normalitzar</a></code></li>
 <li><code><a title="Algebra.Vector.normalitzat" href="#Algebra.Vector.normalitzat">normalitzat</a></code></li>
 <li><code><a title="Algebra.Vector.nul" href="#Algebra.Vector.nul">nul</a></code></li>
@@ -10419,6 +10639,7 @@ v = Vector(3,1,-2)</p></div>
     def __init__(self,matriu,ref=None):
         self.ref = ref
         self.matriu = matriu
+        self.by2 = True
         if ref is None:
             self.canonica = matriu
         else:
@@ -10441,6 +10662,11 @@ v = Vector(3,1,-2)</p></div>
     #
     #
     #
+    def set_noby2(self):
+        self.by2 = False
+    #
+    #
+    #
     def primer_element_no_nul(self):
         &#34;&#34;&#34;
         Determina el primer no nul de la matriu self.canonica en un ordre determinat
@@ -10460,19 +10686,26 @@ v = Vector(3,1,-2)</p></div>
         x, y, z = symbols(&#39;x y z&#39;)
         m = Matriu.matriu_columna(Vector([x,y,z,1]))
         r = m.transposada() * self.canonica * m
-        return mylatex(r[0,0].expand()) + &#34; = 0&#34;
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return mylatex(r[0,0].expand()/mcd) + &#34; = 0&#34;
     #
     #
     #
     def equacio(self):
         &#34;&#34;&#34;
-        Retorna l&#39;equació en latex de l&#39;equació de la quàdrica
+        Retorna l&#39;equació de l&#39;equació de la quàdrica
         &#34;&#34;&#34;
         x, y, z = symbols(&#39;x y z&#39;)
         m = Matriu.matriu_columna(Vector([x,y,z,1]))
         r = m.transposada() * self.canonica * m
-        r.simplificar()
-        return r[0,0].expand()
+        mcd = 1
+        if not self.by2:
+            coefs = list(r[0,0].expand().as_coefficients_dict().values())
+            mcd = mcd_llista(coefs)
+        return r[0,0].expand()/mcd
     #
     #
     #
@@ -10750,14 +10983,14 @@ v = Vector(3,1,-2)</p></div>
     #
     #
     @classmethod
-    def aleatoria(cls,maxim=30,diagonal=15,canonica=False):
+    def aleatoria(cls,maxim=30,diagonal=15,canonica=False,maxr=10):
         &#34;&#34;&#34;
         Retorna una quàdrica de manera aleatòria
         Paràmetres:
             maxim: valor màxim de la matriu projectiva de la quàdrica
             diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
         &#34;&#34;&#34;
-        r = random.randint(0,9)
+        r = random.randint(0,maxr)
         if r == 0:
             return Quadrica.ellipsoide(maxim,diagonal,canonica)
         if r == 1:
@@ -10908,7 +11141,7 @@ v = Vector(3,1,-2)</p></div>
                 #
                 # Con
                 #
-                return Con(a2,b2,-c2,s,v1[0][1],v1[1][1])
+                return Con(1/a2,1/b2,-1/c2,s,v1[0][1],v1[1][1])
             elif tip &gt; 0:
                 #
                 # Hiperboloide de dues fulles
@@ -11001,10 +11234,13 @@ v = Vector(3,1,-2)</p></div>
                 vertex = Punt(solve([es1,es2,eq],x,y,z)[0])
                 a2 =  -2 * ep / t1
                 b2 =  -2 * ep / t2
+                if a2 &lt; 0:
+                    a2, b2 = b2, a2
+                    vec1, vec2 = vec2, vec1
                 return ParaboloideHiperbolic(a2,-b2,vertex,vec1,vec2)
         if len(positius) + len(negatius) == 1:
             #
-            # Cilindre parabòlic xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            # Cilindre parabòlic
             #
             if len(s) &gt; 0:
                 return None
@@ -11013,6 +11249,7 @@ v = Vector(3,1,-2)</p></div>
                 v = negatius
             t1 = v[0][0]
             v1 = v[0][1]
+            v1.simplificar(positiu=True)
             v2 = v1.cross(l,simplificar=True)
             v3 = v1.cross(v2,simplificar=True)
             es = t1 * v1.dot(Vector(x,y,z)) + v1.dot(l)
@@ -11029,14 +11266,15 @@ v = Vector(3,1,-2)</p></div>
                     break
                 k += 1
             ep = v3.dot(l)/v3.length()
-            a2 =  -2 * ep / t1
-            return CilindreParabolic(a2/2,v,v1,v2)</code></pre>
+            a2 =  2 * ep / t1
+            return CilindreParabolic(-a2/2,v,v1,v2)</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb quàdriques. L'objectiu no és classificar quàdriques,
 sinó generar-les a partir dels elements característics o de manera
 aleatòria.</p>
-<h2 id="atributs">Atributs</h2>
-<p>ref: Referència afí
+<p>Atributs
+-----=
+ref: Referència afí
 matriu: matriu projectiva de la quàdrica en la referència "ref"
 canonica: matriu projectiva de la quàdrica en la referència canònica</p></div>
 <h3>Subclasses</h3>
@@ -11054,12 +11292,13 @@ canonica: matriu projectiva de la quàdrica en la referència canònica</p></div
 <h3>Static methods</h3>
 <dl>
 <dt id="Algebra.Quadrica.aleatoria"><code class="name flex">
-<span>def <span class="ident">aleatoria</span></span>(<span>maxim=30, diagonal=15, canonica=False)</span>
+<span>def <span class="ident">aleatoria</span></span>(<span>maxim=30, diagonal=15, canonica=False, maxr=10)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una quàdrica de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica</p></div>
 </dd>
 <dt id="Algebra.Quadrica.cilindreelliptic"><code class="name flex">
@@ -11067,8 +11306,9 @@ diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica</p
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un cilindre el·líptic de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11078,8 +11318,9 @@ als de la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un cilindre hiperbòlic de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11089,8 +11330,9 @@ als de la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un cilindre parabòlic de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11100,8 +11342,9 @@ als de la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un con de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11111,8 +11354,9 @@ als de la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un el·lipsoide de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11129,8 +11373,9 @@ Només per als nou tipus de quàdriques definides en aquesta llibreria</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un hiperboloide de dues fulles de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11140,8 +11385,9 @@ als de la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un hiperboloide d'una fulla de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11151,8 +11397,9 @@ als de la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un paraboloide el·líptic de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11162,8 +11409,9 @@ als de la referència canònica</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un paraboloide hiperbòlic de manera aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>maxim: valor màxim de la matriu projectiva de la quàdrica
+<p>Paràmetres
+-----=
+maxim: valor màxim de la matriu projectiva de la quàdrica
 diagonal: valor màxim de la diagonal de la matriu projectiva de la quàdrica
 canonica: si és True, els eixos principals seran paral·lels
 als de la referència canònica</p></div>
@@ -11181,15 +11429,18 @@ als de la referència canònica</p></div>
 </summary>
 <pre><code class="python">def equacio(self):
     &#34;&#34;&#34;
-    Retorna l&#39;equació en latex de l&#39;equació de la quàdrica
+    Retorna l&#39;equació de l&#39;equació de la quàdrica
     &#34;&#34;&#34;
     x, y, z = symbols(&#39;x y z&#39;)
     m = Matriu.matriu_columna(Vector([x,y,z,1]))
     r = m.transposada() * self.canonica * m
-    r.simplificar()
-    return r[0,0].expand()</code></pre>
+    mcd = 1
+    if not self.by2:
+        coefs = list(r[0,0].expand().as_coefficients_dict().values())
+        mcd = mcd_llista(coefs)
+    return r[0,0].expand()/mcd</code></pre>
 </details>
-<div class="desc"><p>Retorna l'equació en latex de l'equació de la quàdrica</p></div>
+<div class="desc"><p>Retorna l'equació de l'equació de la quàdrica</p></div>
 </dd>
 <dt id="Algebra.Quadrica.equacio_en_plaUV"><code class="name flex">
 <span>def <span class="ident">equacio_en_plaUV</span></span>(<span>self, referencia=\left\{(0,0,0);(1,0,0),(0,1,0),(0,0,1)\right\})</span>
@@ -11216,8 +11467,9 @@ als de la referència canònica</p></div>
 </details>
 <div class="desc"><p>Retorna l'equació de la intersecció de la quàdrica amb el pla w=0
 de la referència R</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>referencia: Element de la classe ReferenciaAfi</p></div>
+<p>Paràmetres
+-----=
+referencia: Element de la classe ReferenciaAfi</p></div>
 </dd>
 <dt id="Algebra.Quadrica.equacio_en_referencia"><code class="name flex">
 <span>def <span class="ident">equacio_en_referencia</span></span>(<span>self, referencia=\left\{(0,0,0);(1,0,0),(0,1,0),(0,0,1)\right\}, prime=1)</span>
@@ -11244,8 +11496,9 @@ de la referència R</p>
     return r[0,0].expand()</code></pre>
 </details>
 <div class="desc"><p>Retorna l'equació de la quàdrica en la referencia 'referencia'</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>referencia: Element de la classe ReferenciaAfi
+<p>Paràmetres
+-----=
+referencia: Element de la classe ReferenciaAfi
 prime: nombre de primes que escriurem a l'equació</p></div>
 </dd>
 <dt id="Algebra.Quadrica.matriu_en_referencia"><code class="name flex">
@@ -11279,8 +11532,9 @@ prime: nombre de primes que escriurem a l'equació</p></div>
     return mat</code></pre>
 </details>
 <div class="desc"><p>Retorna la matriu projectiva de la quàdrica en la referencia 'referencia'</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>referencia: Element de la classe ReferenciaAfi</p></div>
+<p>Paràmetres
+-----=
+referencia: Element de la classe ReferenciaAfi</p></div>
 </dd>
 <dt id="Algebra.Quadrica.matrius"><code class="name flex">
 <span>def <span class="ident">matrius</span></span>(<span>self)</span>
@@ -11341,6 +11595,19 @@ per a utilitzar-les em el Sagemath</p></div>
 </details>
 <div class="desc"><p>Retorna la referencia principal</p></div>
 </dd>
+<dt id="Algebra.Quadrica.set_noby2"><code class="name flex">
+<span>def <span class="ident">set_noby2</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_noby2(self):
+    self.by2 = False</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
 <dt id="Algebra.Quadrica.tipus"><code class="name flex">
 <span>def <span class="ident">tipus</span></span>(<span>self)</span>
 </code></dt>
@@ -11392,8 +11659,9 @@ per a utilitzar-les em el Sagemath</p></div>
     return self.ref.vectors(unitaris)</code></pre>
 </details>
 <div class="desc"><p>Retorna els vectors de la base de la referència principal</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>unitaris: si és True, els retorna unitaris</p></div>
+<p>Paràmetres
+-----=
+unitaris: si és True, els retorna unitaris</p></div>
 </dd>
 </dl>
 </dd>
@@ -11508,8 +11776,9 @@ per a utilitzar-les em el Sagemath</p></div>
 </details>
 <div class="desc"><p>Afegeix els termes que apareixen als denominadors a la llista
 self.fraccions</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>el: expressió del sympy</p></div>
+<p>Paràmetres
+-----=
+el: expressió del sympy</p></div>
 </dd>
 <dt id="Algebra.Radicals.busca_quadrats"><code class="name flex">
 <span>def <span class="ident">busca_quadrats</span></span>(<span>self, el)</span>
@@ -11538,8 +11807,9 @@ self.fraccions</p>
 </details>
 <div class="desc"><p>Afegeix els termes que apareixen dins d'arrels quadrades a la llista
 self.quadrats</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>el: expressió del sympy</p></div>
+<p>Paràmetres
+-----=
+el: expressió del sympy</p></div>
 </dd>
 <dt id="Algebra.Radicals.mcd"><code class="name flex">
 <span>def <span class="ident">mcd</span></span>(<span>self)</span>
@@ -11911,8 +12181,9 @@ self.quadrats</p>
         return m.rang() == 1</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb rectes afins, dimensió 2 o 3</p>
-<h2 id="atributs">Atributs</h2>
-<p>u: generador de la recta vectorial
+<p>Atributs
+-----=
+u: generador de la recta vectorial
 p: punt de pas</p></div>
 <h3>Static methods</h3>
 <dl>
@@ -11921,8 +12192,9 @@ p: punt de pas</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una recta afí aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>dim: dimensió
+<p>Paràmetres
+-----=
+dim: dimensió
 maxim: màxim de les coordenades del punt i les components dels
 vector director</p></div>
 </dd>
@@ -11931,8 +12203,9 @@ vector director</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la recta afí que té equacions implícites s</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>s: SistemaEquacions</p></div>
+<p>Paràmetres
+-----=
+s: SistemaEquacions</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -11959,8 +12232,9 @@ vector director</p></div>
     return m.rang() == 1</code></pre>
 </details>
 <div class="desc"><p>Retorna si el punt "punt" pertany a la recta</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 <dt id="Algebra.RectaAfi.distancia"><code class="name flex">
 <span>def <span class="ident">distancia</span></span>(<span>self, other)</span>
@@ -11995,8 +12269,9 @@ vector director</p></div>
     return None</code></pre>
 </details>
 <div class="desc"><p>Retorna la distància entre la recta actual i un punt, una recta o un pla</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>other: un punt (classe Punt), una recta (classe RectaAfi) o un plan
+<p>Paràmetres
+-----=
+other: un punt (classe Punt), una recta (classe RectaAfi) o un plan
 (class PlaAfi)</p></div>
 </dd>
 <dt id="Algebra.RectaAfi.equacio_continua"><code class="name flex">
@@ -12041,8 +12316,9 @@ vector director</p></div>
 </details>
 <div class="desc"><p>Retorna l'expressió en latex de l'equqció contínua de la recta afí
 en la referència "ref".</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ref: referència afí. Si és None, serà la canònica
+<p>Paràmetres
+-----=
+ref: referència afí. Si és None, serà la canònica
 prime: nombre de primes que s'escriuran a les incògnites</p></div>
 </dd>
 <dt id="Algebra.RectaAfi.equacions_implicites"><code class="name flex">
@@ -12100,8 +12376,9 @@ prime: nombre de primes que s'escriuran a les incògnites</p></div>
 </details>
 <div class="desc"><p>Retorna l'equació implícita (dimensió 2) o el sistema d'equacions implícites
 (dimensió 3) de la recta afí en la referència "ref".</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ref: referència en la que calculem les equacions implícites
+<p>Paràmetres
+-----=
+ref: referència en la que calculem les equacions implícites
 prime: nombre de primes que s'escriran a les incògnites
 aleatori: només s'aplica a dimensió 3 i genera unes equacions implícites
 amb tots els coeficients de les incògnites no nuls</p></div>
@@ -12151,8 +12428,9 @@ amb tots els coeficients de les incògnites no nuls</p></div>
 </details>
 <div class="desc"><p>Retorna la intersecció de la recta amb una altra recta o un pla.
 El resultat pot ser None, un punt o una recta.</p>
-<h2 id="parametes">Paràmetes</h2>
-<p>other. PlaAfi o RectaAfi</p></div>
+<p>Paràmetes
+-----=
+other. PlaAfi o RectaAfi</p></div>
 </dd>
 <dt id="Algebra.RectaAfi.projeccio_ortogonal"><code class="name flex">
 <span>def <span class="ident">projeccio_ortogonal</span></span>(<span>self, punt)</span>
@@ -12176,8 +12454,9 @@ El resultat pot ser None, un punt o una recta.</p>
     return (self.p + P.projeccio_ortogonal(punt - self.p)).punt()</code></pre>
 </details>
 <div class="desc"><p>Retorna la projecció ortogonal del punt "punt" sobre la recta</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 <dt id="Algebra.RectaAfi.punt"><code class="name flex">
 <span>def <span class="ident">punt</span></span>(<span>self, t)</span>
@@ -12197,8 +12476,9 @@ El resultat pot ser None, un punt o una recta.</p>
     return Punt(q.components)</code></pre>
 </details>
 <div class="desc"><p>Retorna el punt de la recta amb paràmetre t</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>t: escalar</p></div>
+<p>Paràmetres
+-----=
+t: escalar</p></div>
 </dd>
 <dt id="Algebra.RectaAfi.punt_de_coordenades_enteres"><code class="name flex">
 <span>def <span class="ident">punt_de_coordenades_enteres</span></span>(<span>self, p=None, u=None)</span>
@@ -12252,8 +12532,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
     return 2*self.projeccio_ortogonal(punt) - punt</code></pre>
 </details>
 <div class="desc"><p>Retorna el simètric del punt "punt" respecte a la recta</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 </dl>
 </dd>
@@ -12376,8 +12657,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
         return f&#34;\\begin{{tabular}}{{{format}}} {xs} \\\\ \\hline {ys} \\end{{tabular}}&#34;</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb rectes de regressió</p>
-<h2 id="atributs">Atributs</h2>
-<p>punts: llista de punts
+<p>Atributs
+-----=
+punts: llista de punts
 A: matriu dels coeficients de les incògnites
 B: vector de termes independents
 solucio: solució del sistema d'equacions A^tAX = A^tB</p></div>
@@ -12388,8 +12670,9 @@ solucio: solució del sistema d'equacions A^tAX = A^tB</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un problema aleatori amb l punts</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>l: nombre de punts
+<p>Paràmetres
+-----=
+l: nombre de punts
 max: valor màxim de les ys</p></div>
 </dd>
 </dl>
@@ -12604,11 +12887,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
         n = a.nucli()
         if len(n) == 1:
             return RectaVectorial(n[0])
-        return PlaVectorial(n)</code></pre>
+        return PlaVectorial(*n)</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb rectes vectorials, dimensió 2 o 3</p>
-<h2 id="atributs">Atributs</h2>
-<p>u: generador de la recta vectorial</p></div>
+<p>Atributs
+-----=
+u: generador de la recta vectorial</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="Algebra.RectaVectorial.equacio_continua"><code class="name flex">
@@ -12647,8 +12931,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 </details>
 <div class="desc"><p>Retorna l'expressió en LaTeX de l'equació contínua de la recta vectorial
 en la base "base".</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: base del pla o de l'espai vectorial (classe Base)
+<p>Paràmetres
+-----=
+base: base del pla o de l'espai vectorial (classe Base)
 prime: nombre de primes amb el que s'escriuran les incògnites</p></div>
 </dd>
 <dt id="Algebra.RectaVectorial.equacions_implicites"><code class="name flex">
@@ -12684,8 +12969,9 @@ prime: nombre de primes amb el que s'escriuran les incògnites</p></div>
 </details>
 <div class="desc"><p>Retorna l'equació implícita (dimensió 2) o el sistema d'equacions implícites
 (dimensió 3) en la base "base".</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: Base en la que calculem les equacions implícites
+<p>Paràmetres
+-----=
+base: Base en la que calculem les equacions implícites
 prime: Quantes primes volem posar a les equacions
 aleatori: només s'aplica a dimensió 3 i genera unes equacions implícites no trivials</p></div>
 </dd>
@@ -12705,7 +12991,7 @@ aleatori: només s'aplica a dimensió 3 i genera unes equacions implícites no t
     n = a.nucli()
     if len(n) == 1:
         return RectaVectorial(n[0])
-    return PlaVectorial(n)</code></pre>
+    return PlaVectorial(*n)</code></pre>
 </details>
 <div class="desc"><p>Retorna el suplementari ortogonal</p></div>
 </dd>
@@ -12732,8 +13018,9 @@ aleatori: només s'aplica a dimensió 3 i genera unes equacions implícites no t
     return t * v</code></pre>
 </details>
 <div class="desc"><p>Retorna la projecció ortogonal del vector u sobre la recta.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>u: Vector</p></div>
+<p>Paràmetres
+-----=
+u: Vector</p></div>
 </dd>
 <dt id="Algebra.RectaVectorial.simetric"><code class="name flex">
 <span>def <span class="ident">simetric</span></span>(<span>self, u)</span>
@@ -12756,8 +13043,9 @@ aleatori: només s'aplica a dimensió 3 i genera unes equacions implícites no t
     return 2*self.projeccio_ortogonal(u) - u</code></pre>
 </details>
 <div class="desc"><p>Retorna el simètric del vector u respecte a la recta.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>u: Vector</p></div>
+<p>Paràmetres
+-----=
+u: Vector</p></div>
 </dd>
 </dl>
 </dd>
@@ -13012,8 +13300,9 @@ aleatori: només s'aplica a dimensió 3 i genera unes equacions implícites no t
         return Punt(coordenades)</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb referències afins de P^n</p>
-<h2 id="atributs">Atributs</h2>
-<p>origen: origen de la referència (classe Punt)
+<p>Atributs
+-----=
+origen: origen de la referència (classe Punt)
 base: base de la referència (classe Base)
 dimensio: dimensió de l'espai corresponent</p></div>
 <h3>Static methods</h3>
@@ -13023,8 +13312,9 @@ dimensio: dimensió de l'espai corresponent</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una referència aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>dimensio: dimensió de l'espai corresponent
+<p>Paràmetres
+-----=
+dimensio: dimensió de l'espai corresponent
 maxim: Màxim nombre que hi apareix
 mzeros: Màxim nombre de zeros que apareixen a la base
 unitaria: si és True la matriu del canvi de base tindrà determinant 1 o -1</p></div>
@@ -13034,8 +13324,9 @@ unitaria: si és True la matriu del canvi de base tindrà determinant 1 o -1</p>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la referència canònica</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>dimensio: dimensió de l'espai corresponent</p></div>
+<p>Paràmetres
+-----=
+dimensio: dimensió de l'espai corresponent</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -13080,8 +13371,9 @@ unitaria: si és True la matriu del canvi de base tindrà determinant 1 o -1</p>
 </details>
 <div class="desc"><p>Restorna en format latex l'expressió del canvi de coordenades de la referència
 actual a la referència canònica</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>prime1: primes que s'escriuran a les coordenades en la referència canònica
+<p>Paràmetres
+-----=
+prime1: primes que s'escriuran a les coordenades en la referència canònica
 prime2: primes que s'escriuran a les coordenades en la referència actual</p></div>
 </dd>
 <dt id="Algebra.ReferenciaAfi.canvi_de_referencia_a_la_referencia"><code class="name flex">
@@ -13132,8 +13424,9 @@ prime2: primes que s'escriuran a les coordenades en la referència actual</p></d
 </details>
 <div class="desc"><p>Retorna en format latex l'expressió del canvi de coordenades de la referència
 actual a la referència R</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>p1: primes que s'escriuran a les coordenades en la referència actual
+<p>Paràmetres
+-----=
+p1: primes que s'escriuran a les coordenades en la referència actual
 p2: primes que s'escriuran a les coordenades en la referència R</p></div>
 </dd>
 <dt id="Algebra.ReferenciaAfi.coordenades_del_punt"><code class="name flex">
@@ -13169,8 +13462,9 @@ p2: primes que s'escriuran a les coordenades en la referència R</p></div>
 <div class="desc"><p>Retorna un nou punt expressat en aquesta referència del punt
 que en la referència "ref" té coordenades "punt".
 Si ref és None, serà la referència canònica</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: coordenades en la referència "ref"
+<p>Paràmetres
+-----=
+punt: coordenades en la referència "ref"
 ref: ReferenciaAfi</p></div>
 </dd>
 <dt id="Algebra.ReferenciaAfi.punt_de_coordenades"><code class="name flex">
@@ -13203,8 +13497,9 @@ ref: ReferenciaAfi</p></div>
 </details>
 <div class="desc"><p>Retorna un nou punt expressat en la referència canònica del
 punt que en aquesta referencia té coordenades "punt"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: coordenades d'un punt en la referència actual</p></div>
+<p>Paràmetres
+-----=
+punt: coordenades d'un punt en la referència actual</p></div>
 </dd>
 <dt id="Algebra.ReferenciaAfi.punt_de_coordenades_ampliat"><code class="name flex">
 <span>def <span class="ident">punt_de_coordenades_ampliat</span></span>(<span>self, punt)</span>
@@ -13239,8 +13534,9 @@ punt que en aquesta referencia té coordenades "punt"</p>
 <div class="desc"><p>Retorna un nou punt expressat en la referència canònica del
 punt que en aquesta referencia té coordenades "punt"
 ampliant-lo a una última coordenada nul·la</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: coordenades d'un punt en la referència actual</p></div>
+<p>Paràmetres
+-----=
+punt: coordenades d'un punt en la referència actual</p></div>
 </dd>
 <dt id="Algebra.ReferenciaAfi.referencia_inversa"><code class="name flex">
 <span>def <span class="ident">referencia_inversa</span></span>(<span>self)</span>
@@ -13281,8 +13577,9 @@ de la referència canònica a l'actual</p></div>
     return self.base.vectors(unitaris)</code></pre>
 </details>
 <div class="desc"><p>Retorna els vectors de la base de la referència</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>unitaris: si és True els retorna dividits per la seva longitud</p></div>
+<p>Paràmetres
+-----=
+unitaris: si és True els retorna dividits per la seva longitud</p></div>
 </dd>
 </dl>
 </dd>
@@ -13322,6 +13619,8 @@ de la referència canònica a l'actual</p></div>
         &#34;&#34;&#34;
         if not isinstance(a,Matriu):
             return None
+        if isinstance(b,Matriu):
+            b = b.vectors_columna()[0]
         if not isinstance(b,Vector):
             return None
         if a.files != b.dimensio:
@@ -13336,6 +13635,8 @@ de la referència canònica a l'actual</p></div>
     #
     #
     def __init__(self,a,b,unknowns=None,prime=0):
+        if isinstance(b,Matriu):
+            b = b.vectors_columna()[0]
         self.A = a
         self.B = b
         self.solucio = None
@@ -13521,8 +13822,9 @@ de la referència canònica a l'actual</p></div>
         return f&#34;$ {eqs} $&#34;</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb sistemes d'equacions lineals</p>
-<h2 id="atributs">Atributs</h2>
-<p>A: matriu dels coeficients de les incógnites
+<p>Atributs
+-----=
+A: matriu dels coeficients de les incógnites
 B: vector de termes independents
 equacions: llista de EquacioLineal
 nombre: nombre d'equacions
@@ -13539,8 +13841,9 @@ prime: nombre de primes que escriurem a l'equació</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un sistema d'equacions amb equacions "eqs"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eqs: llista de EquacioLineal
+<p>Paràmetres
+-----=
+eqs: llista de EquacioLineal
 nombre: nombre d'incògnites
 prime: nombre de primes que s'escriuran a les incògnites</p></div>
 </dd>
@@ -13687,8 +13990,9 @@ incògnites del sistema com a paràmetres</p></div>
     return f&#34;$ {eqs} $&#34;</code></pre>
 </details>
 <div class="desc"><p>Retorna l'expressió en LaTex de la solució del sistema d'equacions</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>linia: si és True escriu la solució en una línia, en cas contrari
+<p>Paràmetres
+-----=
+linia: si és True escriu la solució en una línia, en cas contrari
 ho fa com un sistema d'equacions</p></div>
 </dd>
 </dl>
@@ -13927,8 +14231,9 @@ ho fa com un sistema d'equacions</p></div>
         return f&#34;&lt;{base}&gt;&#34;</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb subespais vectorials</p>
-<h2 id="atributs">Atributs</h2>
-<p>generadors: generadors del subespai
+<p>Atributs
+-----=
+generadors: generadors del subespai
 base: base del subespai
 dimensio: dimensio del subespai
 espai: n si és un suespai de R^n</p></div>
@@ -13939,8 +14244,9 @@ espai: n si és un suespai de R^n</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna el subespai vectorial que té equació implícita "eq"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eqs: equació implícita (classe EquacioLineal)
+<p>Paràmetres
+-----=
+eqs: equació implícita (classe EquacioLineal)
 basern: Base de R^n</p></div>
 </dd>
 <dt id="Algebra.SubespaiVectorial.from_equacions_implicites"><code class="name flex">
@@ -13948,8 +14254,9 @@ basern: Base de R^n</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna el subespai vectorial que té equacions implícites "eqs"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eqs: equacions implícites (classe SistemaEquacions)
+<p>Paràmetres
+-----=
+eqs: equacions implícites (classe SistemaEquacions)
 basern: Base de R^n</p></div>
 </dd>
 </dl>
@@ -13980,8 +14287,9 @@ basern: Base de R^n</p></div>
 </details>
 <div class="desc"><p>Retorna una base ortogonal amb orientació positiva de R^n
 que comença amb una base del subespai</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>unitaria: si és True, retorna una base ortonormal</p></div>
+<p>Paràmetres
+-----=
+unitaria: si és True, retorna una base ortonormal</p></div>
 </dd>
 <dt id="Algebra.SubespaiVectorial.amplia_base_suplementari"><code class="name flex">
 <span>def <span class="ident">amplia_base_suplementari</span></span>(<span>self, unitaria=False)</span>
@@ -14005,8 +14313,9 @@ que comença amb una base del subespai</p>
 </details>
 <div class="desc"><p>Retorna una base ortogonal amb orientació positiva de R^n
 que comença amb una base del suplementari ortogonal del subespai</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>unitaria: si és True, retorna una base ortonormal</p></div>
+<p>Paràmetres
+-----=
+unitaria: si és True, retorna una base ortonormal</p></div>
 </dd>
 <dt id="Algebra.SubespaiVectorial.base_ortogonal"><code class="name flex">
 <span>def <span class="ident">base_ortogonal</span></span>(<span>self)</span>
@@ -14066,8 +14375,9 @@ que comença amb una base del suplementari ortogonal del subespai</p>
     return (p.eliminar_parametres(prime))</code></pre>
 </details>
 <div class="desc"><p>Retorna unes equacions implícites del subespai</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>basern: base en la que s'escriuran les equacions implícites
+<p>Paràmetres
+-----=
+basern: base en la que s'escriuran les equacions implícites
 prime: nombre de primes a les incògnites</p></div>
 </dd>
 <dt id="Algebra.SubespaiVectorial.es_total"><code class="name flex">
@@ -14128,8 +14438,9 @@ prime: nombre de primes a les incògnites</p></div>
     return p</code></pre>
 </details>
 <div class="desc"><p>Retorna la projeccio ortogonal del vector u sobre el subespai</p>
-<h2 id="parametres">Parametres</h2>
-<p>u: Vector</p></div>
+<p>Parametres
+-----=
+u: Vector</p></div>
 </dd>
 <dt id="Algebra.SubespaiVectorial.simetric"><code class="name flex">
 <span>def <span class="ident">simetric</span></span>(<span>self, u)</span>
@@ -14152,8 +14463,9 @@ prime: nombre de primes a les incògnites</p></div>
     return 2*self.projeccio_ortogonal(u) - u</code></pre>
 </details>
 <div class="desc"><p>Retorna el simètric del vector u sobre respecte al subespai</p>
-<h2 id="parametres">Parametres</h2>
-<p>u: Vector</p></div>
+<p>Parametres
+-----=
+u: Vector</p></div>
 </dd>
 <dt id="Algebra.SubespaiVectorial.suplementari_ortogonal"><code class="name flex">
 <span>def <span class="ident">suplementari_ortogonal</span></span>(<span>self)</span>
@@ -14223,7 +14535,7 @@ prime: nombre de primes a les incògnites</p></div>
     def __init__(cls,P=None,eix=&#39;X&#39;,punt=None):
         x, y, z = symbols(&#39;x y z&#39;)
         eixos = {&#39;X&#39; : 0,&#39;Y&#39; : 1,&#39;Z&#39; : 2}
-        cls.eix = eixos[eix]
+        cls.eix = eixos[eix.upper()]
         cls.X = Punt([x,y,z])
         if punt is None:
             punt = Punt.aleatori(l=3,maxim=3,nuls=False)
@@ -14253,15 +14565,42 @@ prime: nombre de primes a les incògnites</p></div>
             eq1 = eq.subs(i,s[0]).expand()
         if eq1.is_polynomial() and Poly(eq1).total_degree() == 2:
             q = Quadrica.from_equacio(eq1)
-            return q
+            return q,None
+        d = eq1.as_coefficients_dict()
+        d = list(d.values())
+        d = [x.q for x in d if x.q != 1]
+        m = 1
+        d = eq1.as_coefficients_dict()
+        d = d.values()
+        d = [x.q for x in d if x.q &gt; 1]
+        if len(d) &gt; 0:
+            m = mcm_llista(d)
+        eq1 = m * eq1
+        eq2 = 0
+        d = eq1.as_coefficients_dict()
+        for k, v in d.items():
+            if isinstance(k,Pow) and k.args[1] == Rational(1,2):
+                eq2 = k * v
+        eq1 = eq1 - eq2
         str = latex(eq1,order=&#39;grlex&#39;)
         if str[0] == &#39;-&#39;:
             eq1 = -eq1
-        return(eq1.expand())</code></pre>
+        try:
+            d = (eq2**2).as_coefficients_dict()
+            d = d.values()
+        except:
+            d = []
+        if eq2 != 0:
+            return (Eq(eq1**2,eq2**2),d)
+        str = latex(eq1,order=&#39;grlex&#39;)
+        if str[0] == &#39;-&#39;:
+            eq1 = -eq1
+        return(eq1.expand(),None)</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb rectes de regressió</p>
-<h2 id="atributs">Atributs</h2>
-<p>P: punt de la corba que gira</p>
+<p>Atributs
+-----=
+P: punt de la corba que gira</p>
 <p>punt: punt del pla </p>
 <p>X: punt (x,y,z) de la superfície de revolució</p>
 <p>C: centre de la circumferència que descriu el punt P</p>
@@ -14287,11 +14626,37 @@ prime: nombre de primes a les incògnites</p></div>
         eq1 = eq.subs(i,s[0]).expand()
     if eq1.is_polynomial() and Poly(eq1).total_degree() == 2:
         q = Quadrica.from_equacio(eq1)
-        return q
+        return q,None
+    d = eq1.as_coefficients_dict()
+    d = list(d.values())
+    d = [x.q for x in d if x.q != 1]
+    m = 1
+    d = eq1.as_coefficients_dict()
+    d = d.values()
+    d = [x.q for x in d if x.q &gt; 1]
+    if len(d) &gt; 0:
+        m = mcm_llista(d)
+    eq1 = m * eq1
+    eq2 = 0
+    d = eq1.as_coefficients_dict()
+    for k, v in d.items():
+        if isinstance(k,Pow) and k.args[1] == Rational(1,2):
+            eq2 = k * v
+    eq1 = eq1 - eq2
     str = latex(eq1,order=&#39;grlex&#39;)
     if str[0] == &#39;-&#39;:
         eq1 = -eq1
-    return(eq1.expand())</code></pre>
+    try:
+        d = (eq2**2).as_coefficients_dict()
+        d = d.values()
+    except:
+        d = []
+    if eq2 != 0:
+        return (Eq(eq1**2,eq2**2),d)
+    str = latex(eq1,order=&#39;grlex&#39;)
+    if str[0] == &#39;-&#39;:
+        eq1 = -eq1
+    return(eq1.expand(),None)</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
@@ -14594,6 +14959,11 @@ prime: nombre de primes a les incògnites</p></div>
     #
     #
     #
+    def transformacio_lineal(self):
+        return self.transformacio
+    #
+    #
+    #
     def rang(self):
         &#34;&#34;&#34;
         Retorna el rang de la transfoprmació afí
@@ -14730,8 +15100,9 @@ prime: nombre de primes a les incògnites</p></div>
 </details>
 <div class="desc"><p>Classe per treballar amb transformacions afins T:P^n ----&gt; P^n, on
 T(p) = T + A(p)</p>
-<h2 id="atributs">Atributs</h2>
-<p>transformacio: Transformació lineal donada per la matriu A
+<p>Atributs
+-----=
+transformacio: Transformació lineal donada per la matriu A
 translacio: translació de la transformació afí en la referència canònica
 dimensio: n
 formats: formats LaTeX en que s'escriuen les matrius de la transfornació</p></div>
@@ -14742,8 +15113,9 @@ formats: formats LaTeX en que s'escriuen les matrius de la transfornació</p></d
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una transformació afí aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: ordre de la matriu corresponent
+<p>Paràmetres
+-----=
+ordre: ordre de la matriu corresponent
 maxim: Nombre màqxim que apareix a la matriu en la base
 canònica de la transformació i en la translació</p></div>
 </dd>
@@ -14752,8 +15124,9 @@ canònica de la transformació i en la translació</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna el gir d'angle "angle" al voltant del punt "origen"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>origen: centre del gir (classe Punt)
+<p>Paràmetres
+-----=
+origen: centre del gir (classe Punt)
 angle: angle de rotació
 radiants: si és True, l'angle ha d'estar expressat en radiants</p></div>
 </dd>
@@ -14764,8 +15137,9 @@ radiants: si és True, l'angle ha d'estar expressat en radiants</p></div>
 <div class="desc"><p>Retorna el moviment helicoidal de P_3 que consisteix en la rotació
 d'angle "angle" al voltant de la recta "recta" seguit d'una translació
 de vector alpha * vector director de la recta.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>recta: eix de rotació
+<p>Paràmetres
+-----=
+recta: eix de rotació
 angle: angle de rotació
 radiants: si és True, l'angle ha d'estar expressat en radiants
 alpha: factor de la translació</p></div>
@@ -14775,16 +15149,18 @@ alpha: factor de la translació</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la projecció ortogonal sobre la variatat lineal "v"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: varietat lineal (classe VarietatLineal)</p></div>
+<p>Paràmetres
+-----=
+v: varietat lineal (classe VarietatLineal)</p></div>
 </dd>
 <dt id="Algebra.TransformacioAfi.rotacio"><code class="name flex">
 <span>def <span class="ident">rotacio</span></span>(<span>recta, angle, radiants=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la rotació d'angle "angle" al voltant de la recta "recta"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>recta: eix de rotació
+<p>Paràmetres
+-----=
+recta: eix de rotació
 angle: angle de rotació
 radiants: si és True, l'angle ha d'estar expressat en radiants</p></div>
 </dd>
@@ -14793,8 +15169,9 @@ radiants: si és True, l'angle ha d'estar expressat en radiants</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la simetria respecte a la variatat lineal "v"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: varietat lineal (classe VarietatLineal)</p></div>
+<p>Paràmetres
+-----=
+v: varietat lineal (classe VarietatLineal)</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -14850,8 +15227,9 @@ radiants: si és True, l'angle ha d'estar expressat en radiants</p></div>
 </details>
 <div class="desc"><p>Retorna l'expressió en latex de la transformació afí en la referència
 "ref". Si ref és None, serà en la referència canònica</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: referència de P^n
+<p>Paràmetres
+-----=
+base: referència de P^n
 prime: nombre de primes que s'escriuran</p></div>
 </dd>
 <dt id="Algebra.TransformacioAfi.rang"><code class="name flex">
@@ -14929,9 +15307,23 @@ prime: nombre de primes que s'escriuran</p></div>
 <div class="desc"><p>Calcula el transformat o imatge del punt "p". p seran les coordenades
 d'aquest punt en la referència "ref" i el transformat també estarà expressat
 en aquesta referència</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: punt (classe Punt)
+<p>Paràmetres
+-----=
+punt: punt (classe Punt)
 ref: referència afí. Si és None, serà la referència canònica</p></div>
+</dd>
+<dt id="Algebra.TransformacioAfi.transformacio_lineal"><code class="name flex">
+<span>def <span class="ident">transformacio_lineal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def transformacio_lineal(self):
+    return self.transformacio</code></pre>
+</details>
+<div class="desc"></div>
 </dd>
 </dl>
 </dd>
@@ -15476,8 +15868,9 @@ ref: referència afí. Si és None, serà la referència canònica</p></div>
         self.canonica.diagonalitza(ortogonals)</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb transformacions lineals T:R^n ----&gt; R^n</p>
-<h2 id="atributs">Atributs</h2>
-<p>dimensio: n
+<p>Atributs
+-----=
+dimensio: n
 canonica: matriu de la transformació en la base canònica
 format: format LaTeX per a la matriu</p></div>
 <h3>Static methods</h3>
@@ -15487,8 +15880,9 @@ format: format LaTeX per a la matriu</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna una transformació lineal aleatòria</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ordre: ordre de la matriu corresponent
+<p>Paràmetres
+-----=
+ordre: ordre de la matriu corresponent
 maxim: Nombre màqxim que apareix a la matriu en la base
 canònica de la transformació</p></div>
 </dd>
@@ -15498,8 +15892,9 @@ canònica de la transformació</p></div>
 <dd>
 <div class="desc"><p>Retorna la transformació lineal que consisteix en escalats de factors
 "factor" en les direccions de la base "base"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>factors: llista de nombres
+<p>Paràmetres
+-----=
+factors: llista de nombres
 base: element de la classe Base</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.gir"><code class="name flex">
@@ -15507,8 +15902,9 @@ base: element de la classe Base</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna el gir d'angle "angle" en dimensió 2</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>angle: angle de rotació
+<p>Paràmetres
+-----=
+angle: angle de rotació
 radiants: si l'angle està en radiants, ha de ser True</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.projeccio_ortogonal"><code class="name flex">
@@ -15516,16 +15912,18 @@ radiants: si l'angle està en radiants, ha de ser True</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la projecció ortogonal sobre el subespai "s"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>s: subespai vectorial (classe SubespaiVectorial)</p></div>
+<p>Paràmetres
+-----=
+s: subespai vectorial (classe SubespaiVectorial)</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.rotacio"><code class="name flex">
 <span>def <span class="ident">rotacio</span></span>(<span>eix, angle, radiants=False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la rotació d'angle "angle" al voltant del vector "eix"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eix: vector al voltant del qual fem la rotació
+<p>Paràmetres
+-----=
+eix: vector al voltant del qual fem la rotació
 angle: angle de rotació
 radiants: si l'angle està en radiants, ha de ser True</p></div>
 </dd>
@@ -15535,8 +15933,9 @@ radiants: si l'angle està en radiants, ha de ser True</p></div>
 <dd>
 <div class="desc"><p>Retorna la rotació amb angles d'Euler psi, theta i phi al voltant dels
 dels eixos determinats pel paràmetre ordre</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>psi, theta i phi: angles d'Euler
+<p>Paràmetres
+-----=
+psi, theta i phi: angles d'Euler
 ordre: eixos al voltant dels que fem les rotacions
 radiants: si l'angle està en radiants, ha de ser True</p></div>
 </dd>
@@ -15545,16 +15944,18 @@ radiants: si l'angle està en radiants, ha de ser True</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la rotació definida pel quaternio "q"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>q: element de la classe Quaternio</p></div>
+<p>Paràmetres
+-----=
+q: element de la classe Quaternio</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.simetria"><code class="name flex">
 <span>def <span class="ident">simetria</span></span>(<span>s)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna la simetria respecte al subespai "s"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>s: subespai vectorial (classe SubespaiVectorial)</p></div>
+<p>Paràmetres
+-----=
+s: subespai vectorial (classe SubespaiVectorial)</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -15598,8 +15999,9 @@ radiants: si l'angle està en radiants, ha de ser True</p></div>
     return (psi,theta,phi)</code></pre>
 </details>
 <div class="desc"><p>Retorna els angles d'Euler de la rotació corresponents a l'ordre 'ZXZ'</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>radiants: si és True retorna els angles en radiants, en cas contrari,
+<p>Paràmetres
+-----=
+radiants: si és True retorna els angles en radiants, en cas contrari,
 ho fa en graus</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.antiimatges"><code class="name flex">
@@ -15623,8 +16025,9 @@ ho fa en graus</p></div>
     return Vector(s.solucio), s.secundaries</code></pre>
 </details>
 <div class="desc"><p>Retorna les antiimages del vector v</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>v: element de la classe Vector</p></div>
+<p>Paràmetres
+-----=
+v: element de la classe Vector</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.determinant"><code class="name flex">
 <span>def <span class="ident">determinant</span></span>(<span>self)</span>
@@ -15692,8 +16095,9 @@ ho fa en graus</p></div>
     return (e,alpha)</code></pre>
 </details>
 <div class="desc"><p>Retorna l'eix i l'angle de rotació</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>radiants: si és True retorna l'angle en radiants, en cas contrari,
+<p>Paràmetres
+-----=
+radiants: si és True retorna l'angle en radiants, en cas contrari,
 ho fa en graus</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.es_rotacio"><code class="name flex">
@@ -15763,8 +16167,9 @@ ho fa en graus</p></div>
     return v.es_proporcional(u)</code></pre>
 </details>
 <div class="desc"><p>Retorna si el vector "u" és o no un vector propi</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>u: element de la class Vector</p></div>
+<p>Paràmetres
+-----=
+u: element de la class Vector</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.imatges_una_base"><code class="name flex">
 <span>def <span class="ident">imatges_una_base</span></span>(<span>self, base)</span>
@@ -15793,8 +16198,9 @@ ho fa en graus</p></div>
     return str.replace(&#39;IMATGES&#39;,ts)</code></pre>
 </details>
 <div class="desc"><p>Retorna l'expressió en LaTeX de les imatges dels vectors de la base "base"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: element de la classe Base</p></div>
+<p>Paràmetres
+-----=
+base: element de la classe Base</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.latex"><code class="name flex">
 <span>def <span class="ident">latex</span></span>(<span>self, base=None, prime=0)</span>
@@ -15844,8 +16250,9 @@ ho fa en graus</p></div>
 </details>
 <div class="desc"><p>Retorna l'expressió en latex de la transformació lineal en la base "base"
 Si base és None, serà en la base canònica</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: base de R^n
+<p>Paràmetres
+-----=
+base: base de R^n
 prime: nombre de primes que s'han d'escriure</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.matriu_en_base"><code class="name flex">
@@ -15869,8 +16276,9 @@ prime: nombre de primes que s'han d'escriure</p></div>
     return Matriu(m)</code></pre>
 </details>
 <div class="desc"><p>Retorna la matriu de la transformacio lineal en la base "base"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: base de R^n (classe Base)</p></div>
+<p>Paràmetres
+-----=
+base: base de R^n (classe Base)</p></div>
 </dd>
 <dt id="Algebra.TransformacioLineal.polinomi_caracteristic"><code class="name flex">
 <span>def <span class="ident">polinomi_caracteristic</span></span>(<span>self)</span>
@@ -15995,8 +16403,9 @@ que l'altre és l'oposat</p></div>
     return t</code></pre>
 </details>
 <div class="desc"><p>Calcula el transformat (imatge) del vector "vec".</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>vec: vector
+<p>Paràmetres
+-----=
+vec: vector
 base: si no és None, vec seran les compoents del vectors en aquesta
 base. El transformat o imatge també estarà expressat en aquesta base</p></div>
 </dd>
@@ -16179,8 +16588,9 @@ base. El transformat o imatge també estarà expressat en aquesta base</p></div>
         return f&#34;{self.punt}+{self.subespai}&#34;</code></pre>
 </details>
 <div class="desc"><p>Classe per treballar amb varietats lineal</p>
-<h2 id="atributs">Atributs</h2>
-<p>punt: punt de pas
+<p>Atributs
+-----=
+punt: punt de pas
 subespai: SubespaiVectorial</p></div>
 <h3>Static methods</h3>
 <dl>
@@ -16190,8 +16600,9 @@ subespai: SubespaiVectorial</p></div>
 <dd>
 <div class="desc"><p>Retorna la varietat afí que té equació implícita "eq"
 en la referència afí "ref"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eq: equació implícita (classe EquacioLineal)
+<p>Paràmetres
+-----=
+eq: equació implícita (classe EquacioLineal)
 ref: Referència de P^n</p></div>
 </dd>
 <dt id="Algebra.VarietatAfi.from_equacions_implicites"><code class="name flex">
@@ -16200,8 +16611,9 @@ ref: Referència de P^n</p></div>
 <dd>
 <div class="desc"><p>Retorna la varietat afí que té equacions implícites "eqs"
 en la referència afí "ref"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>eqs: equacions implícites (classe SistemaEquacions)
+<p>Paràmetres
+-----=
+eqs: equacions implícites (classe SistemaEquacions)
 ref: Referència de P^n</p></div>
 </dd>
 </dl>
@@ -16251,8 +16663,9 @@ ref: Referència de P^n</p></div>
     return (p.eliminar_parametres(prime))</code></pre>
 </details>
 <div class="desc"><p>Retorna unes equacions implícites de la varietat lineal</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>ref: referència en la que s'escriuran les equacions implícites
+<p>Paràmetres
+-----=
+ref: referència en la que s'escriuran les equacions implícites
 prime: nombre de primes de les incògnites</p></div>
 </dd>
 <dt id="Algebra.VarietatAfi.es_total"><code class="name flex">
@@ -16310,8 +16723,9 @@ prime: nombre de primes de les incògnites</p></div>
 </details>
 <div class="desc"><p>Retorna la projecció ortogonal del punt "punt" sobre la
 varietat afi</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 <dt id="Algebra.VarietatAfi.simetric"><code class="name flex">
 <span>def <span class="ident">simetric</span></span>(<span>self, punt)</span>
@@ -16330,8 +16744,9 @@ varietat afi</p>
     return 2*self.projeccio_ortogonal(punt) - punt</code></pre>
 </details>
 <div class="desc"><p>Retorna el simètric del punt "punt" respecte a la varietat afí</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>punt: Punt</p></div>
+<p>Paràmetres
+-----=
+punt: Punt</p></div>
 </dd>
 <dt id="Algebra.VarietatAfi.varietat_ortogonal"><code class="name flex">
 <span>def <span class="ident">varietat_ortogonal</span></span>(<span>self, p)</span>
@@ -16467,7 +16882,7 @@ varietat afi</p>
     #
     def factor_comu2(self):
         &#34;&#34;&#34;
-          Retorna quin factor comú podem treure de la matriu
+          Retorna quin factor comú podem treure del vector
         &#34;&#34;&#34;
         n = []
         d = []
@@ -16540,7 +16955,7 @@ varietat afi</p>
                 else:
                     n1 *= 1
                     n2 *= a
-        return n2,n1    
+        return n2, n1    
     #
     #
     #
@@ -16623,6 +17038,22 @@ varietat afi</p>
         else:
             return g/m , Vector([m/g*k for k in self.components])
     #
+    #
+    #
+    def maxim_factor_comu(self):
+        &#34;&#34;&#34;
+        Retorna el màxim del numerador i denominador del factor comú
+        &#34;&#34;&#34;
+        f, _ = self.factor_comu()
+        if enter(f):
+            return abs(f)
+        m = 1
+        if isinstance(f,Rational):
+            m = abs(f.p)
+            if abs(f.q) &gt; m:
+                m = abs(f.q)
+        return m
+    # 
     #
     #
     def es_proporcional(self,other):
@@ -17160,16 +17591,19 @@ varietat afi</p>
         return Vector(self.components)</code></pre>
 </details>
 <div class="desc"><p>Classe que ens permetrà representar vectors i punts</p>
-<h2 id="atributs">Atributs</h2>
-<p>dimensio: el nombre de components o longitud del vector
+<p>Atributs
+-----=
+dimensio: el nombre de components o longitud del vector
 components: llista amb les components del vector
 big: si ha d'escrire \left( &hellip; \right)</p>
 <p>Constructor.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>c: Una única llista de nombres o una llista de paràmetres
+<p>Paràmetres
+-----=
+c: Una única llista de nombres o una llista de paràmetres
 que han de ser nombres</p>
-<h2 id="exemples">Exemples</h2>
-<p>u = Vector([2,3,1,2])
+<p>Exemples
+-----=
+u = Vector([2,3,1,2])
 v = Vector(3,1,-2)</p></div>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -17182,8 +17616,9 @@ v = Vector(3,1,-2)</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Retorna un vector aleatori de longitud l</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>l: longitud del vector
+<p>Paràmetres
+-----=
+l: longitud del vector
 maxim: Nombre màxin que pot contenir en valor absolut
 nuls: Si pot contenir el valor 0 o no
 positius: Si els coeficients han de set tots positius</p></div>
@@ -17270,8 +17705,9 @@ xxxxxxxxxxxxxxxxxxxxxxxx</p></div>
 </details>
 <div class="desc"><p>Retorna un nou vector amb les components del vector (donem per fet
 que estan en la base canònica) en la base "base"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>base: una base (classe Base)</p></div>
+<p>Paràmetres
+-----=
+base: una base (classe Base)</p></div>
 </dd>
 <dt id="Algebra.Vector.cross"><code class="name flex">
 <span>def <span class="ident">cross</span></span>(<span>self, other, simplificar=False)</span>
@@ -17307,11 +17743,13 @@ que estan en la base canònica) en la base "base"</p>
 </details>
 <div class="desc"><p>Retorna un nou vector que és el producte vectorial de dos vectors:
 Si simplificar és True, simplifica el vector resultant</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>other: un altre vector
+<p>Paràmetres
+-----=
+other: un altre vector
 simplificar: si es vol simplificar el resultat o no</p>
-<h2 id="exemple">Exemple</h2>
-<p>u = Vector.aleatori(l=3)
+<p>Exemple
+-----=
+u = Vector.aleatori(l=3)
 v = Vector.aleatori(l=3)
 w = u.cross(v,simplificar=True)</p></div>
 </dd>
@@ -17360,10 +17798,12 @@ w = u.cross(v,simplificar=True)</p></div>
     return s</code></pre>
 </details>
 <div class="desc"><p>Retorna el producte escalar de dos vectors.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>other: un altre vector</p>
-<h2 id="exemple">Exemple</h2>
-<p>u = Vector.aleatori(l=3)
+<p>Paràmetres
+-----=
+other: un altre vector</p>
+<p>Exemple
+-----=
+u = Vector.aleatori(l=3)
 v = Vector.aleatori(l=3)
 p = u.dot(v)</p></div>
 </dd>
@@ -17387,8 +17827,9 @@ p = u.dot(v)</p></div>
     return m.rang() == 1</code></pre>
 </details>
 <div class="desc"><p>Retorna si és proporcional al vector "other"</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>other: un altre vector</p></div>
+<p>Paràmetres
+-----=
+other: un altre vector</p></div>
 </dd>
 <dt id="Algebra.Vector.factor_comu"><code class="name flex">
 <span>def <span class="ident">factor_comu</span></span>(<span>self)</span>
@@ -17492,7 +17933,7 @@ vector</p></div>
 </summary>
 <pre><code class="python">def factor_comu2(self):
     &#34;&#34;&#34;
-      Retorna quin factor comú podem treure de la matriu
+      Retorna quin factor comú podem treure del vector
     &#34;&#34;&#34;
     n = []
     d = []
@@ -17565,9 +18006,9 @@ vector</p></div>
             else:
                 n1 *= 1
                 n2 *= a
-    return n2,n1    </code></pre>
+    return n2, n1    </code></pre>
 </details>
-<div class="desc"><p>Retorna quin factor comú podem treure de la matriu</p></div>
+<div class="desc"><p>Retorna quin factor comú podem treure del vector</p></div>
 </dd>
 <dt id="Algebra.Vector.latex"><code class="name flex">
 <span>def <span class="ident">latex</span></span>(<span>self, unitari=False)</span>
@@ -17593,8 +18034,9 @@ vector</p></div>
     return str(self)</code></pre>
 </details>
 <div class="desc"><p>Retorna l'expressió en latex del vector.</p>
-<h2 id="parametres">Paràmetres</h2>
-<p>unitari: si unitari és True, el retorna dividit per la seva longitud
+<p>Paràmetres
+-----=
+unitari: si unitari és True, el retorna dividit per la seva longitud
 xxxxxxxxxxxxxxxxxxxxxx</p></div>
 </dd>
 <dt id="Algebra.Vector.length"><code class="name flex">
@@ -17639,9 +18081,34 @@ xxxxxxxxxxxxxxxxxxxxxx</p></div>
     return m</code></pre>
 </details>
 <div class="desc"><p>Retorna el màxim dels valors absoluts de les seves components</p>
-<h2 id="exemple">Exemple</h2>
-<p>u = Vector.aleatori(l=5,maxim=4,nuls=False)
+<p>Exemple
+-----=
+u = Vector.aleatori(l=5,maxim=4,nuls=False)
 m = u.maxim()</p></div>
+</dd>
+<dt id="Algebra.Vector.maxim_factor_comu"><code class="name flex">
+<span>def <span class="ident">maxim_factor_comu</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def maxim_factor_comu(self):
+    &#34;&#34;&#34;
+    Retorna el màxim del numerador i denominador del factor comú
+    &#34;&#34;&#34;
+    f, _ = self.factor_comu()
+    if enter(f):
+        return abs(f)
+    m = 1
+    if isinstance(f,Rational):
+        m = abs(f.p)
+        if abs(f.q) &gt; m:
+            m = abs(f.q)
+    return m</code></pre>
+</details>
+<div class="desc"><p>Retorna el màxim del numerador i denominador del factor comú</p></div>
 </dd>
 <dt id="Algebra.Vector.normalitzar"><code class="name flex">
 <span>def <span class="ident">normalitzar</span></span>(<span>self)</span>
@@ -17662,8 +18129,9 @@ m = u.maxim()</p></div>
     self.components = [k / l for k in self.components]</code></pre>
 </details>
 <div class="desc"><p>Converteix el vector en unitari</p>
-<h2 id="exemple">Exemple</h2>
-<p>u = Vector(1,2,3)
+<p>Exemple
+-----=
+u = Vector(1,2,3)
 u.normalitzar()</p></div>
 </dd>
 <dt id="Algebra.Vector.normalitzat"><code class="name flex">
@@ -17685,8 +18153,9 @@ u.normalitzar()</p></div>
     return Vector([k / l for k in self.components])</code></pre>
 </details>
 <div class="desc"><p>Retorna el vector unitari en la direcció i sentit del vector</p>
-<h2 id="exemple">Exemple</h2>
-<p>u = Vector(1,2,3)
+<p>Exemple
+-----=
+u = Vector(1,2,3)
 v = u.normalitzat()</p></div>
 </dd>
 <dt id="Algebra.Vector.nzeros"><code class="name flex">
@@ -17783,8 +18252,9 @@ v = u.normalitzat()</p></div>
     self.simplificar()</code></pre>
 </details>
 <div class="desc"><p>Simplifica el vector quan alguna de les seves components té radicals</p>
-<h2 id="exemple">Exemple</h2>
-<p>u = Vector(sqrt(2),-3*sqrt(2),-sqrt(2))
+<p>Exemple
+-----=
+u = Vector(sqrt(2),-3*sqrt(2),-sqrt(2))
 u.radsimplificar()</p></div>
 </dd>
 <dt id="Algebra.Vector.reordena_aleatoriament"><code class="name flex">
@@ -17868,8 +18338,9 @@ u.radsimplificar()</p></div>
 llista d'enters amb mcd igual a 1.
 Només té sentit si totes les components del vector són nombres enters
 o racionals</p>
-<h2 id="exemple">Exemple</h2>
-<p>u = Vector(-1,2,2,Rational(3,2))
+<p>Exemple
+-----=
+u = Vector(-1,2,2,Rational(3,2))
 u.simplificar()</p></div>
 </dd>
 <dt id="Algebra.Vector.subs"><code class="name flex">
@@ -17923,6 +18394,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.enter" href="#Algebra.enter">enter</a></code></li>
 <li><code><a title="Algebra.matriu_latex" href="#Algebra.matriu_latex">matriu_latex</a></code></li>
 <li><code><a title="Algebra.matriu_mathematica" href="#Algebra.matriu_mathematica">matriu_mathematica</a></code></li>
+<li><code><a title="Algebra.max_abs_llista" href="#Algebra.max_abs_llista">max_abs_llista</a></code></li>
 <li><code><a title="Algebra.mcd_llista" href="#Algebra.mcd_llista">mcd_llista</a></code></li>
 <li><code><a title="Algebra.mcm_llista" href="#Algebra.mcm_llista">mcm_llista</a></code></li>
 <li><code><a title="Algebra.mti" href="#Algebra.mti">mti</a></code></li>
@@ -18018,6 +18490,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Conica.parabola" href="#Algebra.Conica.parabola">parabola</a></code></li>
 <li><code><a title="Algebra.Conica.primer_element_no_nul" href="#Algebra.Conica.primer_element_no_nul">primer_element_no_nul</a></code></li>
 <li><code><a title="Algebra.Conica.referencia_principal" href="#Algebra.Conica.referencia_principal">referencia_principal</a></code></li>
+<li><code><a title="Algebra.Conica.set_noby2" href="#Algebra.Conica.set_noby2">set_noby2</a></code></li>
 <li><code><a title="Algebra.Conica.tipus" href="#Algebra.Conica.tipus">tipus</a></code></li>
 <li><code><a title="Algebra.Conica.vectors" href="#Algebra.Conica.vectors">vectors</a></code></li>
 </ul>
@@ -18225,6 +18698,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.PlaAfi.amb_associat" href="#Algebra.PlaAfi.amb_associat">amb_associat</a></code></li>
 <li><code><a title="Algebra.PlaAfi.associat" href="#Algebra.PlaAfi.associat">associat</a></code></li>
 <li><code><a title="Algebra.PlaAfi.base_ortogonal" href="#Algebra.PlaAfi.base_ortogonal">base_ortogonal</a></code></li>
+<li><code><a title="Algebra.PlaAfi.base_ortonormal" href="#Algebra.PlaAfi.base_ortonormal">base_ortonormal</a></code></li>
 <li><code><a title="Algebra.PlaAfi.conte" href="#Algebra.PlaAfi.conte">conte</a></code></li>
 <li><code><a title="Algebra.PlaAfi.distancia" href="#Algebra.PlaAfi.distancia">distancia</a></code></li>
 <li><code><a title="Algebra.PlaAfi.equacio_implicita" href="#Algebra.PlaAfi.equacio_implicita">equacio_implicita</a></code></li>
@@ -18241,6 +18715,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.PlaVectorial.amb_associat" href="#Algebra.PlaVectorial.amb_associat">amb_associat</a></code></li>
 <li><code><a title="Algebra.PlaVectorial.associat" href="#Algebra.PlaVectorial.associat">associat</a></code></li>
 <li><code><a title="Algebra.PlaVectorial.base_ortogonal" href="#Algebra.PlaVectorial.base_ortogonal">base_ortogonal</a></code></li>
+<li><code><a title="Algebra.PlaVectorial.base_ortonormal" href="#Algebra.PlaVectorial.base_ortonormal">base_ortonormal</a></code></li>
 <li><code><a title="Algebra.PlaVectorial.conte" href="#Algebra.PlaVectorial.conte">conte</a></code></li>
 <li><code><a title="Algebra.PlaVectorial.equacio_implicita" href="#Algebra.PlaVectorial.equacio_implicita">equacio_implicita</a></code></li>
 <li><code><a title="Algebra.PlaVectorial.es_associat" href="#Algebra.PlaVectorial.es_associat">es_associat</a></code></li>
@@ -18277,6 +18752,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Quadrica.paraboloidehiperbolic" href="#Algebra.Quadrica.paraboloidehiperbolic">paraboloidehiperbolic</a></code></li>
 <li><code><a title="Algebra.Quadrica.primer_element_no_nul" href="#Algebra.Quadrica.primer_element_no_nul">primer_element_no_nul</a></code></li>
 <li><code><a title="Algebra.Quadrica.referencia_principal" href="#Algebra.Quadrica.referencia_principal">referencia_principal</a></code></li>
+<li><code><a title="Algebra.Quadrica.set_noby2" href="#Algebra.Quadrica.set_noby2">set_noby2</a></code></li>
 <li><code><a title="Algebra.Quadrica.tipus" href="#Algebra.Quadrica.tipus">tipus</a></code></li>
 <li><code><a title="Algebra.Quadrica.vectors" href="#Algebra.Quadrica.vectors">vectors</a></code></li>
 </ul>
@@ -18383,7 +18859,7 @@ u.simplificar()</p></div>
 </li>
 <li>
 <h4><code><a title="Algebra.TransformacioAfi" href="#Algebra.TransformacioAfi">TransformacioAfi</a></code></h4>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="Algebra.TransformacioAfi.aleatoria" href="#Algebra.TransformacioAfi.aleatoria">aleatoria</a></code></li>
 <li><code><a title="Algebra.TransformacioAfi.gir" href="#Algebra.TransformacioAfi.gir">gir</a></code></li>
 <li><code><a title="Algebra.TransformacioAfi.latex" href="#Algebra.TransformacioAfi.latex">latex</a></code></li>
@@ -18395,6 +18871,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.TransformacioAfi.set_formats" href="#Algebra.TransformacioAfi.set_formats">set_formats</a></code></li>
 <li><code><a title="Algebra.TransformacioAfi.simetria" href="#Algebra.TransformacioAfi.simetria">simetria</a></code></li>
 <li><code><a title="Algebra.TransformacioAfi.transforma" href="#Algebra.TransformacioAfi.transforma">transforma</a></code></li>
+<li><code><a title="Algebra.TransformacioAfi.transformacio_lineal" href="#Algebra.TransformacioAfi.transformacio_lineal">transformacio_lineal</a></code></li>
 </ul>
 </li>
 <li>
@@ -18457,6 +18934,7 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Vector.latex" href="#Algebra.Vector.latex">latex</a></code></li>
 <li><code><a title="Algebra.Vector.length" href="#Algebra.Vector.length">length</a></code></li>
 <li><code><a title="Algebra.Vector.maxim" href="#Algebra.Vector.maxim">maxim</a></code></li>
+<li><code><a title="Algebra.Vector.maxim_factor_comu" href="#Algebra.Vector.maxim_factor_comu">maxim_factor_comu</a></code></li>
 <li><code><a title="Algebra.Vector.normalitzar" href="#Algebra.Vector.normalitzar">normalitzar</a></code></li>
 <li><code><a title="Algebra.Vector.normalitzat" href="#Algebra.Vector.normalitzat">normalitzat</a></code></li>
 <li><code><a title="Algebra.Vector.nul" href="#Algebra.Vector.nul">nul</a></code></li>

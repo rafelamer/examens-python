@@ -6404,6 +6404,34 @@ Ho he trobat a StackOverflow.</p></div>
     #
     #
     #
+    def numberof(self,_value):
+        &#34;&#34;&#34;
+        Retorna el nombre de valors de la matriu iguals a _value
+        &#34;&#34;&#34;
+        if self.files == 0 or self.columnes == 0:
+            return 0
+        count = 0
+        for i in range(self.files):
+            for j in range(self.columnes):
+                if self.matriu[i,j] == _value:
+                    count +=1
+        return count
+    #
+    #
+    #
+    def number_diagonal_values(self):
+        &#34;&#34;&#34;
+        Retorna el nombre de valors diferents que hi ha a la diagonal
+        Si la matriu no és quadrada retorna None
+        &#34;&#34;&#34;
+        if self.files == 0 or self.columnes == 0:
+            return 0
+        if self.files != self.columnes:
+            return None
+        return len(set([self.matriu[i,i] for i in range(self.columnes)]))
+    #
+    #
+    #
     def max_diagonal(self):
         &#34;&#34;&#34;
         Retorna el màxim en valor absolut dels coeficients de la diagonal
@@ -8000,6 +8028,51 @@ Si la matriu no és quadrada retorna None</p></div>
     return vecs</code></pre>
 </details>
 <div class="desc"><p>Retorna una llista de vectors que formen una base del nucli de la matriu</p></div>
+</dd>
+<dt id="Algebra.Matriu.number_diagonal_values"><code class="name flex">
+<span>def <span class="ident">number_diagonal_values</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def number_diagonal_values(self):
+    &#34;&#34;&#34;
+    Retorna el nombre de valors diferents que hi ha a la diagonal
+    Si la matriu no és quadrada retorna None
+    &#34;&#34;&#34;
+    if self.files == 0 or self.columnes == 0:
+        return 0
+    if self.files != self.columnes:
+        return None
+    return len(set([self.matriu[i,i] for i in range(self.columnes)]))</code></pre>
+</details>
+<div class="desc"><p>Retorna el nombre de valors diferents que hi ha a la diagonal
+Si la matriu no és quadrada retorna None</p></div>
+</dd>
+<dt id="Algebra.Matriu.numberof"><code class="name flex">
+<span>def <span class="ident">numberof</span></span>(<span>self, _value)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def numberof(self,_value):
+    &#34;&#34;&#34;
+    Retorna el nombre de valors de la matriu iguals a _value
+    &#34;&#34;&#34;
+    if self.files == 0 or self.columnes == 0:
+        return 0
+    count = 0
+    for i in range(self.files):
+        for j in range(self.columnes):
+            if self.matriu[i,j] == _value:
+                count +=1
+    return count</code></pre>
+</details>
+<div class="desc"><p>Retorna el nombre de valors de la matriu iguals a _value</p></div>
 </dd>
 <dt id="Algebra.Matriu.nzeros"><code class="name flex">
 <span>def <span class="ident">nzeros</span></span>(<span>self)</span>
@@ -18636,6 +18709,8 @@ u.simplificar()</p></div>
 <li><code><a title="Algebra.Matriu.nnegatius" href="#Algebra.Matriu.nnegatius">nnegatius</a></code></li>
 <li><code><a title="Algebra.Matriu.norma_maxim" href="#Algebra.Matriu.norma_maxim">norma_maxim</a></code></li>
 <li><code><a title="Algebra.Matriu.nucli" href="#Algebra.Matriu.nucli">nucli</a></code></li>
+<li><code><a title="Algebra.Matriu.number_diagonal_values" href="#Algebra.Matriu.number_diagonal_values">number_diagonal_values</a></code></li>
+<li><code><a title="Algebra.Matriu.numberof" href="#Algebra.Matriu.numberof">numberof</a></code></li>
 <li><code><a title="Algebra.Matriu.nzeros" href="#Algebra.Matriu.nzeros">nzeros</a></code></li>
 <li><code><a title="Algebra.Matriu.polinomi_caracteristic" href="#Algebra.Matriu.polinomi_caracteristic">polinomi_caracteristic</a></code></li>
 <li><code><a title="Algebra.Matriu.rang" href="#Algebra.Matriu.rang">rang</a></code></li>

@@ -1829,6 +1829,34 @@ class Matriu:
     #
     #
     #
+    def numberof(self,_value):
+        """
+        Retorna el nombre de valors de la matriu iguals a _value
+        """
+        if self.files == 0 or self.columnes == 0:
+            return 0
+        count = 0
+        for i in range(self.files):
+            for j in range(self.columnes):
+                if self.matriu[i,j] == _value:
+                    count +=1
+        return count
+    #
+    #
+    #
+    def number_diagonal_values(self):
+        """
+        Retorna el nombre de valors diferents que hi ha a la diagonal
+        Si la matriu no és quadrada retorna None
+        """
+        if self.files == 0 or self.columnes == 0:
+            return 0
+        if self.files != self.columnes:
+            return None
+        return len(set([self.matriu[i,i] for i in range(self.columnes)]))
+    #
+    #
+    #
     def max_diagonal(self):
         """
         Retorna el màxim en valor absolut dels coeficients de la diagonal
